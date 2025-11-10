@@ -5,6 +5,7 @@ import { routes } from './app.routes';
 import { providePrimeNG } from 'primeng/config';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import Aura from '@primeuix/themes/aura';
+import { provideHttpClient } from '@angular/common/http'; // <- IMPORTANTE
 import { MessageService } from 'primeng/api';
 
 export const appConfig: ApplicationConfig = {
@@ -24,6 +25,7 @@ export const appConfig: ApplicationConfig = {
       },
       ripple: true
     }),
-    MessageService
+    MessageService,
+    provideHttpClient()
   ]
 };

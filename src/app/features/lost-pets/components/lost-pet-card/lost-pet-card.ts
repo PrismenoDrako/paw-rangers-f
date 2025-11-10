@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-lost-pet-card',
@@ -7,5 +7,8 @@ import { Component } from '@angular/core';
   styleUrl: './lost-pet-card.scss',
 })
 export class LostPetCard {
+
+  @Input()
+  value: number = 0;
 
 }

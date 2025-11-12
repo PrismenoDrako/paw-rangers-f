@@ -1,0 +1,1 @@
+<!-- Placeholder para imagen - coloca tu iconlogo.png aquí -->

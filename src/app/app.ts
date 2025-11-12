@@ -4,13 +4,14 @@ import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { ToastModule } from 'primeng/toast';
 import { ApiService } from './core/services/api.service';
-import { JsonPipe } from '@angular/common';
+import { Navigation } from './shared/components/navigation/navigation';
 
 @Component({
 	selector: 'app-root',
-	imports: [RouterOutlet, ButtonModule, ToastModule, JsonPipe],
+	standalone: true,
+	imports: [RouterOutlet, ButtonModule, ToastModule, Navigation],
 	templateUrl: './app.html',
-	styleUrl: './app.scss',
+	styleUrls: ['./app.scss'],
 })
 export class App implements OnInit {
 	protected readonly title = signal('paw-rangers-f');

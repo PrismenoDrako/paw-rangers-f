@@ -1,0 +1,70 @@
+$primary-blue: #294374;
+$hover-blue: #EDF0F7;
+
+.pet-card {
+    height: 100%;
+    border-radius: 12px;
+    background-color: var(--surface-card, white);
+    border: 1px solid $primary-blue; 
+    display: flex;
+    flex-direction: column;
+
+    // Contenedor de la imagen
+    .pet-image-container {
+        width: 100%;
+        height: 100%; 
+        overflow: hidden;
+        border-radius: 11px 11px 0 0; 
+        background-color: $hover-blue; 
+
+        .pet-image {
+            width: 100%;
+            height: 100%;
+            object-fit: contain; 
+            display: block; 
+        }
+    }
+    
+    // Contenido (Corrección de tamaño de letra)
+    .p-card-content {
+        padding: 1rem !important;
+        background-color: #EDF0F7; 
+        border-radius: 0 0 11px 11px;
+        text-align: center;
+        
+        // 🚨 TAMAÑO DE FUENTE GRANDE para el nombre
+        .pet-name {
+            color: var(--text-color);
+            font-size: 1.3rem !important; 
+            font-weight: 700;
+        }
+        // 🚨 TAMAÑO DE FUENTE GRANDE para los datos
+        .pet-breed-info, .pet-age-weight {
+            color: var(--text-color-secondary);
+            font-size: 1rem !important; 
+            line-height: 1.4;
+        }
+    }
+
+    // Pie de página de la tarjeta (Botón Editar)
+    .p-card-footer {
+        padding: 0.75rem 1rem !important;
+        border-top: 1px solid var(--surface-200);
+        background-color: var(--surface-card, white);
+        display: flex;
+        justify-content: center;
+
+        /* 🚨 CORRECCIÓN FINAL BOTÓN: Estilo de relleno azul con la máxima especificidad */
+        :host ::ng-deep .pet-edit-button .p-button,
+        .pet-edit-button.p-button { 
+            background-color: $primary-blue !important;
+            color: white !important; 
+            border-color: $primary-blue !important; 
+            
+            &:hover {
+                background-color: darken($primary-blue, 5%) !important; 
+                border-color: darken($primary-blue, 5%) !important;
+            }
+        }
+    }
+}

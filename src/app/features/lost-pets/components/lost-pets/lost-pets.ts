@@ -20,7 +20,7 @@ export class LostPets implements OnInit {
       breed: 'Pastor Alemán',
       location: 'Centro, Ciudad',
       reward: 100.00,
-      image: 'https://images.unsplash.com/photo-1587402092302-725e37c70fd8?w=400&h=400&fit=crop&crop=face',
+      image: 'https://tse4.mm.bing.net/th/id/OIP.kupJkH5891LwxXlUvjB2GwHaFj?cb=ucfimg2ucfimg=1&rs=1&pid=ImgDetMain&o=7&rm=3',
       description: 'Perdido cerca del parque central. Muy amigable, responde a su nombre.',
       timeAgo: 'Perdido hace 2 horas'
     },
@@ -55,5 +55,16 @@ export class LostPets implements OnInit {
   onContact(pet: any): void {
     console.log('Contactando por:', pet.name);
     // Aquí puedes implementar la lógica de contacto
+  }
+
+  onOpenMap(pet: any): void {
+    console.log('Abriendo mapa para localizar a:', pet.name);
+    console.log('Ubicación:', pet.location);
+    // Aquí puedes implementar la lógica para abrir el mapa
+    // Por ejemplo: abrir Google Maps, mostrar un modal con mapa, etc.
+    
+    // Ejemplo de URL para Google Maps (puedes cambiar esto)
+    const mapUrl = `https://www.google.com/maps/search/${encodeURIComponent(pet.location)}`;
+    window.open(mapUrl, '_blank');
   }
 }

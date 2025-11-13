@@ -32,21 +32,176 @@
   }
 }
 
-@media (max-width: 768px) {
+// Responsive Design Ultra Detallado
+// Desktop Extra Large (1920px+)
+@media (min-width: 1920px) {
   .search-modern-container {
-    padding: 14px 16px;
-    margin-bottom: 16px;
+    padding: 28px 32px;
+    border-radius: 24px;
+    margin-bottom: 32px;
+  }
+
+  .search-categories-separator {
+    margin: 20px 0 18px 0;
+    height: 2px;
+    
+    &::before {
+      width: 40px;
+      height: 4px;
+    }
+  }
+}
+
+// Desktop Large (1600px - 1919px)
+@media (min-width: 1600px) and (max-width: 1919px) {
+  .search-modern-container {
+    padding: 24px 28px;
+    border-radius: 22px;
+    margin-bottom: 28px;
+  }
+
+  .search-categories-separator {
+    margin: 18px 0 16px 0;
+    
+    &::before {
+      width: 36px;
+      height: 3px;
+    }
+  }
+}
+
+// Desktop Medium (1200px - 1599px)
+@media (min-width: 1200px) and (max-width: 1599px) {
+  .search-modern-container {
+    padding: 22px 26px;
+    border-radius: 20px;
+    margin-bottom: 26px;
+  }
+
+  .search-categories-separator {
+    margin: 16px 0 14px 0;
+    
+    &::before {
+      width: 34px;
+    }
+  }
+}
+
+// Desktop Small (992px - 1199px)
+@media (min-width: 992px) and (max-width: 1199px) {
+  .search-modern-container {
+    padding: 20px 24px;
+    border-radius: 18px;
+    margin-bottom: 24px;
+  }
+
+  .search-categories-separator {
+    margin: 15px 0 13px 0;
+    
+    &::before {
+      width: 32px;
+    }
+  }
+}
+
+// Tablet Large (768px - 991px)
+@media (min-width: 768px) and (max-width: 991px) {
+  .search-modern-container {
+    padding: 18px 22px;
+    margin-bottom: 22px;
+    border-radius: 16px;
+  }
+
+  .search-categories-separator {
+    margin: 14px 0 12px 0;
+  }
+}
+
+// Tablet Medium (600px - 767px)
+@media (min-width: 600px) and (max-width: 767px) {
+  .search-modern-container {
+    padding: 16px 20px;
+    margin-bottom: 20px;
     border-radius: 14px;
   }
 
   .search-categories-separator {
-    margin: 12px 0 10px 0;
+    margin: 13px 0 11px 0;
+    
+    &::before {
+      width: 28px;
+    }
   }
 }
 
-@media (max-width: 480px) {
+// Mobile Large (480px - 599px)
+@media (min-width: 480px) and (max-width: 599px) {
   .search-modern-container {
-    padding: 12px 14px;
+    padding: 14px 18px;
     border-radius: 12px;
+    margin-bottom: 18px;
+  }
+
+  .search-categories-separator {
+    margin: 12px 0 10px 0;
+    
+    &::before {
+      width: 26px;
+      height: 2px;
+    }
+  }
+}
+
+// Mobile Medium (400px - 479px)
+@media (min-width: 400px) and (max-width: 479px) {
+  .search-modern-container {
+    padding: 12px 16px;
+    border-radius: 10px;
+    margin-bottom: 16px;
+  }
+
+  .search-categories-separator {
+    margin: 11px 0 9px 0;
+    
+    &::before {
+      width: 24px;
+      height: 2px;
+    }
+  }
+}
+
+// Mobile Small (320px - 399px)
+@media (min-width: 320px) and (max-width: 399px) {
+  .search-modern-container {
+    padding: 10px 14px;
+    border-radius: 8px;
+    margin-bottom: 14px;
+  }
+
+  .search-categories-separator {
+    margin: 10px 0 8px 0;
+    
+    &::before {
+      width: 22px;
+      height: 2px;
+    }
+  }
+}
+
+// Mobile Extra Small (menos de 320px)
+@media (max-width: 319px) {
+  .search-modern-container {
+    padding: 8px 12px;
+    border-radius: 6px;
+    margin-bottom: 12px;
+  }
+
+  .search-categories-separator {
+    margin: 8px 0 6px 0;
+    
+    &::before {
+      width: 20px;
+      height: 2px;
+    }
   }
 }

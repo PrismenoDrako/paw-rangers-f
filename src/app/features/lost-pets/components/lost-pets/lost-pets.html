@@ -3,7 +3,8 @@
     <app-lost-pet-card 
       *ngFor="let pet of lostPets"
       [pet]="pet"
-      (onContact)="onContact($event)">
+      (onContact)="onContact($event)"
+      (onOpenMap)="onOpenMap($event)">
     </app-lost-pet-card>
   </div>
   

@@ -1,37 +1,40 @@
-<div class="pet-card" *ngIf="pet">
-  <div class="pet-image">
-    <img [src]="pet.image" [alt]="pet.name" />
-  </div>
-  
-  <div class="pet-info">
-    <h3 class="pet-name">{{ pet.name }}</h3>
-    <p class="pet-breed">{{ pet.type }} - {{ pet.breed }}</p>
-    <p class="pet-location">{{ pet.location }}</p>
-    <p class="pet-reward">S/ {{ pet.reward | number:'1.2-2' }}</p>
+@if (pet) {
+  <div class="pet-card">
+    <div class="pet-image">
+      <div class="reward-badge">S/ {{ pet.reward | number:'1.0-0' }}</div>
+      <img [src]="pet.image" [alt]="pet.name" />
+      <div class="favorite-icon">
+        <i class="pi pi-heart"></i>
+      </div>
+    </div>
     
-    <p-button 
-      label="Contactar" 
-      styleClass="contact-btn"
-      (onClick)="contact()">
-    </p-button>
+    <div class="pet-info">
+      <div class="pet-details">
+        <h3 class="pet-name">{{ pet.name }}</h3>
+        <p class="pet-breed">{{ pet.type }} • {{ pet.breed }}</p>
+        <p class="pet-description">{{ pet.description }}</p>
+        
+        <div class="location-time-info">
+          <div class="location-info">
+            <i class="pi pi-map-marker"></i>
+            <span>{{ pet.location }}</span>
+          </div>
+          <div class="time-info">
+            <i class="pi pi-clock"></i>
+            <span>{{ pet.timeAgo }}</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="pet-footer">
+        <button class="contact-btn" (click)="contact()">
+          <i class="pi pi-phone"></i>
+          Contactar
+        </button>
+        <button class="map-btn" (click)="openMap()">
+          <i class="pi pi-map"></i>
+        </button>
+      </div>
+    </div>
   </div>
-</div>
-
-<div class="pet-card" *ngIf="pet">
-  <div class="pet-image">
-    <img [src]="pet.image" [alt]="pet.name" />
-  </div>
-  
-  <div class="pet-info">
-    <h3 class="pet-name">{{ pet.name }}</h3>
-    <p class="pet-breed">{{ pet.type }} - {{ pet.breed }}</p>
-    <p class="pet-location">{{ pet.location }}</p>
-    <p class="pet-reward">S/ {{ pet.reward | number:'1.2-2' }}</p>
-    
-    <p-button 
-      label="Contactar" 
-      styleClass="contact-btn"
-      (onClick)="contact()">
-    </p-button>
-  </div>
-</div>
+}

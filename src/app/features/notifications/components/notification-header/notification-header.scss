@@ -1,0 +1,41 @@
+.header {
+  padding: 0 20px 2px;
+  background-color: transparent;  // Eliminamos el color de fondo
+  color: black;  // El texto será negro por defecto
+  text-align: left;  // Alineamos todo a la izquierda
+  border-radius: 10px 10px 0 0;
+  box-shadow: none;  // Eliminamos la sombra del encabezado
+}
+
+.header-title {
+  display: flex;
+  flex-direction: column;  // Coloca los elementos en columna
+  align-items: flex-start; // Alineamos todo al inicio (izquierda)
+}
+
+h2 {
+  font-size: 1.5rem;
+  margin: 0;
+  font-weight: 600;
+  color: #334473;  // Cambiamos el color del título a #334473
+}
+
+.notifications-count {
+  font-size: 1.2rem;
+  margin-top: 5px; // Separación entre el título y el número de notificaciones
+  color: #888;  // El color del número de notificaciones será gris
+}
+
+@media (max-width: 768px) {
+  .header {
+    padding: 0 16px 2px;
+  }
+
+  h2 {
+    font-size: 1.2rem;
+  }
+
+  .notifications-count {
+    font-size: 1rem;
+  }
+}

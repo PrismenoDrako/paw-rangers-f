@@ -1,0 +1,108 @@
+<div class="account-info-card p-4">
+
+    <div class="flex flex-column align-items-center mb-4">
+        <div class="avatar-container mb-3 editable-avatar" (click)="isEditing && onAvatarClick()"> 
+            <p-avatar styleClass="xl-avatar" shape="circle">
+                <img [src]="profileImageUrl" alt="Profile" class="profile-image" *ngIf="profileImageUrl">
+                <span *ngIf="!profileImageUrl" class="pi pi-user avatar-placeholder"></span>
+            </p-avatar>
+
+            <div class="edit-overlay" *ngIf="isEditing">
+                <p-fileUpload #fileUpload mode="basic" chooseLabel=" " icon="pi pi-camera" accept="image/*"
+                    maxFileSize="1000000" (onSelect)="onUpload($event)" class="file-upload-button">
+                </p-fileUpload>
+            </div>
+        </div>
+
+        <div class="user-info-display text-center" *ngIf="!isEditing">
+            <div class="username font-bold text-xl mb-1">{{ userData.nombre }} {{ userData.apellidoPaterno }}</div>
+            <div class="email">{{ userData.email }}</div>
+            <div class="phone">{{ userData.phone }}</div>
+            <div class="address">{{ userData.direccion }}</div>
+        </div>
+    </div>
+
+    <form class="edit-form p-fluid w-full" *ngIf="isEditing">
+        <div class="form-fields">
+
+            <div class="col-span-full">
+                <span class="p-float-label">
+                    <label for="username-input">Usuario</label>
+                    <input pInputText id="username-input" [(ngModel)]="userData.username" name="username" required class="w-full">
+                </span>
+            </div>
+
+            <div class="col-span-full">
+                <span class="p-float-label">
+                    <label for="nombre-input">Nombre</label>
+                    <input pInputText id="nombre-input" [(ngModel)]="userData.nombre" name="nombre" required class="w-full">
+                </span>
+            </div>
+
+            <div class="col-span-full">
+                <span class="p-float-label">
+                    <label for="apellido-paterno-input">Apellido Paterno</label>
+                    <input pInputText id="apellido-paterno-input" [(ngModel)]="userData.apellidoPaterno"
+                        name="apellidoPaterno" required class="w-full">
+                </span>
+            </div>
+            <div class="col-span-full">
+                <span class="p-float-label">
+                    <label for="apellido-materno-input">Apellido Materno</label>
+                    <input pInputText id="apellido-materno-input" [(ngModel)]="userData.apellidoMaterno"
+                        name="apellidoMaterno" class="w-full">
+                </span>
+            </div>
+
+            <div class="col-span-full">
+                <span class="p-float-label">
+                    <label for="email-input">Correo</label>
+                    <input pInputText id="email-input" type="email" [(ngModel)]="userData.email" name="email" required class="w-full">
+                </span>
+            </div>
+
+            <div class="col-span-full">
+                <span class="p-float-label">
+                    <label for="phone-input">Celular</label>
+                    <p-inputMask mask="+99 999 999 999" id="phone-input" [(ngModel)]="userData.phone" name="phone" required styleClass="w-full"></p-inputMask>
+                </span>
+            </div>
+
+            <div class="col-span-full">
+                <span class="p-float-label">
+                    <label for="direccion-input">Dirección</label>
+                    <input pInputText id="direccion-input" [(ngModel)]="userData.direccion" name="direccion" class="w-full">
+                </span>
+            </div>
+
+            <div class="col-span-full password-section">
+                <span class="p-float-label">
+                    <label for="password-input">Contraseña Nueva</label>
+                    <p-password id="password-input" [feedback]="false" toggleMask="true" [(ngModel)]="userData.password"
+                        name="password" styleClass="w-full"></p-password>
+                </span>
+            </div>
+            <div class="col-span-full">
+                <span class="p-float-label">
+                    <label for="confirm-password-input">Confirmar Contraseña Nueva</label>
+                    <p-password id="confirm-password-input" [feedback]="false" toggleMask="true"
+                        [(ngModel)]="userData.confirmPassword" name="confirmPassword" styleClass="w-full"></p-password>
+                </span>
+            </div>
+        </div>
+    </form>
+
+
+    <div class="button-group flex gap-2 mt-4 w-full justify-content-center">
+        <p-button [label]="isEditing ? 'Guardar Cambios' : 'Editar Perfil'"
+            [icon]="isEditing ? 'pi pi-save' : 'pi pi-user-edit'"
+            [styleClass]="isEditing ? 'p-button-primary p-button-raised' : 'p-button-outlined custom-edit-button'"
+            (onClick)="onEditProfile()">
+        </p-button>
+
+        <p-button *ngIf="isEditing" label="Cancelar" icon="pi pi-times" styleClass="p-button-secondary p-button-text"
+            (onClick)="cancelEditing()">
+        </p-button>
+    </div>
+
+</div>

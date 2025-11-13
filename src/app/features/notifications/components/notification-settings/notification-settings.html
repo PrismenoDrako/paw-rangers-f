@@ -1,0 +1,40 @@
+<section class="settings-container">
+  <header class="settings-hero">
+    <p class="eyebrow">Preferencias</p>
+    <h2>Configura tus notificaciones</h2>
+    <p>Activa solo las alertas que necesitas para reaccionar rápido ante rescates o actividad en la comunidad.</p>
+  </header>
+
+  <div class="settings-grid">
+    <label class="settings-card">
+      <div class="settings-card__copy">
+        <span class="settings-card__tag">Mascotas</span>
+        <h3>Alertas de rescate</h3>
+        <p>Recibe avisos inmediatos sobre mascotas perdidas o encontradas cerca de ti.</p>
+      </div>
+      <div class="toggle">
+        <input type="checkbox" id="toggle-mascotas" [(ngModel)]="notificationPreferences.mascotas" />
+        <span class="toggle-slider"></span>
+      </div>
+    </label>
+
+    <label class="settings-card">
+      <div class="settings-card__copy">
+        <span class="settings-card__tag">Comunidad</span>
+        <h3>Interacciones del foro</h3>
+        <p>Entérate cuando alguien reacciona o responde a tus publicaciones en PawRangers.</p>
+      </div>
+      <div class="toggle">
+        <input type="checkbox" id="toggle-foro" [(ngModel)]="notificationPreferences.foro" />
+        <span class="toggle-slider"></span>
+      </div>
+    </label>
+  </div>
+
+  <footer class="settings-actions">
+    <button type="button" class="btn-secondary" (click)="resetChanges()" [disabled]="saving">Cancelar</button>
+    <button type="button" class="btn-save" (click)="saveSettings()" [disabled]="saving">
+      {{ saving ? 'Guardando…' : 'Guardar configuración' }}
+    </button>
+  </footer>
+</section>

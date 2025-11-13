@@ -1,15 +1,95 @@
 <div class="lost-pets-page">
-  
-  <!-- Header con título y botón reportar -->
-  <app-title-buttom></app-title-buttom>
-  
-  <!-- Componente de búsqueda -->
-  <app-search 
-    (onSearch)="onSearch($event)"
-    (onFilterChange)="onFilterChange($event)">
-  </app-search>
-  
-  <!-- Componente de mascotas perdidas -->
-  <app-lost-pets></app-lost-pets>
+  <div class="page-header">
+    <div class="header-content">
+      <h1 class="page-title">Animales Perdidos</h1>
+      <button class="report-btn" (click)="goToReport()">
+        <i class="pi pi-plus"></i>
+        Reportar
+      </button>
+    </div>
+  </div>
 
+  <div class="page-content">
+    <!-- Barra de búsqueda con filtros integrados -->
+    <div class="search-section">
+      <div class="search-box">
+        <span class="p-input-icon-left search-input-container">
+          <i class="pi pi-search"></i>
+          <input
+            type="text"
+            [(ngModel)]="searchTerm"
+            (ngModelChange)="onSearchChange()"
+            placeholder="Buscar por nombre, raza, ubicación..."
+            class="search-input"
+          />
+        </span>
+        <button class="filter-btn" (click)="toggleFilters()">
+          <i class="pi pi-filter"></i>
+          <span>Filtros</span>
+        </button>
+      </div>
+      
+      <!-- Panel de filtros desplegable -->
+      @if (showFilters) {
+        <div class="filters-panel">
+          <div class="filter-categories">
+            <button 
+              *ngFor="let category of categories" 
+              class="category-btn"
+              [class.active]="selectedCategory === category.value"
+              (click)="selectCategory(category.value)">
+              {{ category.label }}
+            </button>
+          </div>
+          <div class="filter-options">
+            <label class="filter-checkbox">
+              <input type="checkbox" [(ngModel)]="showWithReward" (change)="applyFilters()">
+              <span class="checkmark"></span>
+              Con Recompensa
+            </label>
+            <label class="filter-checkbox">
+              <input type="checkbox" [(ngModel)]="showRecent" (change)="applyFilters()">
+              <span class="checkmark"></span>
+              Recientes (últimas 24h)
+            </label>
+          </div>
+        </div>
+      }
+    </div>
+    
+    <!-- Container de lista de animales perdidos -->
+    <div class="pets-container">
+      <div class="pets-grid">
+        <app-lost-pet-card 
+          *ngFor="let pet of filteredPets"
+          [pet]="pet"
+          (onContact)="onContact($event)"
+          (onOpenMap)="onOpenMap($event)">
+        </app-lost-pet-card>
+      </div>
+      
+      <!-- Mensaje cuando no hay resultados -->
+      @if (filteredPets.length === 0) {
+        <div class="no-results">
+          <div class="no-results-icon">
+            <i class="pi pi-search"></i>
+          </div>
+          <h3>No se encontraron mascotas</h3>
+          <p>Intenta ajustar tus filtros de búsqueda</p>
+        </div>
+      }
+    </div>
+    
+    <!-- Sección de call-to-action -->
+    <div class="cta-section">
+      <div class="cta-content">
+        <h3 class="cta-title">¿Perdiste una mascota?</h3>
+        <p class="cta-description">Reporta la pérdida para recibir ayuda de la comunidad</p>
+        <button class="cta-btn" (click)="goToReport()">
+          <i class="pi pi-plus"></i>
+          Reportar Pérdida
+        </button>
+      </div>
+    </div>
+  </div>
 </div>

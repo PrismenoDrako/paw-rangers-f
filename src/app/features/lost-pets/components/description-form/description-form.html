@@ -1,0 +1,83 @@
+<div class="description-form-container">
+  <h3 class="form-title">Descripción y Detalles</h3>
+  
+  <div class="form-group">
+    <label for="description" class="form-label">
+      Descripción de la situación <span class="required">*</span>
+    </label>
+    <textarea 
+      id="description"
+      class="form-textarea"
+      rows="5"
+      placeholder="Describe cómo se perdió tu mascota, cuándo y cualquier detalle que pueda ayudar a encontrarla..."
+      [(ngModel)]="formData.description"
+      (ngModelChange)="onFormChange()"></textarea>
+    <small class="form-help">
+      Incluye información como: cuándo se perdió, circunstancias, características distintivas, etc.
+    </small>
+  </div>
+  
+  <div class="form-grid">
+    <div class="form-group">
+      <label for="contactName" class="form-label">
+        Nombre de contacto <span class="required">*</span>
+      </label>
+      <input 
+        id="contactName"
+        type="text" 
+        class="form-input"
+        placeholder="Tu nombre completo"
+        [(ngModel)]="formData.contactName"
+        (ngModelChange)="onFormChange()" />
+    </div>
+    
+    <div class="form-group">
+      <label for="contactPhone" class="form-label">
+        Teléfono <span class="required">*</span>
+      </label>
+      <input 
+        id="contactPhone"
+        type="tel" 
+        class="form-input"
+        placeholder="123-456-7890"
+        [(ngModel)]="formData.contactPhone"
+        (ngModelChange)="onFormChange()" />
+    </div>
+    
+    <div class="form-group full-width">
+      <label for="contactEmail" class="form-label">
+        Correo electrónico <span class="optional">(Opcional)</span>
+      </label>
+      <input 
+        id="contactEmail"
+        type="email" 
+        class="form-input"
+        placeholder="correo@ejemplo.com"
+        [(ngModel)]="formData.contactEmail"
+        (ngModelChange)="onFormChange()" />
+    </div>
+  </div>
+  
+  <div class="reward-section">
+    <label class="checkbox-label">
+      <input 
+        type="checkbox" 
+        class="form-checkbox"
+        [(ngModel)]="formData.hasReward"
+        (ngModelChange)="onFormChange()" />
+      <span class="checkmark"></span>
+      Ofrecer recompensa
+    </label>
+    
+    @if (formData.hasReward) {
+      <div class="reward-amount">
+        <input 
+          type="number" 
+          class="form-input"
+          placeholder="Cantidad de recompensa"
+          [(ngModel)]="formData.rewardAmount"
+          (ngModelChange)="onFormChange()" />
+      </div>
+    }
+  </div>
+</div>

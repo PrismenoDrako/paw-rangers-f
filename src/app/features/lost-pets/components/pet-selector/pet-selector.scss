@@ -1,0 +1,127 @@
+.pet-selector-container {
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(41, 67, 116, 0.08);
+  padding: 24px;
+  margin-bottom: 20px;
+  border: 1px solid rgba(41, 67, 116, 0.06);
+}
+
+.selector-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  
+  h3 {
+    color: #1f2937;
+    font-size: 20px;
+    font-weight: 600;
+    margin: 0;
+  }
+  
+  .report-other-btn {
+    background: #6b7280;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    
+    &:hover {
+      background: #4b5563;
+      transform: translateY(-1px);
+    }
+  }
+}
+
+.pets-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 16px;
+}
+
+.pet-option {
+  cursor: pointer;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  border: 3px solid transparent;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+  
+  &.selected {
+    border-color: #3b82f6;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(59, 130, 246, 0.3);
+  }
+}
+
+.pet-image-container {
+  position: relative;
+  width: 100%;
+  height: 120px;
+}
+
+.pet-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.pet-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
+  padding: 12px 8px 8px;
+  
+  .pet-name {
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+    text-align: center;
+    display: block;
+  }
+}
+
+// Responsive Design
+@media (max-width: 768px) {
+  .pets-grid {
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 12px;
+  }
+  
+  .pet-image-container {
+    height: 100px;
+  }
+  
+  .selector-header {
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch;
+    
+    h3 {
+      text-align: center;
+      font-size: 18px;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .pet-selector-container {
+    padding: 16px;
+  }
+  
+  .pets-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

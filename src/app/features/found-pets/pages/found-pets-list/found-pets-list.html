@@ -1,0 +1,93 @@
+<div class="found-pets-page">
+  <div class="page-header">
+    <div class="header-content">
+      <h1 class="page-title">Animales Encontrados</h1>
+      <button class="report-btn" (click)="goToReport()">
+        <i class="pi pi-plus"></i>
+        Reportar
+      </button>
+    </div>
+  </div>
+
+  <div class="page-content">
+    <!-- Barra de búsqueda y filtros -->
+    <app-found-search (onFiltersUpdate)="handleFiltersUpdate($event)"></app-found-search>
+    
+    <!-- Lista de animales encontrados -->
+    <app-found-pets-container
+      [foundPets]="foundPets"
+      [favorites]="favoriteIds"
+      [isLoading]="isLoading"
+      (onContactPet)="handleContact($event)"
+      (onFavoriteUpdate)="handleFavoriteUpdate($event)"
+      #petsContainer>
+    </app-found-pets-container>
+    
+    <!-- Sección de call-to-action -->
+    <div class="cta-section">
+      <div class="cta-content">
+        <h3 class="cta-title">¿Encontraste una mascota?</h3>
+        <p class="cta-description">Reporta el hallazgo para ayudar a reunir familias</p>
+        <button class="cta-btn" (click)="goToReport()">
+          <i class="pi pi-plus"></i>
+          Reportar Hallazgo
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de contacto -->
+@if (showContactModal && selectedPet) {
+  <div class="modal-overlay" (click)="closeContactModal()">
+    <div class="contact-modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Contactar sobre {{ selectedPet.type }}</h3>
+        <button class="close-btn" (click)="closeContactModal()">
+          <i class="pi pi-times"></i>
+        </button>
+      </div>
+      
+      <div class="modal-content">
+        <div class="pet-summary">
+          <img [src]="selectedPet.image" [alt]="selectedPet.type" class="pet-thumb" />
+          <div class="pet-details">
+            <h4>{{ selectedPet.type }}</h4>
+            <p>{{ selectedPet.location }}</p>
+          </div>
+        </div>
+        
+        <div class="contact-info">
+          <h4>Información de Contacto</h4>
+          <div class="contact-item">
+            <i class="pi pi-user"></i>
+            <span>{{ selectedPet.contactInfo.name }}</span>
+          </div>
+          <div class="contact-item">
+            <i class="pi pi-phone"></i>
+            <a [href]="'tel:' + selectedPet.contactInfo.phone">{{ selectedPet.contactInfo.phone }}</a>
+          </div>
+          @if (selectedPet.contactInfo.email) {
+            <div class="contact-item">
+              <i class="pi pi-envelope"></i>
+              <a [href]="'mailto:' + selectedPet.contactInfo.email">{{ selectedPet.contactInfo.email }}</a>
+            </div>
+          }
+        </div>
+        
+        <div class="warning-box">
+          <i class="pi pi-info-circle"></i>
+          <span>Consejo: Mantén al animal en un lugar seguro mientras esperas contacto del dueño. Si el animal está herido, considera llevarlo a un veterinario.</span>
+        </div>
+      </div>
+      
+      <div class="modal-actions">
+        <button class="btn btn-secondary" (click)="closeContactModal()">Cerrar</button>
+        <button class="btn btn-primary" (click)="callOwner()">
+          <i class="pi pi-phone"></i>
+          Llamar
+        </button>
+      </div>
+    </div>
+  </div>
+}

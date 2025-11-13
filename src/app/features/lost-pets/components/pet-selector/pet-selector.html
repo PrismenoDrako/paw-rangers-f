@@ -1,0 +1,25 @@
+<div class="pet-selector-container">
+  <div class="selector-header">
+    <h3>¿Es tu mascota?</h3>
+    <button class="report-other-btn" (click)="onReportOther()">
+      Reportar otra
+    </button>
+  </div>
+  
+  <div class="pets-grid">
+    @for (pet of myPets; track pet.id) {
+      <div 
+        class="pet-option"
+        [class.selected]="selectedPetId === pet.id"
+        (click)="selectPet(pet)">
+        
+        <div class="pet-image-container">
+          <img [src]="pet.image" [alt]="pet.name" class="pet-image" />
+          <div class="pet-overlay">
+            <span class="pet-name">{{ pet.name }}</span>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+</div>

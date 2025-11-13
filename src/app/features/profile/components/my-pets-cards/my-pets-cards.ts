@@ -1,6 +1,6 @@
 // my-pets-cards.component.ts
 
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core'; 
 import { CommonModule } from '@angular/common';
 
 // PrimeNG Modules
@@ -25,7 +25,8 @@ import { TagModule } from 'primeng/tag';
 export class MyPetsCardsComponent {
   
   @Input() pet: any; 
-  @Output() editPet = new EventEmitter<any>(); // 🚨 Output para el botón de edición
+  // Evento para notificar al padre que se ha solicitado la edición
+  @Output() editPet = new EventEmitter<any>(); 
 
   constructor() { }
 
@@ -43,7 +44,8 @@ export class MyPetsCardsComponent {
   }
 
   onEditPet(): void {
-    console.log('Editar mascota:', this.pet.name);
-    this.editPet.emit(this.pet); // 🚨 Emite la mascota al componente padre
+    console.log('Emitiendo evento para editar mascota:', this.pet.name);
+    // Emite el objeto completo de la mascota para su edición
+    this.editPet.emit(this.pet);
   }
 }

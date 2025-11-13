@@ -1,23 +1,21 @@
-// add-pet-card.component.ts
-
 import { Component, Output, EventEmitter } from '@angular/core'; 
 import { CommonModule } from '@angular/common';
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
 
 @Component({
-  selector: 'app-add-pet-card',
+  selector: 'app-add-ubication-card', // Selector corregido
   standalone: true,
   imports: [CommonModule, CardModule, ButtonModule],
-  templateUrl: './add-pet-card.html',
-  styleUrl: './add-pet-card.scss'
+  templateUrl: './add-ubication-card.html',
+  styleUrl: './add-ubication-card.scss'
 })
-export class AddPetCardComponent {
-    // Evento que se emitirá cuando se haga clicK
+export class AddUbicationCardComponent { // Clase corregida
+    // Evento que se emitirá cuando se haga clic
     @Output() addClicked = new EventEmitter<void>();
 
-    onAddPet(): void {
-        console.log('Emitiendo evento para abrir el formulario de nueva mascota.');
+    onAddLocation(): void {
+        console.log('Emitiendo evento para abrir el formulario de nueva ubicación.');
         this.addClicked.emit(); 
     }
 }

@@ -1,0 +1,52 @@
+/* ubication-card/ubication-card.scss */
+
+$primary-blue: #294374; 
+$hover-blue: #EDF0F7;
+
+.location-card {
+    // 🚨 MODIFICACIÓN CLAVE: Borde sólido azul
+    border: 1px solid $primary-blue !important; 
+    border-radius: 8px;
+    transition: transform 0.2s, box-shadow 0.2s;
+    overflow: hidden;
+    height: 250px; // 🚨 AÑADIDO: Altura fija para igualar la tarjeta de añadir
+    
+    &:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+        cursor: pointer;
+    }
+
+    .location-image-container {
+        width: 100%;
+        height: 120px;
+        overflow: hidden;
+        border-bottom: 1px solid var(--surface-200);
+
+        .location-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    }
+
+    .location-name {
+        color: $primary-blue;
+    }
+
+    .p-card-content {
+        padding: 0.5rem 1rem !important;
+    }
+
+    .p-card-footer {
+        padding: 0.5rem 1rem 1rem 1rem !important;
+    }
+
+    .p-button-outlined {
+        color: $primary-blue !important;
+        border-color: $primary-blue !important;
+        &:hover {
+            background-color: $hover-blue !important;
+        }
+    }
+}

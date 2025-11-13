@@ -1,7 +1,8 @@
 <p-card styleClass="pet-card text-center">
     <ng-template pTemplate="header">
         <div class="pet-image-container">
-            <img [src]="pet.imageUrl" [alt]="pet.name" class="pet-image" />
+            <!-- Usamos img en lugar de p-image para simplificar el header -->
+            <img [src]="pet.imageUrl" [alt]="pet.name" class="pet-image" /> 
         </div>
     </ng-template>
     

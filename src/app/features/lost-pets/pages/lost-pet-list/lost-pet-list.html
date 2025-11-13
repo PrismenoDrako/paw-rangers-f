@@ -1,4 +1,15 @@
-<p>lost-pet-list works! Esta es una página</p>
-<app-lost-pet-card [value]="5" ></app-lost-pet-card>
-<app-lost-pet-card [value]="56" ></app-lost-pet-card>
-<app-lost-pet-card [value]="23" ></app-lost-pet-card>
+<div class="lost-pets-page">
+  
+  <!-- Header con título y botón reportar -->
+  <app-title-buttom></app-title-buttom>
+  
+  <!-- Componente de búsqueda -->
+  <app-search 
+    (onSearch)="onSearch($event)"
+    (onFilterChange)="onFilterChange($event)">
+  </app-search>
+  
+  <!-- Componente de mascotas perdidas -->
+  <app-lost-pets></app-lost-pets>
+
+</div>

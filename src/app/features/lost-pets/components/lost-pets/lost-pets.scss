@@ -1,0 +1,274 @@
+.lost-pets-container {
+  // Alineación exacta con el contenedor de búsqueda
+  max-width: 100%;
+  padding: 0 24px 24px 24px; // Mismo padding que search-modern-container
+  margin: 0;
+  
+  .pets-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 20px; // Separación moderna entre tarjetas
+  }
+  
+  .no-results {
+    text-align: center;
+    margin-top: 40px;
+    color: #64748b;
+    background: white;
+    border-radius: 16px;
+    padding: 40px 24px;
+    box-shadow: 0 2px 8px rgba(41, 67, 116, 0.06);
+    
+    .no-results-icon {
+      width: 80px;
+      height: 80px;
+      background: #f1f5f9;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      
+      .pi {
+        font-size: 32px;
+        color: #94a3b8;
+      }
+    }
+    
+    h3 {
+      margin: 0 0 8px 0;
+      font-size: 20px;
+      color: #374151;
+    }
+    
+    p {
+      margin: 0;
+      font-size: 16px;
+    }
+  }
+}
+
+// Responsive Design Ultra Detallado - Desktop a Mobile
+// Desktop Extra Large (1920px+)
+@media (min-width: 1920px) {
+  .lost-pets-container {
+    padding: 0 64px 32px 64px;
+    
+    .pets-grid {
+      gap: 28px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+  }
+}
+
+// Desktop Large (1600px - 1919px)
+@media (min-width: 1600px) and (max-width: 1919px) {
+  .lost-pets-container {
+    padding: 0 48px 28px 48px;
+    
+    .pets-grid {
+      gap: 26px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+  }
+}
+
+// Desktop Medium (1200px - 1599px)
+@media (min-width: 1200px) and (max-width: 1599px) {
+  .lost-pets-container {
+    padding: 0 40px 26px 40px;
+    
+    .pets-grid {
+      gap: 24px;
+    }
+  }
+}
+
+// Desktop Small (992px - 1199px)
+@media (min-width: 992px) and (max-width: 1199px) {
+  .lost-pets-container {
+    padding: 0 32px 24px 32px;
+    
+    .pets-grid {
+      gap: 22px;
+    }
+  }
+}
+
+// Tablet Large (768px - 991px)
+@media (min-width: 768px) and (max-width: 991px) {
+  .lost-pets-container {
+    padding: 0 24px 22px 24px;
+    
+    .pets-grid {
+      gap: 20px;
+    }
+  }
+}
+
+// Tablet Medium (600px - 767px)
+@media (min-width: 600px) and (max-width: 767px) {
+  .lost-pets-container {
+    padding: 0 20px 20px 20px;
+    
+    .pets-grid {
+      gap: 18px;
+    }
+    
+    .no-results {
+      padding: 32px 20px;
+      border-radius: 14px;
+      
+      .no-results-icon {
+        width: 70px;
+        height: 70px;
+        
+        .pi {
+          font-size: 28px;
+        }
+      }
+      
+      h3 {
+        font-size: 18px;
+      }
+      
+      p {
+        font-size: 15px;
+      }
+    }
+  }
+}
+
+// Mobile Large (480px - 599px)
+@media (min-width: 480px) and (max-width: 599px) {
+  .lost-pets-container {
+    padding: 0 16px 18px 16px;
+    
+    .pets-grid {
+      gap: 16px;
+    }
+    
+    .no-results {
+      padding: 28px 16px;
+      border-radius: 12px;
+      
+      .no-results-icon {
+        width: 64px;
+        height: 64px;
+        
+        .pi {
+          font-size: 24px;
+        }
+      }
+      
+      h3 {
+        font-size: 17px;
+      }
+      
+      p {
+        font-size: 14px;
+      }
+    }
+  }
+}
+
+// Mobile Medium (400px - 479px)
+@media (min-width: 400px) and (max-width: 479px) {
+  .lost-pets-container {
+    padding: 0 14px 16px 14px;
+    
+    .pets-grid {
+      gap: 14px;
+    }
+    
+    .no-results {
+      padding: 24px 14px;
+      border-radius: 10px;
+      
+      .no-results-icon {
+        width: 60px;
+        height: 60px;
+        
+        .pi {
+          font-size: 22px;
+        }
+      }
+      
+      h3 {
+        font-size: 16px;
+      }
+      
+      p {
+        font-size: 13px;
+      }
+    }
+  }
+}
+
+// Mobile Small (320px - 399px)
+@media (min-width: 320px) and (max-width: 399px) {
+  .lost-pets-container {
+    padding: 0 12px 14px 12px;
+    
+    .pets-grid {
+      gap: 12px;
+    }
+    
+    .no-results {
+      padding: 20px 12px;
+      border-radius: 8px;
+      
+      .no-results-icon {
+        width: 56px;
+        height: 56px;
+        
+        .pi {
+          font-size: 20px;
+        }
+      }
+      
+      h3 {
+        font-size: 15px;
+      }
+      
+      p {
+        font-size: 12px;
+      }
+    }
+  }
+}
+
+// Mobile Extra Small (menos de 320px)
+@media (max-width: 319px) {
+  .lost-pets-container {
+    padding: 0 10px 12px 10px;
+    
+    .pets-grid {
+      gap: 10px;
+    }
+    
+    .no-results {
+      padding: 16px 10px;
+      border-radius: 6px;
+      
+      .no-results-icon {
+        width: 50px;
+        height: 50px;
+        
+        .pi {
+          font-size: 18px;
+        }
+      }
+      
+      h3 {
+        font-size: 14px;
+      }
+      
+      p {
+        font-size: 11px;
+      }
+    }
+  }
+}

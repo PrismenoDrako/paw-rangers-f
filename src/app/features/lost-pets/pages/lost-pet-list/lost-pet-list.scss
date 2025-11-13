@@ -1,0 +1,183 @@
+.lost-pets-page {
+  min-height: 100vh;
+  background: #f8fafc;
+  padding: 0;
+  padding-bottom: 100px; // Espacio inferior para la navegación bottom
+  
+  // Contenedor centralizado con padding responsive
+  > * {
+    margin: 0 auto;
+    max-width: 1200px;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+  
+  // Espacio entre componentes
+  app-lost-pets {
+    display: block;
+    margin-top: 20px;
+  }
+}
+
+// Responsive Design Ultra Detallado para la Página Principal
+// Desktop Extra Large (1920px+)
+@media (min-width: 1920px) {
+  .lost-pets-page {
+    padding-bottom: 120px;
+    
+    > * {
+      max-width: 1600px;
+      padding-left: 60px;
+      padding-right: 60px;
+    }
+    
+    app-lost-pets {
+      margin-top: 32px;
+    }
+  }
+}
+
+// Desktop Large (1600px - 1919px)
+@media (min-width: 1600px) and (max-width: 1919px) {
+  .lost-pets-page {
+    padding-bottom: 115px;
+    
+    > * {
+      max-width: 1400px;
+      padding-left: 50px;
+      padding-right: 50px;
+    }
+    
+    app-lost-pets {
+      margin-top: 28px;
+    }
+  }
+}
+
+// Desktop Medium (1200px - 1599px)
+@media (min-width: 1200px) and (max-width: 1599px) {
+  .lost-pets-page {
+    padding-bottom: 110px;
+    
+    > * {
+      padding-left: 40px;
+      padding-right: 40px;
+    }
+    
+    app-lost-pets {
+      margin-top: 26px;
+    }
+  }
+}
+
+// Desktop Small (992px - 1199px)
+@media (min-width: 992px) and (max-width: 1199px) {
+  .lost-pets-page {
+    padding-bottom: 105px;
+    
+    > * {
+      padding-left: 32px;
+      padding-right: 32px;
+    }
+    
+    app-lost-pets {
+      margin-top: 24px;
+    }
+  }
+}
+
+// Tablet Large (768px - 991px)
+@media (min-width: 768px) and (max-width: 991px) {
+  .lost-pets-page {
+    padding-bottom: 100px;
+    
+    > * {
+      padding-left: 24px;
+      padding-right: 24px;
+    }
+    
+    app-lost-pets {
+      margin-top: 22px;
+    }
+  }
+}
+
+// Tablet Medium (600px - 767px)
+@media (min-width: 600px) and (max-width: 767px) {
+  .lost-pets-page {
+    padding-bottom: 95px;
+    
+    > * {
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+    
+    app-lost-pets {
+      margin-top: 20px;
+    }
+  }
+}
+
+// Mobile Large (480px - 599px)
+@media (min-width: 480px) and (max-width: 599px) {
+  .lost-pets-page {
+    padding-bottom: 90px;
+    
+    > * {
+      padding-left: 16px;
+      padding-right: 16px;
+    }
+    
+    app-lost-pets {
+      margin-top: 18px;
+    }
+  }
+}
+
+// Mobile Medium (400px - 479px)
+@media (min-width: 400px) and (max-width: 479px) {
+  .lost-pets-page {
+    padding-bottom: 85px;
+    
+    > * {
+      padding-left: 14px;
+      padding-right: 14px;
+    }
+    
+    app-lost-pets {
+      margin-top: 16px;
+    }
+  }
+}
+
+// Mobile Small (320px - 399px)
+@media (min-width: 320px) and (max-width: 399px) {
+  .lost-pets-page {
+    padding-bottom: 80px;
+    
+    > * {
+      padding-left: 12px;
+      padding-right: 12px;
+    }
+    
+    app-lost-pets {
+      margin-top: 14px;
+    }
+  }
+}
+
+// Mobile Extra Small (menos de 320px)
+@media (max-width: 319px) {
+  .lost-pets-page {
+    padding-bottom: 75px;
+    
+    > * {
+      padding-left: 10px;
+      padding-right: 10px;
+    }
+    
+    app-lost-pets {
+      margin-top: 12px;
+    }
+  }
+}

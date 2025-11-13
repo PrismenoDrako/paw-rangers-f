@@ -1,5 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
-@import "@fontsource/roboto"; /* Fuente base para Aura */
+@import url("@fontsource/roboto"); /* Fuente base para Aura */
+/* @import "primeflex/primeflex.css"; */ /* Comentado porque se carga desde index.html (CDN) */
 body {
 	font-family: 'Roboto', sans-serif;
+	
 }

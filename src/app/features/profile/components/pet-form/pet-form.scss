@@ -10,7 +10,7 @@ $input-border-color: var(--surface-300, #ccc); // Gris claro para el borde del i
 }
 
 /* ----------------------------------------------------------------------- */
-/* NUEVO ESTILO: TÍTULO DE TARJETA EN AZUL */
+/* ESTILO: TÍTULO DE TARJETA EN AZUL */
 /* Se usa ::ng-deep para penetrar el componente p-card y cambiar el estilo del título */
 /* ----------------------------------------------------------------------- */
 :host ::ng-deep .p-card-title {
@@ -30,11 +30,18 @@ $input-border-color: var(--surface-300, #ccc); // Gris claro para el borde del i
         margin-bottom: 0.5rem; // Espacio entre la etiqueta y el input
         font-weight: 600;
         color: $primary-blue !important; // 🔵 Color azul para la letra
-        font-size: 0.875rem; // Tamaño de letra más pequeño
+        font-size: 0.875rem; // Tamaño de fuente más pequeño para la etiqueta
     }
-
-    /* Sobrescribir estilos de PrimeNG InputText y InputNumber */
-    .p-inputtext, .p-inputnumber input {
+    
+    // Estilo general para todos los inputs, selects y selectores de PrimeNG
+    // Esto asegura que todos los elementos de formulario se vean uniformes.
+    input[type="text"],
+    select,
+    .p-inputtext,
+    p-inputnumber ::ng-deep .p-inputnumber-input,
+    p-dropdown ::ng-deep .p-dropdown,
+    p-calendar ::ng-deep .p-inputtext,
+    p-inputmask ::ng-deep .p-inputtext {
         width: 100%;
         border-radius: 8px;
         padding: 0.75rem 1rem;
@@ -56,7 +63,7 @@ $input-border-color: var(--surface-300, #ccc); // Gris claro para el borde del i
     }
 }
 
-/* Ajuste para SelectButton */
+/* Ajuste para SelectButton (Género) */
 .select-button-container {
     .p-selectbutton {
         width: 100%;
@@ -69,19 +76,71 @@ $input-border-color: var(--surface-300, #ccc); // Gris claro para el borde del i
 
 /* Estilos para la imagen de previsualización */
 .preview-image {
-    max-height: 200px; 
-    width: 200px;
-    object-fit: cover;
+    height: 200px; /* ✅ Altura fija */
+    width: 200px; /* ✅ Ancho fijo */
+    object-fit: fill; /* ✅ Estira la imagen para llenar el contenedor, sin recortar */
     border-radius: 12px;
-    border: 3px solid $primary-blue; // Borde azul para mejor diseño
+    border: 3px solid $primary-blue;
 }
 
-/* Estilos de botones de PrimeNG: Botón de Guardar en Azul */
+/* Estilos para FileUpload (Botón de Imagen) */
+:host ::ng-deep p-fileupload {
+    .p-fileupload-buttonbar {
+        padding: 0;
+        border: none;
+        background: transparent;
+    }
+    .p-button-label {
+        margin-left: 0.5rem;
+    }
+    .p-fileupload-content {
+        display: none; // Oculta la lista de archivos
+    }
+}
+
+/* Estilos para el Dropdown (Select) */
+:host ::ng-deep p-dropdown {
+    .p-dropdown-label {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+}
+
+/* Estilo para el RadioButton (SelectButton) */
+:host ::ng-deep .p-selectbutton {
+    .p-button {
+        &.p-highlight {
+            background-color: $primary-blue !important;
+            border-color: $primary-blue !important;
+            color: white !important;
+        }
+    }
+}
+
+/* Botones del formulario */
 .p-button-primary.p-button-raised {
-    background-color: $primary-blue !important; 
+    background-color: $primary-blue !important;
     border-color: $primary-blue !important;
     &:hover {
         background-color: darken($primary-blue, 5%) !important; 
         border-color: darken($primary-blue, 5%) !important;
+    }
+}
+
+.p-button-outlined {
+    background-color: transparent !important; 
+    color: $primary-blue !important;
+    border-color: $primary-blue !important;
+    &:hover {
+        background-color: lighten($primary-blue, 40%) !important;
+    }
+}
+
+
+/* Ajustes responsivos */
+@media screen and (max-width: 768px) {
+    .form-layout {
+        padding: 0 0.5rem;
     }
 }

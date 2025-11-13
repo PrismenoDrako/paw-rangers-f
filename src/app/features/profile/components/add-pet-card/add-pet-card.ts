@@ -1,5 +1,3 @@
-// add-pet-card.component.ts
-
 import { Component, Output, EventEmitter } from '@angular/core'; 
 import { CommonModule } from '@angular/common';
 import { CardModule } from 'primeng/card';
@@ -13,7 +11,7 @@ import { ButtonModule } from 'primeng/button';
   styleUrl: './add-pet-card.scss'
 })
 export class AddPetCardComponent {
-    // Evento que se emitirá cuando se haga clicK
+    // 🚨 Evento que se emitirá cuando se haga clicK
     @Output() addClicked = new EventEmitter<void>();
 
     onAddPet(): void {

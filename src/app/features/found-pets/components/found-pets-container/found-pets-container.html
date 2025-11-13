@@ -1,0 +1,25 @@
+<div class="found-pets-container">
+  @if (filteredPets.length === 0) {
+    <div class="empty-state">
+      <div class="empty-icon">
+        <i class="pi pi-search"></i>
+      </div>
+      <h3 class="empty-title">No se encontraron resultados</h3>
+      <p class="empty-description">
+        No hay animales encontrados que coincidan con tu búsqueda.
+        Intenta cambiar los filtros o la consulta de búsqueda.
+      </p>
+    </div>
+  } @else {
+    <div class="pets-grid">
+      @for (pet of filteredPets; track pet.id) {
+        <app-found-pet-card
+          [foundPet]="pet"
+          [isFavorite]="getFavoriteStatus(pet.id)"
+          (onContactClick)="handleContact($event)"
+          (onFavoriteToggle)="handleFavoriteToggle($event)">
+        </app-found-pet-card>
+      }
+    </div>
+  }
+</div>

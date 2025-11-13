@@ -1,0 +1,41 @@
+<div class="report-page">
+  <div class="report-header">
+    <button class="back-btn" (click)="goBack()">
+      <i class="pi pi-arrow-left"></i>
+    </button>
+    <h1 class="page-title">Reportar Mascota Perdida</h1>
+    <p class="page-subtitle">Ayúdanos a reunir familias con sus queridas mascotas</p>
+  </div>
+
+  <div class="report-content">
+    <!-- Selector de Mascota -->
+    <app-pet-selector
+      [myPets]="userPets"
+      (onPetSelected)="onPetSelected($event)"
+      (onReportOtherPet)="onReportOther()">
+    </app-pet-selector>
+
+    <!-- Formulario de Información de la Mascota -->
+    <app-pet-info-form
+      [selectedPet]="selectedPet"
+      (onInfoChange)="onPetInfoChange($event)">
+    </app-pet-info-form>
+
+    <!-- Mapa de Ubicación -->
+    <app-location-map
+      (onLocationUpdate)="onLocationChange($event)">
+    </app-location-map>
+
+    <!-- Formulario de Descripción y Contacto -->
+    <app-description-form
+      (onFormDataChange)="onDescriptionChange($event)">
+    </app-description-form>
+
+    <!-- Acciones del Formulario -->
+    <app-form-actions
+      [isFormValid]="isFormValid"
+      (onSubmitForm)="onSubmitReport()"
+      (onCancelForm)="onCancelReport()">
+    </app-form-actions>
+  </div>
+</div>

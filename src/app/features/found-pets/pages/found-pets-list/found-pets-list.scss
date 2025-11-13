@@ -1,0 +1,404 @@
+.found-pets-page {
+  min-height: 100vh;
+  background: #EDF0F7;
+  padding: 20px 20px 60px 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.page-header {
+  max-width: 1200px;
+  margin: 0 auto 30px;
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #ffffff;
+  padding: 24px 32px;
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(41, 67, 116, 0.08);
+  border: 1px solid rgba(41, 67, 116, 0.06);
+}
+
+.page-title {
+  color: #1f2937;
+  font-size: 32px;
+  font-weight: 700;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.report-btn {
+  background: linear-gradient(135deg, #294374, #294374);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 14px 24px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+  
+  .pi {
+    font-size: 16px;
+  }
+  
+  &:hover {
+    background: linear-gradient(135deg, #294374, #294374);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(12, 9, 80, 0.4);
+  }
+}
+
+.page-content {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.cta-section {
+  background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+  border-radius: 16px;
+  padding: 40px;
+  text-align: center;
+  margin: 40px 0 20px 0;
+  border: 1px solid rgba(59, 130, 246, 0.1);
+}
+
+.cta-content {
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.cta-title {
+  color: #1f2937;
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0 0 12px 0;
+}
+
+.cta-description {
+  color: #6b7280;
+  font-size: 16px;
+  margin: 0 0 24px 0;
+  line-height: 1.5;
+}
+
+.cta-btn {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 16px 32px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+  
+  .pi {
+    font-size: 16px;
+  }
+  
+  &:hover {
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4);
+  }
+}
+
+// Modal de contacto
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.contact-modal {
+  background: white;
+  border-radius: 16px;
+  max-width: 500px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 24px 0;
+  
+  h3 {
+    color: #1f2937;
+    font-size: 20px;
+    font-weight: 700;
+    margin: 0;
+  }
+  
+  .close-btn {
+    background: none;
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #6b7280;
+    transition: all 0.3s ease;
+    
+    &:hover {
+      background: #f3f4f6;
+      color: #374151;
+    }
+  }
+}
+
+.modal-content {
+  padding: 24px;
+}
+
+.pet-summary {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 24px;
+  padding: 16px;
+  background: #f9fafb;
+  border-radius: 12px;
+}
+
+.pet-thumb {
+  width: 80px;
+  height: 80px;
+  border-radius: 12px;
+  object-fit: cover;
+}
+
+.pet-details {
+  flex: 1;
+  
+  h4 {
+    color: #1f2937;
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0 0 4px 0;
+  }
+  
+  p {
+    color: #6b7280;
+    font-size: 14px;
+    margin: 0;
+  }
+}
+
+.contact-info {
+  margin-bottom: 20px;
+  
+  h4 {
+    color: #1f2937;
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0 0 16px 0;
+  }
+}
+
+.contact-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+  
+  .pi {
+    width: 20px;
+    color: #6b7280;
+    font-size: 16px;
+  }
+  
+  span, a {
+    color: #374151;
+    font-size: 16px;
+    text-decoration: none;
+  }
+  
+  a:hover {
+    color: #3b82f6;
+    text-decoration: underline;
+  }
+}
+
+.warning-box {
+  background: #fef3cd;
+  border: 1px solid #EDF0F7;
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  gap: 12px;
+  
+  .pi {
+    color: #294374;
+    font-size: 20px;
+    margin-top: 2px;
+  }
+  
+  span {
+    color: #294374;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+}
+
+.modal-actions {
+  display: flex;
+  gap: 12px;
+  padding: 0 24px 24px;
+}
+
+.btn {
+  flex: 1;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #294374, #3b5998);
+  color: white;
+  
+  &:hover {
+    background: linear-gradient(135deg, #1e3050, #2d4373);
+    transform: translateY(-1px);
+  }
+}
+
+.btn-secondary {
+  background: #f3f4f6;
+  color: #374151;
+  border: 1px solid #d1d5db;
+  
+  &:hover {
+    background: #e5e7eb;
+    transform: translateY(-1px);
+  }
+}
+
+// Responsive Design
+@media (max-width: 1024px) {
+  .found-pets-page {
+    padding: 16px;
+  }
+  
+  .page-title {
+    font-size: 28px;
+  }
+  
+  .header-content {
+    padding: 20px 24px;
+  }
+}
+
+@media (max-width: 768px) {
+  .found-pets-page {
+    padding: 12px 12px 60px 12px;
+  }
+  
+  .header-content {
+    flex-direction: column;
+    gap: 16px;
+    align-items: stretch;
+    padding: 20px;
+  }
+  
+  .page-title {
+    font-size: 24px;
+    text-align: center;
+  }
+  
+  .report-btn {
+    justify-content: center;
+  }
+  
+  .cta-section {
+    padding: 32px 20px;
+    margin: 30px 0 20px 0;
+  }
+  
+  .cta-title {
+    font-size: 20px;
+  }
+  
+  .modal-overlay {
+    padding: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .found-pets-page {
+    padding: 8px 8px 60px 8px;
+  }
+  
+  .header-content {
+    padding: 16px;
+  }
+  
+  .page-title {
+    font-size: 22px;
+  }
+  
+  .report-btn {
+    padding: 12px 20px;
+    font-size: 14px;
+  }
+  
+  .cta-section {
+    padding: 24px 16px;
+    margin: 20px 0 20px 0;
+  }
+  
+  .cta-title {
+    font-size: 18px;
+  }
+  
+  .cta-btn {
+    padding: 14px 24px;
+    font-size: 14px;
+  }
+  
+  .modal-content {
+    padding: 20px;
+  }
+  
+  .pet-summary {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .modal-actions {
+    flex-direction: column;
+  }
+}

@@ -4,7 +4,13 @@ export const lostPetsRoutes: Routes = [
     {
         path: 'animales-perdidos',
         loadComponent: () => import('./pages/lost-pet-list/lost-pet-list')
-        .then(m => m.LostPetList)
+            .then(m => m.LostPetList)
+    },
+    {
+        path: 'animales-perdidos/report',
+        loadComponent: () => import('./pages/lost-pet-report-d/lost-pet-report-d')
+            .then(m => m.LostPetReportD),
+        title: 'Reportar Mascota Perdida - Paw Rangers'
     },
     {
         path: 'lost-pets',
@@ -15,16 +21,16 @@ export const lostPetsRoutes: Routes = [
     {
         path: 'aux/card',
         loadComponent: () => import('./components/lost-pet-card/lost-pet-card')
-        .then(m => m.LostPetCard)
+            .then(m => m.LostPetCard)
     },
     {
         path: 'aux/search',
         loadComponent: () => import('./components/search/search')
-        .then(m => m.Search)
+            .then(m => m.Search)
     },
     {
         path: 'aux/categories',
         loadComponent: () => import('./components/categories/categories')
-        .then(m => m.Categories)
+            .then(m => m.Categories)
     }
 ];

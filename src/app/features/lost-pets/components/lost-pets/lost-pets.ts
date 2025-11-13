@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { LostPetCard } from '../lost-pet-card/lost-pet-card';
+import { LostPetCard, LostPet } from '../lost-pet-card/lost-pet-card';
 
 @Component({
   selector: 'app-lost-pets',
@@ -12,17 +12,22 @@ import { LostPetCard } from '../lost-pet-card/lost-pet-card';
 export class LostPets implements OnInit {
 
   // Datos de ejemplo para las mascotas perdidas
-  lostPets = [
+  lostPets: LostPet[] = [
     {
       id: 1,
       name: 'Zeus',
       type: 'Perro',
       breed: 'Pastor Alemán',
       location: 'Centro, Ciudad',
-      reward: 100.00,
-      image: 'https://tse4.mm.bing.net/th/id/OIP.kupJkH5891LwxXlUvjB2GwHaFj?cb=ucfimg2ucfimg=1&rs=1&pid=ImgDetMain&o=7&rm=3',
+      lostDate: new Date(Date.now() - 2 * 60 * 60 * 1000), // Hace 2 horas
+      reward: 100,
+      image: 'https://images.unsplash.com/photo-1551717743-49959800b1f6?w=400&h=400&fit=crop',
       description: 'Perdido cerca del parque central. Muy amigable, responde a su nombre.',
-      timeAgo: 'Perdido hace 2 horas'
+      contactInfo: {
+        name: 'María García',
+        phone: '+1234567890',
+        email: 'maria@email.com'
+      }
     },
     {
       id: 2,
@@ -30,10 +35,14 @@ export class LostPets implements OnInit {
       type: 'Gato',
       breed: 'Mestizo',
       location: 'Norte, Ciudad',
-      reward: 120.00,
-      image: 'https://images.unsplash.com/photo-1574158622682-e40e69881006?w=400&h=400&fit=crop&crop=face',
+      lostDate: new Date(Date.now() - 5 * 60 * 60 * 1000), // Hace 5 horas
+      reward: 120,
+      image: 'https://images.unsplash.com/photo-1574158622682-e40e69881006?w=400&h=400&fit=crop',
       description: 'Gato naranja, muy amigable. Se escapó durante una tormenta.',
-      timeAgo: 'Perdido hace 5 horas'
+      contactInfo: {
+        name: 'Carlos Rodriguez',
+        phone: '+0987654321'
+      }
     },
     {
       id: 3,
@@ -41,10 +50,14 @@ export class LostPets implements OnInit {
       type: 'Perro',
       breed: 'Beagle',
       location: 'Sur, Ciudad',
-      reward: 80.00,
-      image: 'https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=400&h=400&fit=crop&crop=face',
+      lostDate: new Date(Date.now() - 24 * 60 * 60 * 1000), // Hace 1 día
+      reward: 80,
+      image: 'https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=400&h=400&fit=crop',
       description: 'Perrita muy cariñosa, tiene collar rosa.',
-      timeAgo: 'Perdido hace 1 día'
+      contactInfo: {
+        name: 'Ana López',
+        phone: '+1122334455'
+      }
     }
   ];
 
@@ -52,12 +65,13 @@ export class LostPets implements OnInit {
 
   ngOnInit(): void { }
 
-  onContact(pet: any): void {
+  onContact(pet: LostPet): void {
     console.log('Contactando por:', pet.name);
+    console.log('Teléfono:', pet.contactInfo.phone);
     // Aquí puedes implementar la lógica de contacto
   }
 
-  onOpenMap(pet: any): void {
+  onOpenMap(pet: LostPet): void {
     console.log('Abriendo mapa para localizar a:', pet.name);
     console.log('Ubicación:', pet.location);
     // Aquí puedes implementar la lógica para abrir el mapa

@@ -1,31 +1,28 @@
-<p-card class="profile-section-card">
+<p-card class="profile-section-card"> 
     <ng-template pTemplate="title">
-        <h2 class="text-2xl font-bold mb-4">Mis Mascotas</h2>
+        <h2 class="text-2xl font-bold mb-4">
+            {{ isEditing && editingPet && editingPet.name ? 'Editar Mascota: ' + editingPet.name : 'Mis Mascotas' }}
+        </h2>
     </ng-template>
-
+    
     <ng-template pTemplate="content">
+        
+        <div *ngIf="isEditing" class="flex justify-content-center">
+            <div class="col-12 md:col-8 lg:col-6">
+                <app-pet-form 
+                    [petData]="editingPet" 
+                    (formSubmit)="onFormClosed($event)" 
+                    (formCancel)="onFormClosed()"
+                    (formDelete)="onPetDelete($event)"> </app-pet-form>
+            </div>
+        </div>
 
-        <div class="grid">
+        <div class="grid" *ngIf="!isEditing">
             <div *ngFor="let pet of pets" class="col-12 sm:col-6 lg:col-4 xl:col-3 mb-4">
-                <!-- Listener para el evento (editPet) de la tarjeta -->
-                <app-my-pets-cards [pet]="pet" (editPet)="onPetEdit($event)"></app-my-pets-cards>
-            </div>
-
+                <app-my-pets-cards [pet]="pet" (editPet)="onPetEdit($event)"></app-my-pets-cards> </div>
+            
             <div class="col-12 sm:col-6 lg:col-4 xl:col-3 mb-4">
-                <!-- Listener para el evento (addClicked) de la tarjeta de añadir -->
-                <app-add-pet-card (addClicked)="openAddPetForm()"></app-add-pet-card>
-            </div>
+                <app-add-pet-card (addClicked)="onAddPet()"></app-add-pet-card> </div>
         </div>
     </ng-template>
 </p-card>
-
-<!-- Componente de diálogo (Modal) para el formulario de mascota -->
-<p-dialog [header]="petToEdit ? 'Editar Mascota: ' + petToEdit.name : 'Añadir Nueva Mascota'" [(visible)]="showPetForm"
-    [modal]="true" [maximizable]="false" [style]="{ width: '50vw' }"
-    [breakpoints]="{ '1100px': '70vw', '960px': '75vw', '640px': '90vw' }" (onHide)="closePetForm()"
-    styleClass="custom-dialog">
-
-    <app-pet-form [petData]="petToEdit" (formSubmit)="handlePetSubmit($event)" (formCancel)="closePetForm()">
-    </app-pet-form>
-
-</p-dialog>

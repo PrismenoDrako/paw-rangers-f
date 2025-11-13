@@ -1,0 +1,40 @@
+<app-notification-header [totalNotifications]="totalNotifications"></app-notification-header>
+
+<div class="notifications-layout" *ngIf="showPets || showForum">
+  <!-- Seccion de Mascotas -->
+  <section class="notification-section pet-section" *ngIf="showPets">
+    <div class="section-header">
+      <h3 class="section-title">Mascotas</h3>
+      <span class="section-count">{{ petNotifications.length }} nuevas</span>
+    </div>
+
+    <div class="notification-list">
+      <app-notification-item
+        *ngFor="let notification of petNotifications"
+        [notification]="notification">
+      </app-notification-item>
+    </div>
+  </section>
+
+  <!-- Seccion de Interacciones -->
+  <section class="notification-section forum-section" *ngIf="showForum">
+    <div class="section-header">
+      <h3 class="section-title">Interacciones</h3>
+      <span class="section-count">{{ forumNotifications.length }} nuevas</span>
+    </div>
+
+    <div class="notification-list">
+      <app-notification-item
+        *ngFor="let notification of forumNotifications"
+        [notification]="notification">
+      </app-notification-item>
+    </div>
+  </section>
+</div>
+
+<div class="notifications-disabled" *ngIf="allNotificationsDisabled">
+  <h3>Notificaciones desactivadas</h3>
+  <p>Activa al menos un tipo de alerta desde Configurar Notificaciones para volver a ver novedades aquí.</p>
+</div>
+
+<app-notification-footer></app-notification-footer>

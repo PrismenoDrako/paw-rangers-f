@@ -1,14 +1,21 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { CardModule } from 'primeng/card';
+import { ButtonModule } from 'primeng/button';
+import { TagModule } from 'primeng/tag';
 
 @Component({
   selector: 'app-lost-pet-card',
-  imports: [],
+  standalone: true,
+  imports: [CommonModule, CardModule, ButtonModule, TagModule],
   templateUrl: './lost-pet-card.html',
-  styleUrl: './lost-pet-card.scss',
+  styleUrls: ['./lost-pet-card.scss']
 })
 export class LostPetCard {
+  @Input() pet: any;
+  @Output() onContact = new EventEmitter<any>();
 
-  @Input()
-  value: number = 0;
-
+  contact(): void {
+    this.onContact.emit(this.pet);
+  }
 }

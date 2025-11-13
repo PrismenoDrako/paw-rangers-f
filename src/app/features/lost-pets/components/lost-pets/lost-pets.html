@@ -1,0 +1,18 @@
+<div class="lost-pets-container">
+  <div class="pets-grid">
+    <app-lost-pet-card 
+      *ngFor="let pet of lostPets"
+      [pet]="pet"
+      (onContact)="onContact($event)">
+    </app-lost-pet-card>
+  </div>
+  
+  <!-- Mensaje cuando no hay resultados -->
+  <div *ngIf="lostPets.length === 0" class="no-results">
+    <div class="no-results-icon">
+      <i class="pi pi-search"></i>
+    </div>
+    <h3>No se encontraron mascotas</h3>
+    <p>Intenta ajustar tus filtros de búsqueda</p>
+  </div>
+</div>

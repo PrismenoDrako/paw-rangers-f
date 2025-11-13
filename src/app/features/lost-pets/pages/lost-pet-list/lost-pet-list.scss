@@ -1,0 +1,103 @@
+.lost-pets-page {
+  min-height: 100vh;
+  background: #f8fafc;
+  padding: 0;
+  padding-bottom: 100px; // Espacio inferior para la navegación bottom
+  
+  // Contenedor centralizado con padding responsive
+  > * {
+    margin: 0 auto;
+    max-width: 1200px;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+  
+  // Espacio entre componentes
+  app-lost-pets {
+    display: block;
+    margin-top: 20px;
+  }
+}
+
+// Responsive Design para el espaciado - Previene distorsión
+@media (min-width: 1200px) {
+  .lost-pets-page {
+    > * {
+      padding-left: 32px;
+      padding-right: 32px;
+    }
+    
+    app-lost-pets {
+      margin-top: 24px;
+    }
+  }
+}
+
+@media (min-width: 992px) and (max-width: 1199px) {
+  .lost-pets-page {
+    > * {
+      padding-left: 28px;
+      padding-right: 28px;
+    }
+    
+    app-lost-pets {
+      margin-top: 22px;
+    }
+  }
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  .lost-pets-page {
+    > * {
+      padding-left: 24px;
+      padding-right: 24px;
+    }
+    
+    app-lost-pets {
+      margin-top: 20px;
+    }
+  }
+}
+
+@media (min-width: 600px) and (max-width: 767px) {
+  .lost-pets-page {
+    > * {
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+    
+    app-lost-pets {
+      margin-top: 18px;
+    }
+  }
+}
+
+@media (min-width: 480px) and (max-width: 599px) {
+  .lost-pets-page {
+    padding-bottom: 90px;
+    
+    > * {
+      padding-left: 16px;
+      padding-right: 16px;
+    }
+    
+    app-lost-pets {
+      margin-top: 16px;
+    }
+  }
+}
+
+@media (max-width: 479px) {
+  .lost-pets-page {
+    padding-bottom: 85px;
+    
+    > * {
+      padding-left: 12px;
+      padding-right: 12px;
+    }
+    
+    app-lost-pets {
+      margin-top: 14px;
+    }
+  }
+}

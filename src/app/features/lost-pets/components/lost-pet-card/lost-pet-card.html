@@ -1,1 +1,37 @@
-<p>lost-pet-card works! {{value}}</p>
+<div class="pet-card" *ngIf="pet">
+  <div class="pet-image">
+    <img [src]="pet.image" [alt]="pet.name" />
+  </div>
+  
+  <div class="pet-info">
+    <h3 class="pet-name">{{ pet.name }}</h3>
+    <p class="pet-breed">{{ pet.type }} - {{ pet.breed }}</p>
+    <p class="pet-location">{{ pet.location }}</p>
+    <p class="pet-reward">S/ {{ pet.reward | number:'1.2-2' }}</p>
+    
+    <p-button 
+      label="Contactar" 
+      styleClass="contact-btn"
+      (onClick)="contact()">
+    </p-button>
+  </div>
+</div>
+
+<div class="pet-card" *ngIf="pet">
+  <div class="pet-image">
+    <img [src]="pet.image" [alt]="pet.name" />
+  </div>
+  
+  <div class="pet-info">
+    <h3 class="pet-name">{{ pet.name }}</h3>
+    <p class="pet-breed">{{ pet.type }} - {{ pet.breed }}</p>
+    <p class="pet-location">{{ pet.location }}</p>
+    <p class="pet-reward">S/ {{ pet.reward | number:'1.2-2' }}</p>
+    
+    <p-button 
+      label="Contactar" 
+      styleClass="contact-btn"
+      (onClick)="contact()">
+    </p-button>
+  </div>
+</div>

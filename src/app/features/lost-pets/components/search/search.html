@@ -1,0 +1,8 @@
+<div class="search-modern-container">
+  <app-search-box (onSearch)="handleSearch($event)"></app-search-box>
+  <div class="search-categories-separator"></div>
+  <app-categories
+    [selectedCategory]="selectedCategory"
+    (onCategoryChange)="handleCategoryChange($event)">
+  </app-categories>
+</div>

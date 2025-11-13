@@ -1,0 +1,33 @@
+.lost-pets-container {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-bottom: 90px; // Espacio para el bottom nav
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding: 0 5px;
+
+  .title {
+    color: #294374;
+    font-size: 28px;
+    font-weight: 600;
+    margin: 0;
+  }
+  
+
+  .report-btn {
+    background: #294374 !important;
+    border: none !important;
+    padding: 12px 24px !important;
+    font-weight: 500 !important;
+    
+    &:hover {
+      background: #294374!important;
+    }
+  }
+}

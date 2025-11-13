@@ -32,13 +32,11 @@ $hover-blue: #EDF0F7;
         border-radius: 0 0 11px 11px;
         text-align: center;
         
-        // 🚨 TAMAÑO DE FUENTE GRANDE para el nombre
         .pet-name {
             color: var(--text-color);
             font-size: 1.3rem !important; 
             font-weight: 700;
         }
-        // 🚨 TAMAÑO DE FUENTE GRANDE para los datos
         .pet-breed-info, .pet-age-weight {
             color: var(--text-color-secondary);
             font-size: 1rem !important; 
@@ -54,7 +52,6 @@ $hover-blue: #EDF0F7;
         display: flex;
         justify-content: center;
 
-        /* 🚨 CORRECCIÓN FINAL BOTÓN: Estilo de relleno azul con la máxima especificidad */
         :host ::ng-deep .pet-edit-button .p-button,
         .pet-edit-button.p-button { 
             background-color: $primary-blue !important;

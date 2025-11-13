@@ -1,0 +1,87 @@
+/* pet-form.component.scss */
+
+// Definición de color base para el Azul
+$primary-blue: #294374;
+$input-border-color: var(--surface-300, #ccc); // Gris claro para el borde del input
+
+.form-layout {
+    max-width: 600px;
+    margin: 0 auto; // Centrar el formulario dentro de la tarjeta
+}
+
+/* ----------------------------------------------------------------------- */
+/* NUEVO ESTILO: TÍTULO DE TARJETA EN AZUL */
+/* Se usa ::ng-deep para penetrar el componente p-card y cambiar el estilo del título */
+/* ----------------------------------------------------------------------- */
+:host ::ng-deep .p-card-title {
+    color: $primary-blue !important;
+}
+
+/* ----------------------------------------------------------------------- */
+/* ESTILO DE ETIQUETAS APILADAS (Stacked Labels) */
+/* ----------------------------------------------------------------------- */
+.field {
+    // Aplicamos estilos a todos los contenedores de campo
+    margin-bottom: 1.5rem; // Espacio entre campos
+
+    // Estilo para la etiqueta (label)
+    label {
+        display: block; // La etiqueta ocupa su propia línea
+        margin-bottom: 0.5rem; // Espacio entre la etiqueta y el input
+        font-weight: 600;
+        color: $primary-blue !important; // 🔵 Color azul para la letra
+        font-size: 0.875rem; // Tamaño de letra más pequeño
+    }
+
+    /* Sobrescribir estilos de PrimeNG InputText y InputNumber */
+    .p-inputtext, .p-inputnumber input {
+        width: 100%;
+        border-radius: 8px;
+        padding: 0.75rem 1rem;
+        border: 1px solid $input-border-color;
+        transition: border-color 0.2s, box-shadow 0.2s;
+
+        &:focus {
+            border-color: $primary-blue;
+            box-shadow: 0 0 0 0.1rem lighten($primary-blue, 30%); // Sombra suave
+        }
+    }
+
+    // Estilo para el InputNumber, si tiene botones
+    p-inputnumber {
+        display: block;
+        .p-inputnumber-buttons-vertical .p-inputnumber-input {
+            width: 100% !important;
+        }
+    }
+}
+
+/* Ajuste para SelectButton */
+.select-button-container {
+    .p-selectbutton {
+        width: 100%;
+        .p-button {
+            flex-grow: 1;
+        }
+    }
+}
+
+
+/* Estilos para la imagen de previsualización */
+.preview-image {
+    max-height: 200px; 
+    width: 200px;
+    object-fit: cover;
+    border-radius: 12px;
+    border: 3px solid $primary-blue; // Borde azul para mejor diseño
+}
+
+/* Estilos de botones de PrimeNG: Botón de Guardar en Azul */
+.p-button-primary.p-button-raised {
+    background-color: $primary-blue !important; 
+    border-color: $primary-blue !important;
+    &:hover {
+        background-color: darken($primary-blue, 5%) !important; 
+        border-color: darken($primary-blue, 5%) !important;
+    }
+}

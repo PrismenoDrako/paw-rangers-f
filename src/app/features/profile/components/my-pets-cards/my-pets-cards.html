@@ -1,0 +1,25 @@
+<p-card styleClass="pet-card text-center">
+    <ng-template pTemplate="header">
+        <div class="pet-image-container">
+            <img [src]="pet.imageUrl" [alt]="pet.name" class="pet-image" />
+        </div>
+    </ng-template>
+    
+    <ng-template pTemplate="content">
+        <div class="card-content-wrapper">
+            <h2 class="pet-name text-lg font-semibold">{{ pet.name }}</h2>
+            <p class="pet-breed-info text-color-secondary">
+                {{ pet.species }} - {{ pet.breed }}
+            </p>
+            <p class="pet-age-weight text-sm text-color-secondary">
+                {{ pet.age }} años / {{ pet.weight }} kg
+            </p>
+        </div>
+    </ng-template>
+    
+    <ng-template pTemplate="footer">
+        <div class="flex justify-content-center"> 
+            <p-button label="Editar" icon="pi pi-pencil" styleClass="pet-edit-button" (onClick)="onEditPet()"></p-button>
+        </div>
+    </ng-template>
+</p-card>

@@ -53,13 +53,9 @@
             <p-inputNumber id="age" formControlName="age" mode="decimal" [min]="0" [showButtons]="true" inputId="age"></p-inputNumber>
         </div>
 
-        <div class="field col-12 md:col-6">
-            <label for="weight">Peso (Kg)</label>
-            <p-inputNumber id="weight" formControlName="weight" mode="decimal" [minFractionDigits]="1" [maxFractionDigits]="2" [min]="0.1" [showButtons]="true" inputId="weight"></p-inputNumber>
-        </div>
-        
+                
         <div class="field col-12">
-            <label for="fileUpload">Imagen de la Mascota</label>
+            <label for="fileUpload">Foto (Opcional)</label>
             <!-- ✅ CORRECCIÓN FINAL: Usamos (onSelect) y pasamos el evento completo. [auto] se quita para que funcione con modo 'basic'. -->
             <p-fileUpload #fileUpload mode="basic" chooseLabel="Elegir Archivo" accept="image/*" [customUpload]="true" (onSelect)="onImageUpload($event)"
                 [showCancelButton]="false">
@@ -69,10 +65,10 @@
         <div class="col-12 text-center mb-3">
             <img [src]="localImageUrl || petForm.get('imageUrl')?.value || 'https://placehold.co/200x200/294374/FFFFFF?text=Sin+Imagen'"
                 alt="Imagen de la Mascota" class="preview-image shadow-md"
-                onerror="this.onerror=null; this.src='https://placehold.co/200x200/294374/FFFFFF?text=Sin+Imagen';">
+                onerror="this.onerror=null; this.src='https://placehold.co/200x200/294374/FFFFFF?text=Sin+Imagen'">
         </div>
 
-        <div class="col-12 flex justify-content-center gap-2 mt-3">
+        <div class="col-12 flex justify-content-center gap-2 mt-3 form-actions">
             <p-button type="submit" [label]="isEditMode ? 'Guardar Cambios' : 'Añadir Mascota'" icon="pi pi-save"
                 styleClass="p-button-primary p-button-raised"></p-button>
             

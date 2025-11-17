@@ -32,7 +32,6 @@ export class MyPetsComponent {
       breed: 'Angora Turco', 
       gender: 'Hembra',
       age: 3, 
-      weight: 4.3, 
       imageUrl: 'https://i.pinimg.com/736x/c2/46/f1/c246f1428432790f5306699e716cb413.jpg'
     },
     { 
@@ -42,7 +41,6 @@ export class MyPetsComponent {
       breed: 'Labrador', 
       gender: 'Macho',
       age: 5, 
-      weight: 30, 
       imageUrl: 'https://cdn.pixabay.com/photo/2018/05/03/22/07/dog-3372553_1280.jpg'
     },
   ];
@@ -57,7 +55,7 @@ export class MyPetsComponent {
   onAddPet(): void {
 
     this.editingPet = { 
-        name: '', species: '', breed: '', gender: 'Macho', age: 1, weight: 1
+        name: '', species: '', breed: '', gender: 'Macho', age: 1
     };
     this.isEditing = true;
   }
@@ -71,11 +69,20 @@ export class MyPetsComponent {
   // Guardar o cancelar
   onFormClosed(updatedPet: Pet | null = null): void {
       if (updatedPet) {
+          // Si se seleccionó un archivo de imagen, generamos una URL temporal para mostrarla en la tarjeta inmediatamente
+          if (updatedPet.imageFile) {
+              try {
+                  updatedPet.imageUrl = URL.createObjectURL(updatedPet.imageFile);
+              } catch (e) {
+                  console.warn('No se pudo crear URL temporal para la imagen:', e);
+              }
+          }
+
           const index = this.pets.findIndex(p => p.id === updatedPet.id);
           
           if (updatedPet.id && index !== -1) {
               // 🚨 Lógica de actualización (Editar)
-              this.pets[index] = updatedPet;
+              this.pets[index] = { ...this.pets[index], ...updatedPet };
               console.log('Mascota actualizada:', updatedPet.name);
           } else {
               // 🚨 Lógica de adición (Nueva Mascota)

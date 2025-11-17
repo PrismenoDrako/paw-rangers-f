@@ -1,8 +1,11 @@
 <p-card styleClass="pet-card text-center">
     <ng-template pTemplate="header">
         <div class="pet-image-container">
-            <!-- Usamos img en lugar de p-image para simplificar el header -->
-            <img [src]="pet.imageUrl" [alt]="pet.name" class="pet-image" /> 
+            <img
+                [src]="pet.imageUrl || 'https://placehold.co/640x400/EDF0F7/294374?text=Mascota'"
+                [alt]="pet.name"
+                class="pet-image"
+                onerror="this.onerror=null; this.src='https://placehold.co/640x400/EDF0F7/294374?text=Mascota'" />
         </div>
     </ng-template>
     
@@ -13,7 +16,7 @@
                 {{ pet.species }} - {{ pet.breed }}
             </p>
             <p class="pet-age-weight text-sm text-color-secondary">
-                {{ pet.age }} años / {{ pet.weight }} kg
+                {{ pet.age }} años
             </p>
         </div>
     </ng-template>

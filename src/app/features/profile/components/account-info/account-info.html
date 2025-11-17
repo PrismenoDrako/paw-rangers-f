@@ -78,14 +78,14 @@
             <div class="col-span-full password-section">
                 <span class="p-float-label">
                     <label for="password-input">Contraseña Nueva</label>
-                    <p-password id="password-input" [feedback]="false" toggleMask="true" [(ngModel)]="userData.password"
-                        name="password" styleClass="w-full"></p-password>
+                    <p-password id="password-input" [feedback]="false" [toggleMask]="true"
+                        [(ngModel)]="userData.password" name="password" styleClass="w-full"></p-password>
                 </span>
             </div>
             <div class="col-span-full">
                 <span class="p-float-label">
                     <label for="confirm-password-input">Confirmar Contraseña Nueva</label>
-                    <p-password id="confirm-password-input" [feedback]="false" toggleMask="true"
+                    <p-password id="confirm-password-input" [feedback]="false" [toggleMask]="true"
                         [(ngModel)]="userData.confirmPassword" name="confirmPassword" styleClass="w-full"></p-password>
                 </span>
             </div>

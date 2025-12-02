@@ -1,0 +1,14 @@
+<div class="alerts-list">
+  <h2>Alertas</h2>
+
+  <div class="alerts-grid">
+    <article
+      class="alert-card"
+      *ngFor="let alert of alerts"
+      (click)="openAlert(alert)"
+      tabindex="0"
+      (keydown.enter)="openAlert(alert)">
+      <app-alert-summary [alert]="alert"></app-alert-summary>
+    </article>
+  </div>
+</div>

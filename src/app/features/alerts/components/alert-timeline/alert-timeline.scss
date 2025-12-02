@@ -1,0 +1,61 @@
+.alert-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.timeline-item {
+  display: grid;
+  grid-template-columns: 18px 1fr;
+  gap: 10px;
+  align-items: start;
+}
+
+.dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #4a57d3;
+  margin-top: 6px;
+}
+
+.dot--status {
+  background: #cf5d33;
+}
+
+.content h4 {
+  margin: 0;
+  font-size: 1rem;
+  color: #334473;
+}
+
+.content p {
+  margin: 4px 0 0;
+  color: #4f5675;
+}
+
+.title-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.date {
+  color: #4f5675;
+  font-size: 0.9rem;
+}
+
+.meta {
+  display: inline-flex;
+  margin-top: 4px;
+  padding: 4px 8px;
+  border-radius: 8px;
+  background: rgba(51, 68, 115, 0.08);
+  color: #334473;
+  font-size: 0.85rem;
+}
+
+.empty {
+  color: #4f5675;
+}

@@ -1,35 +1,91 @@
-<app-notification-header [totalNotifications]="totalNotifications"></app-notification-header>
+<div class="notifications-page-head">
+  <app-notification-header [totalNotifications]="totalNotifications"></app-notification-header>
+  <button
+    *ngIf="showSettingsIcon"
+    type="button"
+    class="settings-icon-button"
+    (click)="openSettings()"
+    aria-label="Configurar preferencias">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="1.6" />
+      <path d="M12 8.5v3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+      <path d="M9 12h6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+    </svg>
+  </button>
+</div>
+
+<div class="notifications-toolbar" *ngIf="!allNotificationsDisabled">
+  <button
+    type="button"
+    class="filter-icon-button"
+    (click)="toggleUnreadFilter()"
+    [class.active]="showUnreadOnly"
+    [attr.aria-pressed]="showUnreadOnly">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.8" />
+      <path d="M9 12l2 2 4-4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+    </svg>
+    <span>{{ showUnreadOnly ? 'Ver todas' : 'Notificaciones no leídas' }}</span>
+  </button>
+</div>
 
 <div class="notifications-layout" *ngIf="showPets || showForum">
-  <!-- Seccion de Mascotas -->
   <section class="notification-section pet-section" *ngIf="showPets">
     <div class="section-header">
       <h3 class="section-title">Mascotas</h3>
-      <span class="section-count">{{ petNotifications.length }} nuevas</span>
+      <span class="section-count">{{ petUnreadCount }} nuevas</span>
     </div>
 
-    <div class="notification-list">
-      <app-notification-item
-        *ngFor="let notification of petNotifications"
-        [notification]="notification">
-      </app-notification-item>
+    <div class="notification-groups">
+      <div class="notification-group" *ngFor="let group of petVisibleGroups">
+        <p class="group-label">{{ group.label }}</p>
+        <div class="notification-list">
+          <app-notification-item
+            *ngFor="let notification of group.items"
+            [notification]="notification"
+            (openDetail)="openNotification($event)">
+          </app-notification-item>
+        </div>
+      </div>
+    </div>
+
+    <div class="see-more-wrapper" *ngIf="shouldShowMorePets">
+      <button type="button" class="see-more-button" (click)="toggleShowAll('pet')">
+        {{ showAllPets ? 'Ver menos' : 'Ver más notificaciones' }}
+      </button>
     </div>
   </section>
 
-  <!-- Seccion de Interacciones -->
   <section class="notification-section forum-section" *ngIf="showForum">
     <div class="section-header">
       <h3 class="section-title">Interacciones</h3>
-      <span class="section-count">{{ forumNotifications.length }} nuevas</span>
+      <span class="section-count">{{ forumUnreadCount }} nuevas</span>
     </div>
 
-    <div class="notification-list">
-      <app-notification-item
-        *ngFor="let notification of forumNotifications"
-        [notification]="notification">
-      </app-notification-item>
+    <div class="notification-groups">
+      <div class="notification-group" *ngFor="let group of forumVisibleGroups">
+        <p class="group-label">{{ group.label }}</p>
+        <div class="notification-list">
+          <app-notification-item
+            *ngFor="let notification of group.items"
+            [notification]="notification"
+            (openDetail)="openNotification($event)">
+          </app-notification-item>
+        </div>
+      </div>
+    </div>
+
+    <div class="see-more-wrapper" *ngIf="shouldShowMoreForum">
+      <button type="button" class="see-more-button" (click)="toggleShowAll('forum')">
+        {{ showAllForum ? 'Ver menos' : 'Ver más notificaciones' }}
+      </button>
     </div>
   </section>
+</div>
+
+<div class="notifications-empty" *ngIf="!allNotificationsDisabled && !showPets && !showForum">
+  <h3>No hay notificaciones {{ showUnreadOnly ? 'no leídas' : 'disponibles' }}</h3>
+  <p>Cuando llegue algo nuevo lo verás aquí de inmediato.</p>
 </div>
 
 <div class="notifications-disabled" *ngIf="allNotificationsDisabled">
@@ -37,4 +93,4 @@
   <p>Activa al menos un tipo de alerta desde Configurar Notificaciones para volver a ver novedades aquí.</p>
 </div>
 
-<app-notification-footer></app-notification-footer>
+<app-notification-footer *ngIf="showFooterCTA"></app-notification-footer>

@@ -5,6 +5,7 @@ import { profileRoutes } from './features/profile/profile.routes';
 import { homeRoutes } from './features/home/home.routes';
 
 import { notificationsRoutes } from './features/notifications/notifications.routes';
+import { alertsRoutes } from './features/alerts/alerts.routes';
 export const routes: Routes = [
     // Ruta de inicio (página principal)
     {
@@ -30,6 +31,11 @@ export const routes: Routes = [
         path: 'found-pets',
         redirectTo: '/animales-encontrados',
         pathMatch: 'prefix'
+    },
+    // Rutas de alertas
+    {
+        path: 'alertas',
+        children: alertsRoutes
     },
     
     // Rutas de perfil

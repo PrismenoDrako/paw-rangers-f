@@ -1,18 +1,20 @@
+/* my-pets-cards.scss */
+
 $primary-blue: #294374;
 $hover-blue: #EDF0F7;
 
 .pet-card {
-    height: 100%;
+    min-height: 350px; 
     border-radius: 12px;
     background-color: var(--surface-card, white);
-    border: 1px solid $primary-blue; 
+    //border: 1px solid $primary-blue; 
     display: flex;
     flex-direction: column;
 
     // Contenedor de la imagen
     .pet-image-container {
         width: 100%;
-        height: 100%; 
+        height: 200px; 
         overflow: hidden;
         border-radius: 11px 11px 0 0; 
         background-color: $hover-blue; 
@@ -25,43 +27,40 @@ $hover-blue: #EDF0F7;
         }
     }
     
-    // Contenido (Corrección de tamaño de letra)
+    // Contenido
     .p-card-content {
         padding: 1rem !important;
-        background-color: #EDF0F7; 
+        background-color: $hover-blue; 
         border-radius: 0 0 11px 11px;
         text-align: center;
+        flex-grow: 1; 
+        display: flex; 
+        flex-direction: column; 
+        justify-content: center; 
         
         .pet-name {
             color: var(--text-color);
-            font-size: 1.3rem !important; 
+            font-size: 1.3rem; 
             font-weight: 700;
+            margin-bottom: 0.5rem;
         }
         .pet-breed-info, .pet-age-weight {
             color: var(--text-color-secondary);
-            font-size: 1rem !important; 
+            font-size: 1rem; 
             line-height: 1.4;
         }
     }
 
-    // Pie de página de la tarjeta (Botón Editar)
-    .p-card-footer {
-        padding: 0.75rem 1rem !important;
-        border-top: 1px solid var(--surface-200);
-        background-color: var(--surface-card, white);
-        display: flex;
-        justify-content: center;
+}
 
-        :host ::ng-deep .pet-edit-button .p-button,
-        .pet-edit-button.p-button { 
-            background-color: $primary-blue !important;
-            color: white !important; 
-            border-color: $primary-blue !important; 
-            
-            &:hover {
-                background-color: darken($primary-blue, 5%) !important; 
-                border-color: darken($primary-blue, 5%) !important;
-            }
-        }
+//Estilo del boton de editar mascota 
+
+:host ::ng-deep .pet-card .pet-edit-button {
+    background-color: $primary-blue !important;
+    color: white !important;
+    border-color: $primary-blue !important;
+    &:hover {
+        background-color: darken($primary-blue, 5%) !important;
+        border-color: darken($primary-blue, 5%) !important;
     }
 }

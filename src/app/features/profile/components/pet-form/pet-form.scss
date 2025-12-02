@@ -8,33 +8,30 @@ $input-border-color: var(--surface-300, #ccc); // Gris claro para el borde del i
     max-width: 600px;
     margin: 0 auto; // Centrar el formulario dentro de la tarjeta
 }
-
-/* ----------------------------------------------------------------------- */
-/* ESTILO: TÍTULO DE TARJETA EN AZUL */
-/* Se usa ::ng-deep para penetrar el componente p-card y cambiar el estilo del título */
-/* ----------------------------------------------------------------------- */
+//Titulo 
 :host ::ng-deep .p-card-title {
     color: $primary-blue !important;
+    font-size: 1.75rem !important;
+    font-weight: 700 !important;
+    margin-bottom: 1.5rem !important;
 }
 
-/* ----------------------------------------------------------------------- */
+
 /* ESTILO DE ETIQUETAS APILADAS (Stacked Labels) */
-/* ----------------------------------------------------------------------- */
+
 .field {
-    // Aplicamos estilos a todos los contenedores de campo
-    margin-bottom: 1.5rem; // Espacio entre campos
+    margin-bottom: 1.5rem; 
 
     // Estilo para la etiqueta (label)
     label {
-        display: block; // La etiqueta ocupa su propia línea
-        margin-bottom: 0.5rem; // Espacio entre la etiqueta y el input
+        display: block; 
+        margin-bottom: 0.5rem; 
         font-weight: 600;
-        color: $primary-blue !important; // 🔵 Color azul para la letra
-        font-size: 0.875rem; // Tamaño de fuente más pequeño para la etiqueta
+        color: $primary-blue !important; 
+        font-size: 0.875rem; 
     }
     
-    // Estilo general para todos los inputs, selects y selectores de PrimeNG
-    // Esto asegura que todos los elementos de formulario se vean uniformes.
+
     input[type="text"],
     select,
     .p-inputtext,
@@ -74,38 +71,42 @@ $input-border-color: var(--surface-300, #ccc); // Gris claro para el borde del i
 }
 
 
+/* Estilos para el icono de mascota */
+.pet-icon {
+    font-size: 4rem;
+    color: $primary-blue;
+    margin: 1rem 0;
+}
+
 /* Estilos para la imagen de previsualización */
 .preview-image {
-    width: 100%; /* Ocupa todo el ancho disponible del contenedor */
-    height: auto; /* Mantiene proporciones */
-    max-height: 320px; /* Limita altura en desktop para no estirar de más */
-    object-fit: contain; /* No recorta la imagen */
+    width: 100%;
+    height: auto;
+    max-height: 320px;
+    object-fit: contain;
     border-radius: 12px;
     border: 3px solid $primary-blue;
-    background-color: #EDF0F7; /* Fondo neutro si hay bandas */
+    background-color: #EDF0F7;
+}
+
+/* Estilos para input file oculto */
+.file-input-hidden {
+    display: none;
+}
+
+/* Contenedor del upload de archivo */
+.file-upload-wrapper {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
 }
 
 /* Ajustes responsivos para el preview */
 @media screen and (max-width: 768px) {
     .preview-image {
-        max-height: 260px; /* Un poco menos alto en móvil */
+        max-height: 260px;
         display: block;
         margin: 0 auto;
-    }
-}
-
-/* Estilos para FileUpload (Botón de Imagen) */
-:host ::ng-deep p-fileupload {
-    .p-fileupload-buttonbar {
-        padding: 0;
-        border: none;
-        background: transparent;
-    }
-    .p-button-label {
-        margin-left: 0.5rem;
-    }
-    .p-fileupload-content {
-        display: none; // Oculta la lista de archivos
     }
 }
 
@@ -130,9 +131,10 @@ $input-border-color: var(--surface-300, #ccc); // Gris claro para el borde del i
 }
 
 /* Botones del formulario */
-.p-button-primary.p-button-raised {
+:host ::ng-deep .p-button-primary {
     background-color: $primary-blue !important;
     border-color: $primary-blue !important;
+    color: white !important;
     &:hover {
         background-color: darken($primary-blue, 5%) !important; 
         border-color: darken($primary-blue, 5%) !important;
@@ -140,11 +142,12 @@ $input-border-color: var(--surface-300, #ccc); // Gris claro para el borde del i
 }
 
 .p-button-outlined {
-    background-color: transparent !important; 
-    color: $primary-blue !important;
+    background-color: $primary-blue !important;
+    color: white !important;
     border-color: $primary-blue !important;
     &:hover {
-        background-color: lighten($primary-blue, 40%) !important;
+        background-color: darken($primary-blue, 5%) !important;
+        border-color: darken($primary-blue, 5%) !important;
     }
 }
 

@@ -1,28 +1,19 @@
 <p-card class="profile-section-card"> 
     <ng-template pTemplate="title">
         <h2 class="text-2xl font-bold mb-4">
-            {{ isEditing && editingPet && editingPet.name ? 'Editar Mascota: ' + editingPet.name : 'Mis Mascotas' }}
+            Mis Mascotas
         </h2>
     </ng-template>
     
     <ng-template pTemplate="content">
-        
-        <div *ngIf="isEditing" class="flex justify-content-center">
-            <div class="col-12 md:col-8 lg:col-6">
-                <app-pet-form 
-                    [petData]="editingPet" 
-                    (formSubmit)="onFormClosed($event)" 
-                    (formCancel)="onFormClosed()"
-                    (formDelete)="onPetDelete($event)"> </app-pet-form>
+        <div class="grid">
+            <div *ngFor="let pet of pets" class="col-12 sm:col-6 lg:col-3 xl:col-2 mb-4">
+                <app-my-pets-cards [pet]="pet" (editPet)="onPetEdit($event)"></app-my-pets-cards> 
             </div>
-        </div>
-
-        <div class="grid" *ngIf="!isEditing">
-            <div *ngFor="let pet of pets" class="col-12 sm:col-6 lg:col-4 xl:col-3 mb-4">
-                <app-my-pets-cards [pet]="pet" (editPet)="onPetEdit($event)"></app-my-pets-cards> </div>
             
-            <div class="col-12 sm:col-6 lg:col-4 xl:col-3 mb-4">
-                <app-add-pet-card (addClicked)="onAddPet()"></app-add-pet-card> </div>
+            <div class="col-12 sm:col-6 lg:col-3 xl:col-2 mb-4">
+                <app-add-pet-card (addClicked)="onAddPet()"></app-add-pet-card>
+            </div>
         </div>
     </ng-template>
 </p-card>

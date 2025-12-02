@@ -1,0 +1,109 @@
+<div class="profile-card-container">
+
+    <div class="header">
+        <h2>Editar Perfil</h2>
+        <p>Actualiza tu información personal</p>
+    </div>
+
+    <form [formGroup]="profileForm" (ngSubmit)="onSubmit()" class="p-fluid form-content">
+
+        <!-- Avatar con icono para editar -->
+        <div class="flex justify-content-center mb-4 avatar-area-wrapper">
+
+    <div class="relative avatar-and-button-container"> 
+
+        <p-avatar label="D" size="xlarge" shape="circle"
+            [style]="{ 'background-color': '#EDF0F7', 'color': '#294374', 'border': '3px solid #294374' }"
+            class="editable-avatar">
+        </p-avatar>
+
+        <button type="button" class="edit-photo-btn">
+            <i class="pi pi-camera"></i>
+        </button>
+
+    </div> 
+    
+</div>
+
+        <!-- Inputs -->
+        <div class="p-grid form-grid">
+            
+            <div class="p-col-12 p-md-6">
+                <p-floatlabel>
+                    <input pInputText formControlName="nombre" id="nombre"/>
+                    <label for="nombre">Nombre</label>
+                </p-floatlabel>
+            </div>
+
+            <div class="p-col-12 p-md-6">
+                <p-floatlabel>
+                    <input pInputText formControlName="username" id="username"/>
+                    <label for="username">Nombre de Usuario</label>
+                </p-floatlabel>
+            </div>
+
+            <div class="p-col-12 p-md-6">
+                <p-floatlabel>
+                    <input pInputText formControlName="apellidoPaterno" id="apellidoPaterno"/>
+                    <label for="apellidoPaterno">Apellido Paterno</label>
+                </p-floatlabel>
+            </div>
+
+            <div class="p-col-12 p-md-6">
+                <p-floatlabel>
+                    <input pInputText formControlName="documento" id="documento"/>
+                    <label for="documento">Documento de Identidad</label>
+                </p-floatlabel>
+            </div>
+
+            <div class="p-col-12 p-md-6">
+                <p-floatlabel>
+                    <input pInputText formControlName="apellidoMaterno" id="apellidoMaterno"/>
+                    <label for="apellidoMaterno">Apellido Materno</label>
+                </p-floatlabel>
+            </div>
+
+            <div class="p-col-12 p-md-6">
+                <p-floatlabel>
+                    <input pInputText formControlName="email" id="email"/>
+                    <label for="email">Correo Electrónico</label>
+                </p-floatlabel>
+            </div>
+
+            <div class="p-col-12 p-md-6">
+                <p-floatlabel>
+                    <input pInputText formControlName="phone" id="phone"/>
+                    <label for="phone">Teléfono</label>
+                </p-floatlabel>
+            </div>
+
+            <div class="p-col-12">
+                <p-floatlabel>
+                    <input pInputText formControlName="direccion" id="direccion"/>
+                    <label for="direccion">Dirección</label>
+                </p-floatlabel>
+            </div>
+
+        </div>
+
+        <!-- Botones -->
+        <div class="footer-btns flex justify-content-end gap-2 mt-5">
+            <p-button 
+                label="Cancelar" 
+                styleClass="btn-secondary"
+                icon="pi pi-times"
+                (onClick)="onCancel()">
+            </p-button>
+
+            <p-button 
+                label="Guardar Cambios" 
+                type="submit" 
+                styleClass="btn-primary"
+                icon="pi pi-check"
+                [disabled]="!profileForm.valid">
+            </p-button>
+        </div>
+
+    </form>
+
+</div>

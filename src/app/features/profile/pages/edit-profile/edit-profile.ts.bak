@@ -1,0 +1,39 @@
+// edit-profile.ts (Página que actúa como Host/Contenedor)
+
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router'; 
+import { CardModule } from 'primeng/card'; 
+import { AccountFormComponent } from '../../components/account-form/account-form';
+import { ChangePasswordComponent } from '../../components/change-password/change-password';
+
+
+@Component({
+    selector: 'app-edit-profile',
+    standalone: true,
+    imports: [
+        CommonModule,
+        CardModule,
+        AccountFormComponent 
+    ],
+    templateUrl: './edit-profile.html',
+    styleUrl: './edit-profile.scss'
+})
+export class EditProfilePage implements OnInit {
+    
+    constructor(private router: Router) {}
+
+    ngOnInit(): void {
+    }
+
+    handleSubmission(formData: any): void {
+        console.log('Datos recibidos del formulario (listos para API):', formData);
+
+        this.router.navigate(['/perfil']); 
+    }
+
+    handleCancel(): void {
+        console.log('Edición de perfil cancelada.');
+        this.router.navigate(['/perfil']); 
+    }
+}

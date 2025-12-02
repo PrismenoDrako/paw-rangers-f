@@ -1,0 +1,31 @@
+/* ubication-list-item.scss */
+
+$primary-blue: #294374; 
+
+.location-list-item {
+    background-color: var(--surface-card);
+    border: 1px solid var(--surface-200);
+    transition: all 0.2s ease-in-out;
+    cursor: pointer;
+
+    &:hover {
+        background-color: var(--surface-hover);
+        border-color: $primary-blue;
+    }
+
+    .location-icon {
+        color: $primary-blue;
+    }
+    
+    .location-name {
+        color: var(--text-color);
+    }
+}
+
+:host ::ng-deep .p-button-secondary {
+    color: $primary-blue !important;
+    
+    &:hover {
+        background-color: rgba($primary-blue, 0.1) !important;
+    }
+}

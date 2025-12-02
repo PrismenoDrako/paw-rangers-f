@@ -1,0 +1,37 @@
+<div class="found-pets-page">
+  <div class="page-header">
+    <div class="header-content">
+      <h1 class="page-title">Animales Encontrados</h1>
+      <button class="report-btn" (click)="goToReport()">
+        <i class="pi pi-plus"></i>
+        Reportar
+      </button>
+    </div>
+  </div>
+
+  <div class="page-content">
+    <!-- Barra de búsqueda y filtros -->
+    <app-found-search (onFiltersUpdate)="handleFiltersUpdate($event)"></app-found-search>
+
+    <!-- Lista de animales encontrados -->
+    <app-found-pets-container [foundPets]="foundPets" [favorites]="favoriteIds" [isLoading]="isLoading"
+      (onContactPet)="handleContact($event)" (onFavoriteUpdate)="handleFavoriteUpdate($event)" #petsContainer>
+    </app-found-pets-container>
+
+    <!-- Sección de call-to-action -->
+    <div class="cta-section">
+      <div class="cta-content">
+        <h3 class="cta-title">¿Encontraste una mascota?</h3>
+        <p class="cta-description">Reporta el hallazgo para ayudar a reunir familias</p>
+        <button class="cta-btn" (click)="goToReport()">
+          <i class="pi pi-plus"></i>
+          Reportar Hallazgo
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal Component -->
+<app-modal [showContactModal]="showContactModal" [selectedPet]="selectedPet" (onClose)="closeContactModal()"
+  (onCallOwner)="callOwner()">
+</app-modal>

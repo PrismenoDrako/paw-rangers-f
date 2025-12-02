@@ -1,0 +1,33 @@
+<div class="fab-wrapper">
+  <!-- Backdrop -->
+  <div 
+    class="fab-backdrop" 
+    *ngIf="isExpanded"
+    (click)="closeMenu()">
+  </div>
+
+  <!-- Menu opciones -->
+  <div class="fab-menu" [class.show]="isExpanded">
+    <button 
+      class="fab-menu-item"
+      (click)="navigateToReportLost()">
+      <i class="pi pi-exclamation-triangle"></i>
+      <span>Reportar Desaparición</span>
+    </button>
+    
+    <button 
+      class="fab-menu-item"
+      (click)="navigateToReportFound()">
+      <i class="pi pi-search"></i>
+      <span>Reportar Hallazgo</span>
+    </button>
+  </div>
+
+  <!-- Botón principal -->
+  <button 
+    class="fab-button"
+    (click)="toggleMenu()"
+    [class.rotated]="isExpanded">
+    <i class="pi pi-plus"></i>
+  </button>
+</div>

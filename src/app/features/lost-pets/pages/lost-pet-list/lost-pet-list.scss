@@ -1,0 +1,371 @@
+.lost-pets-page {
+  min-height: 100vh;
+  background: #EDF0F7;
+  padding: 20px 20px 60px 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.page-header {
+  max-width: 1200px;
+  margin: 0 auto 30px;
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #ffffff;
+  padding: 24px 32px;
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(41, 67, 116, 0.08);
+  border: 1px solid rgba(41, 67, 116, 0.06);
+}
+
+.page-title {
+  color: #1f2937;
+  font-size: 32px;
+  font-weight: 700;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.report-btn {
+  background: linear-gradient(135deg, #294374, #3b5998);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 14px 24px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(41, 67, 116, 0.3);
+  
+  .pi {
+    font-size: 16px;
+  }
+  
+  &:hover {
+    background: linear-gradient(135deg, #1e3050, #2d4373);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(41, 67, 116, 0.4);
+  }
+}
+
+.page-content {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.search-section {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 30px;
+  box-shadow: 0 2px 12px rgba(41, 67, 116, 0.08);
+  border: 1px solid rgba(41, 67, 116, 0.06);
+}
+
+.search-box {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.search-input-container {
+  flex: 1;
+  position: relative;
+}
+
+.search-input {
+  width: 100%;
+  padding: 14px 16px 14px 45px;
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  background: #ffffff;
+  
+  &:focus {
+    outline: none;
+    border-color: #294374;
+    box-shadow: 0 0 0 3px rgba(41, 67, 116, 0.1);
+  }
+  
+  &::placeholder {
+    color: #9ca3af;
+  }
+}
+
+.p-input-icon-left i {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #6b7280;
+  font-size: 16px;
+}
+
+.filter-btn {
+  background: linear-gradient(135deg, #294374, #3b5998);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 14px 20px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+  min-width: 120px;
+  
+  &:hover {
+    background: linear-gradient(135deg, #1e3050, #2d4373);
+    transform: translateY(-1px);
+  }
+}
+
+.filters-panel {
+  margin-top: 20px;
+  padding: 20px;
+  background: #f9fafb;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+}
+
+.filter-categories {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.category-btn {
+  padding: 8px 16px;
+  border: 2px solid #e5e7eb;
+  border-radius: 20px;
+  background: white;
+  color: #6b7280;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    border-color: #294374;
+    color: #294374;
+  }
+  
+  &.active {
+    background: #294374;
+    border-color: #294374;
+    color: white;
+  }
+}
+
+.filter-options {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.filter-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #374151;
+  
+  input[type="checkbox"] {
+    accent-color: #294374;
+  }
+}
+
+.pets-container {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 30px;
+  box-shadow: 0 2px 12px rgba(41, 67, 116, 0.08);
+  border: 1px solid rgba(41, 67, 116, 0.06);
+}
+
+.pets-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.no-results {
+  text-align: center;
+  padding: 60px 20px;
+  
+  .no-results-icon {
+    margin-bottom: 16px;
+    
+    .pi {
+      font-size: 48px;
+      color: #9ca3af;
+    }
+  }
+  
+  h3 {
+    color: #374151;
+    font-size: 20px;
+    font-weight: 600;
+    margin: 0 0 8px 0;
+  }
+  
+  p {
+    color: #6b7280;
+    font-size: 16px;
+    margin: 0;
+  }
+}
+
+.cta-section {
+  background: linear-gradient(135deg, #fef3c7 0%, #fed7aa 100%);
+  border-radius: 16px;
+  padding: 40px;
+  text-align: center;
+  margin: 40px 0 20px 0;
+  border: 1px solid rgba(251, 191, 36, 0.1);
+}
+
+.cta-content {
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.cta-title {
+  color: #1f2937;
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0 0 12px 0;
+}
+
+.cta-description {
+  color: #6b7280;
+  font-size: 16px;
+  margin: 0 0 24px 0;
+  line-height: 1.5;
+}
+
+.cta-btn {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 16px 32px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+  
+  .pi {
+    font-size: 16px;
+  }
+  
+  &:hover {
+    background: linear-gradient(135deg, #d97706, #b45309);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(245, 158, 11, 0.4);
+  }
+}
+
+// Responsive Design
+@media (max-width: 1024px) {
+  .lost-pets-page {
+    padding: 16px 16px 60px 16px;
+  }
+  
+  .page-title {
+    font-size: 28px;
+  }
+  
+  .header-content {
+    padding: 20px 24px;
+  }
+}
+
+@media (max-width: 768px) {
+  .lost-pets-page {
+    padding: 12px 12px 60px 12px;
+  }
+  
+  .header-content {
+    flex-direction: column;
+    gap: 16px;
+    align-items: stretch;
+    padding: 20px;
+  }
+  
+  .page-title {
+    font-size: 24px;
+    text-align: center;
+  }
+  
+  .report-btn {
+    justify-content: center;
+  }
+  
+  .search-section {
+    padding: 20px;
+  }
+  
+  .cta-section {
+    padding: 32px 20px;
+    margin: 30px 0 20px 0;
+  }
+  
+  .cta-title {
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .lost-pets-page {
+    padding: 8px 8px 60px 8px;
+  }
+  
+  .header-content {
+    padding: 16px;
+  }
+  
+  .page-title {
+    font-size: 22px;
+  }
+  
+  .report-btn {
+    padding: 12px 20px;
+    font-size: 14px;
+  }
+  
+  .search-section {
+    padding: 16px;
+  }
+  
+  .cta-section {
+    padding: 24px 16px;
+    margin: 20px 0 20px 0;
+  }
+  
+  .cta-title {
+    font-size: 18px;
+  }
+  
+  .cta-btn {
+    padding: 14px 24px;
+    font-size: 14px;
+  }
+}

@@ -1,0 +1,140 @@
+.report-found-page {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #F7FAFC 0%, #EDF2F7 100%);
+  padding-bottom: 3rem;
+}
+
+// Header con fondo blanco
+.page-header {
+  background: white;
+  padding: 1.75rem 2rem;
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  border-bottom: 1px solid #E2E8F0;
+
+  .back-btn {
+    background: #F7FAFC;
+    border: 2px solid #E2E8F0;
+    border-radius: 8px;
+    cursor: pointer;
+    padding: 0.625rem 0.75rem;
+    color: #4A5568;
+    font-size: 1.25rem;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover {
+      background: #EDF2F7;
+      border-color: #CBD5E0;
+      color: #2D3748;
+      transform: translateX(-2px);
+    }
+
+    &:active {
+      transform: translateX(-3px);
+    }
+
+    .pi {
+      font-size: 1.25rem;
+    }
+  }
+
+  .header-text {
+    flex: 1;
+
+    h1 {
+      margin: 0;
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: #1A202C;
+      line-height: 1.2;
+      letter-spacing: -0.025em;
+    }
+
+    p {
+      margin: 0.5rem 0 0 0;
+      font-size: 0.95rem;
+      color: #718096;
+      line-height: 1.5;
+      font-weight: 400;
+    }
+  }
+}
+
+// Contenido
+.page-content {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 2rem 3rem 2rem;
+  animation: fadeIn 0.4s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Responsive
+@media (max-width: 1024px) {
+  .page-content {
+    max-width: 720px;
+    padding: 0 1.25rem 2rem 1.25rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .page-header {
+    padding: 1.25rem 1rem;
+
+    .back-btn {
+      font-size: 1.25rem;
+
+      .pi {
+        font-size: 1.25rem;
+      }
+    }
+
+    .header-text h1 {
+      font-size: 1.25rem;
+    }
+
+    .header-text p {
+      font-size: 0.85rem;
+    }
+  }
+
+  .page-content {
+    padding: 0 1rem 2rem 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-header {
+    padding: 1rem 0.75rem;
+
+    .header-text h1 {
+      font-size: 1.125rem;
+    }
+
+    .header-text p {
+      font-size: 0.8rem;
+    }
+  }
+
+  .page-content {
+    padding: 0 0.75rem 2rem 0.75rem;
+  }
+}

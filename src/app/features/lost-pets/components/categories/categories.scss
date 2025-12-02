@@ -1,0 +1,230 @@
+.categories-container {
+  margin-bottom: 20px;
+}
+
+.categories-scroll {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding: 5px 0;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.category-btn {
+  background: #f8fafc !important;
+  border: 2px solid #e2e8f0 !important;
+  color: #64748b !important;
+  border-radius: 25px !important;
+  padding: 10px 20px !important;
+  font-weight: 500 !important;
+  white-space: nowrap !important;
+  transition: all 0.3s ease !important;
+  font-size: 14px !important;
+  cursor: pointer;
+  
+  &:hover {
+    background: #294374 !important;
+    border-color: #294374 !important;
+    color: white !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(41, 67, 116, 0.2);
+  }
+  
+  &.active {
+    background: #1e293b !important;
+    border-color: #1e293b !important;
+    color: white !important;
+    box-shadow: 0 2px 8px rgba(30, 41, 59, 0.3);
+    
+    &:hover {
+      background: #0f172a !important;
+      border-color: #0f172a !important;
+      transform: translateY(-1px);
+    }
+  }
+}
+
+// Responsive Design Ultra Detallado
+// Desktop Extra Large (1920px+)
+@media (min-width: 1920px) {
+  .categories-container {
+    margin-bottom: 28px;
+  }
+  
+  .categories-scroll {
+    gap: 16px;
+    padding: 8px 0;
+  }
+  
+  .category-btn {
+    padding: 14px 28px !important;
+    font-size: 16px !important;
+    border-radius: 30px !important;
+  }
+}
+
+// Desktop Large (1600px - 1919px)
+@media (min-width: 1600px) and (max-width: 1919px) {
+  .categories-container {
+    margin-bottom: 26px;
+  }
+  
+  .categories-scroll {
+    gap: 14px;
+    padding: 7px 0;
+  }
+  
+  .category-btn {
+    padding: 13px 26px !important;
+    font-size: 15px !important;
+    border-radius: 28px !important;
+  }
+}
+
+// Desktop Medium (1200px - 1599px)
+@media (min-width: 1200px) and (max-width: 1599px) {
+  .categories-container {
+    margin-bottom: 24px;
+  }
+  
+  .categories-scroll {
+    gap: 12px;
+    padding: 6px 0;
+  }
+  
+  .category-btn {
+    padding: 12px 24px !important;
+    font-size: 15px !important;
+    border-radius: 27px !important;
+  }
+}
+
+// Desktop Small (992px - 1199px)
+@media (min-width: 992px) and (max-width: 1199px) {
+  .categories-container {
+    margin-bottom: 22px;
+  }
+  
+  .categories-scroll {
+    gap: 11px;
+  }
+  
+  .category-btn {
+    padding: 11px 22px !important;
+    font-size: 14px !important;
+    border-radius: 26px !important;
+  }
+}
+
+// Tablet Large (768px - 991px)
+@media (min-width: 768px) and (max-width: 991px) {
+  .categories-container {
+    margin-bottom: 20px;
+  }
+  
+  .categories-scroll {
+    gap: 10px;
+  }
+  
+  .category-btn {
+    padding: 10px 20px !important;
+    font-size: 13px !important;
+    border-radius: 25px !important;
+  }
+}
+
+// Tablet Medium (600px - 767px)
+@media (min-width: 600px) and (max-width: 767px) {
+  .categories-container {
+    margin-bottom: 18px;
+  }
+  
+  .categories-scroll {
+    gap: 9px;
+    padding: 4px 0;
+  }
+  
+  .category-btn {
+    padding: 9px 18px !important;
+    font-size: 13px !important;
+    border-radius: 24px !important;
+  }
+}
+
+// Mobile Large (480px - 599px)
+@media (min-width: 480px) and (max-width: 599px) {
+  .categories-container {
+    margin-bottom: 16px;
+  }
+  
+  .categories-scroll {
+    gap: 8px;
+    padding: 3px 0;
+  }
+  
+  .category-btn {
+    padding: 8px 16px !important;
+    font-size: 12px !important;
+    border-radius: 22px !important;
+  }
+}
+
+// Mobile Medium (400px - 479px)
+@media (min-width: 400px) and (max-width: 479px) {
+  .categories-container {
+    margin-bottom: 14px;
+  }
+  
+  .categories-scroll {
+    gap: 7px;
+    padding: 3px 0;
+  }
+  
+  .category-btn {
+    padding: 7px 14px !important;
+    font-size: 11px !important;
+    border-radius: 20px !important;
+  }
+}
+
+// Mobile Small (320px - 399px)
+@media (min-width: 320px) and (max-width: 399px) {
+  .categories-container {
+    margin-bottom: 12px;
+  }
+  
+  .categories-scroll {
+    gap: 6px;
+    padding: 2px 0;
+  }
+  
+  .category-btn {
+    padding: 6px 12px !important;
+    font-size: 10px !important;
+    border-radius: 18px !important;
+  }
+}
+
+// Mobile Extra Small (menos de 320px)
+@media (max-width: 319px) {
+  .categories-container {
+    margin-bottom: 10px;
+  }
+  
+  .categories-scroll {
+    gap: 5px;
+    padding: 2px 0;
+  }
+  
+  .category-btn {
+    padding: 5px 10px !important;
+    font-size: 9px !important;
+    border-radius: 16px !important;
+  }
+}
+

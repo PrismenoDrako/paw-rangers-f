@@ -1,0 +1,34 @@
+<div class="found-search-container">
+  <div class="search-header">
+    <div class="search-box">
+      <i class="pi pi-search search-icon"></i>
+      <input 
+        type="text" 
+        class="search-input"
+        placeholder="Buscar por tipo, raza, ubicación..."
+        [(ngModel)]="searchQuery"
+        (ngModelChange)="onSearchChange()" />
+    </div>
+    
+    <button class="filters-toggle" (click)="toggleFilters()">
+      <i class="pi pi-filter"></i>
+      Filtros
+    </button>
+  </div>
+  
+  @if (showFilters) {
+    <div class="filters-panel">
+      <div class="filter-categories">
+        @for (category of categories; track category.id) {
+          <button 
+            class="filter-btn"
+            [class.active]="selectedCategory === category.id"
+            (click)="selectCategory(category.id)">
+            {{ category.name }}
+          </button>
+        }
+      </div>
+      
+      </div>
+  }
+</div>

@@ -1,0 +1,138 @@
+// ==================== VARIABLES ====================
+$primary-color: #294374;
+$white: #ffffff;
+$shadow-fab: 0 6px 20px rgba(41, 67, 116, 0.4);
+$shadow-fab-hover: 0 8px 24px rgba(41, 67, 116, 0.5);
+$shadow-menu: 0 4px 12px rgba(0, 0, 0, 0.15);
+
+// ==================== FAB WRAPPER ====================
+.fab-wrapper {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 1rem;
+}
+
+// ==================== BACKDROP ====================
+
+
+// ==================== MENU OPCIONES ====================
+.fab-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  opacity: 0;
+  transform: translateY(20px);
+  pointer-events: none;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+  &.show {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+}
+
+.fab-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.875rem 1.5rem;
+  background: $white;
+  border: none;
+  border-radius: 50px;
+  box-shadow: $shadow-menu;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+
+  i {
+    font-size: 1.25rem;
+    color: $primary-color;
+  }
+
+  span {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #333;
+  }
+
+  &:hover {
+    transform: translateX(-4px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+    background: #f8f9fa;
+  }
+
+  &:active {
+    transform: translateX(-2px) scale(0.98);
+  }
+}
+
+// ==================== BOTÓN PRINCIPAL ====================
+.fab-button {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: $primary-color;
+  border: none;
+  box-shadow: $shadow-fab;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+  i {
+    font-size: 1.75rem;
+    color: $white;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  &:hover {
+    transform: scale(1.05);
+    box-shadow: $shadow-fab-hover;
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+
+  &.rotated {
+    i {
+      transform: rotate(45deg);
+    }
+  }
+}
+
+// ==================== RESPONSIVE ====================
+@media (max-width: 768px) {
+  .fab-wrapper {
+    bottom: 1.5rem;
+    right: 1.5rem;
+  }
+
+  .fab-button {
+    width: 56px;
+    height: 56px;
+
+    i {
+      font-size: 1.5rem;
+    }
+  }
+
+  .fab-menu-item {
+    padding: 0.75rem 1.25rem;
+
+    i {
+      font-size: 1.125rem;
+    }
+
+    span {
+      font-size: 0.875rem;
+    }
+  }
+}

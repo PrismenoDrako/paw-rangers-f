@@ -1,0 +1,18 @@
+<div class="report-found-page">
+  <!-- Header con fondo gris claro -->
+  <div class="page-header">
+    <button class="back-btn" (click)="goBack()">
+      <i class="pi pi-arrow-left"></i>
+    </button>
+    <div class="header-text">
+      <h1>Reportar Animal Encontrado</h1>
+      <p>Ayuda a reunir familias reportando el animal que encontraste</p>
+    </div>
+  </div>
+
+  <!-- Contenido con el formulario -->
+  <div class="page-content">
+    <app-report-found-forms (formSubmit)="onFormSubmit($event)">
+    </app-report-found-forms>
+  </div>
+</div>

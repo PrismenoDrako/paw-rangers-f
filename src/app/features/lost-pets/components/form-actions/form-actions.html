@@ -1,0 +1,27 @@
+<div class="form-actions-container">
+  <div class="actions-content">
+    <button 
+      class="btn btn-secondary"
+      (click)="onCancel()"
+      type="button">
+      <i class="pi pi-times"></i>
+      Cancelar
+    </button>
+    
+    <button 
+      class="btn btn-primary"
+      (click)="onSubmit()"
+      type="button"
+      [disabled]="!isFormValid">
+      <i class="pi pi-send"></i>
+      Publicar Reporte
+    </button>
+  </div>
+  
+  @if (!isFormValid) {
+    <div class="form-info">
+      <i class="pi pi-info-circle"></i>
+      <span>Completa todos los campos requeridos para publicar tu reporte</span>
+    </div>
+  }
+</div>

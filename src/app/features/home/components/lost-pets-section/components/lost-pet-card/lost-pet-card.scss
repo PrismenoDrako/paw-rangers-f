@@ -1,0 +1,149 @@
+@use 'sass:color';
+
+$primary-color: #294374;
+$danger-color: #e74c3c;
+$white: #ffffff;
+
+.pet-card {
+  background: $white;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin: 0.5rem;
+
+  &:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+
+    .pet-image img {
+      transform: scale(1.1);
+    }
+  }
+}
+
+.pet-image {
+  position: relative;
+  width: 100%;
+  height: 220px;
+  overflow: hidden;
+  background: #f5f5f5;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+
+  ::ng-deep {
+    .pet-type-tag {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+    }
+
+    .urgent-tag {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      animation: pulse 2s infinite;
+    }
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+.pet-info {
+  padding: 1.25rem;
+}
+
+.pet-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+
+  h3 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: $primary-color;
+    margin: 0;
+  }
+
+  .days-badge {
+    background: #f39c12;
+    color: $white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.875rem;
+    font-weight: 600;
+  }
+}
+
+.pet-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.detail-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9375rem;
+  color: #555;
+
+  i {
+    font-size: 1rem;
+    color: $primary-color;
+    width: 20px;
+  }
+
+  span {
+    flex: 1;
+  }
+}
+
+.pet-description {
+  font-size: 0.9375rem;
+  color: #666;
+  line-height: 1.6;
+  margin: 0 0 1rem 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.pet-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  border-top: 1px solid #eee;
+  padding-top: 1rem;
+
+  .reward {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #27ae60;
+    font-weight: 700;
+    font-size: 1rem;
+
+    i {
+      font-size: 1.25rem;
+    }
+  }
+}

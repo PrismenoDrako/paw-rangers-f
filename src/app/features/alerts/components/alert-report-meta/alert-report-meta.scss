@@ -1,0 +1,16 @@
+.report-meta {
+  display: flex;
+}
+
+.link-btn {
+  border: none;
+  background: none;
+  color: #4a57d3;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 4px 8px;
+}
+
+.link-btn:hover {
+  text-decoration: underline;
+}

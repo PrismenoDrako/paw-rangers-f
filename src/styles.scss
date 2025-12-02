@@ -1,6 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
 @import url("@fontsource/roboto"); /* Fuente base para Aura */
 /* @import "primeflex/primeflex.css"; */ /* Comentado porque se carga desde index.html (CDN) */
+@import "leaflet/dist/leaflet.css"; /* Estilos de Leaflet para mapas */
 body {
 	font-family: 'Roboto', sans-serif;
 	

@@ -1,4 +1,6 @@
 import { Routes } from '@angular/router';
+import { FoundPetsList } from './pages/found-pets-list/found-pets-list';
+import { ReportFoundPet } from './pages/report-found-pet/report-found-pet';
 
 export const foundPetsRoutes: Routes = [
   {

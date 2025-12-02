@@ -21,7 +21,7 @@
   }
   
   .report-other-btn {
-    background: #6b7280;
+    background: #294374;
     color: white;
     border: none;
     border-radius: 8px;
@@ -32,7 +32,7 @@
     transition: all 0.3s ease;
     
     &:hover {
-      background: #4b5563;
+      background: #1e3050;
       transform: translateY(-1px);
     }
   }
@@ -57,9 +57,9 @@
   }
   
   &.selected {
-    border-color: #3b82f6;
+    border-color: #294374;
     transform: translateY(-2px);
-    box-shadow: 0 4px 16px rgba(59, 130, 246, 0.3);
+    box-shadow: 0 4px 16px rgba(41, 67, 116, 0.3);
   }
 }
 

@@ -1,41 +1,398 @@
+﻿<p-toast></p-toast>
+
 <div class="report-page">
-  <div class="report-header">
+  <!-- Header con fondo blanco -->
+  <div class="page-header">
     <button class="back-btn" (click)="goBack()">
       <i class="pi pi-arrow-left"></i>
     </button>
-    <h1 class="page-title">Reportar Mascota Perdida</h1>
-    <p class="page-subtitle">Ayúdanos a reunir familias con sus queridas mascotas</p>
+    <div class="header-text">
+      <h1>Alerta de Desaparición</h1>
+      <p>Ayúdanos a encontrar a tu mascota reportando su desaparición</p>
+    </div>
   </div>
 
-  <div class="report-content">
-    <!-- Selector de Mascota -->
-    <app-pet-selector
-      [myPets]="userPets"
-      (onPetSelected)="onPetSelected($event)"
-      (onReportOtherPet)="onReportOther()">
-    </app-pet-selector>
+  <!-- Contenido con el formulario -->
+  <div class="page-content">
+    <div class="report-form-card">
+      <p-stepper [linear]="true" [value]="1">
+      <p-step-list>
+        <p-step [value]="1">Información</p-step>
+        <p-step [value]="2">Ubicación</p-step>
+        <p-step [value]="3">Recompensa</p-step>
+      </p-step-list>
 
-    <!-- Formulario de Información de la Mascota -->
-    <app-pet-info-form
-      [selectedPet]="selectedPet"
-      (onInfoChange)="onPetInfoChange($event)">
-    </app-pet-info-form>
+      <p-step-panels>
+    <!-- PASO 1: Información de la Mascota -->
+    <p-step-panel [value]="1">
+      <ng-template #content let-activateCallback="activateCallback">
+      <div class="step-content">
+        <!-- Selector de Mascota del Usuario -->
+        <div class="form-group">
+          <label class="form-label">¿Es una de tus mascotas?</label>
+          <div class="pets-grid">
+            <div 
+              *ngFor="let pet of userPets"
+              class="pet-option"
+              [class.selected]="selectedPet?.id === pet.id"
+              (click)="selectUserPet(pet)">
+              <div class="pet-image-container">
+                <img [src]="pet.image" [alt]="pet.name" class="pet-image">
+                <div class="pet-overlay">
+                  <span class="pet-name">{{ pet.name }}</span>
+                </div>
+              </div>
+            </div>
+            <div 
+              class="pet-option other-pet-option"
+              [class.selected]="isReportingOther"
+              (click)="reportOtherPet()">
+              <div class="pet-image-container">
+                <div class="other-pet-content">
+                  <i class="pi pi-plus"></i>
+                  <span>Otra mascota</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
 
-    <!-- Mapa de Ubicación -->
-    <app-location-map
-      (onLocationUpdate)="onLocationChange($event)">
-    </app-location-map>
+        <!-- Formulario visible solo después de seleccionar -->
+        <div *ngIf="petSelected" class="form-container" [@slideDown]>
+          <!-- Foto (solo si es "Otra mascota") -->
+          <div class="form-group" *ngIf="isReportingOther">
+            <label class="form-label">Foto de la Mascota</label>
+            <div class="photo-upload-wrapper" *ngIf="!photoPreview">
+              <div class="photo-upload-box" (click)="photoInput.click()">
+                <i class="pi pi-cloud-upload upload-icon"></i>
+                <p class="upload-main-text">Haz clic para subir una foto</p>
+                <p class="upload-help-text">PNG, JPG o JPEG (MAX. 5MB)</p>
+              </div>
+              <input 
+                #photoInput
+                type="file" 
+                accept="image/*" 
+                (change)="onPhotoSelected($event)"
+                style="display: none;">
+            </div>
+            <div class="photo-preview-wrapper" *ngIf="photoPreview">
+              <img [src]="photoPreview" alt="Preview" class="preview-image">
+              <button class="remove-photo-button" (click)="removePhoto()" type="button">
+                <i class="pi pi-times"></i>
+              </button>
+            </div>
+          </div>
 
-    <!-- Formulario de Descripción y Contacto -->
-    <app-description-form
-      (onFormDataChange)="onDescriptionChange($event)">
-    </app-description-form>
+          <!-- Formulario de datos de la mascota -->
+          <form [formGroup]="petInfoForm">
+            <div class="form-row-2">
+              <div class="form-group">
+                <label class="form-label">
+                  Nombre <span class="required-asterisk">*</span>
+                </label>
+                <input 
+                  type="text" 
+                  pInputText 
+                  formControlName="petName"
+                  placeholder="Ej: Max"
+                  [class.field-error]="petInfoForm.get('petName')?.invalid && petInfoForm.get('petName')?.touched">
+                <span class="error-message" *ngIf="petInfoForm.get('petName')?.hasError('required') && petInfoForm.get('petName')?.touched">
+                  El nombre es requerido
+                </span>
+              </div>
 
-    <!-- Acciones del Formulario -->
-    <app-form-actions
-      [isFormValid]="isFormValid"
-      (onSubmitForm)="onSubmitReport()"
-      (onCancelForm)="onCancelReport()">
-    </app-form-actions>
+              <div class="form-group">
+                <label class="form-label">
+                  Especie <span class="required-asterisk">*</span>
+                </label>
+                <p-select 
+                  formControlName="species"
+                  [options]="speciesOptions"
+                  placeholder="Selecciona la especie"
+                  optionLabel="label"
+                  optionValue="value"
+                  [class.field-error]="petInfoForm.get('species')?.invalid && petInfoForm.get('species')?.touched">
+                </p-select>
+                <span class="error-message" *ngIf="petInfoForm.get('species')?.hasError('required') && petInfoForm.get('species')?.touched">
+                  La especie es requerida
+                </span>
+              </div>
+            </div>
+
+            <div class="form-row-2">
+              <div class="form-group">
+                <label class="form-label">Raza</label>
+                <input 
+                  type="text" 
+                  pInputText 
+                  formControlName="breed"
+                  placeholder="Ej: Labrador">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Edad</label>
+                <input 
+                  type="text" 
+                  pInputText 
+                  formControlName="age"
+                  placeholder="Ej: 2 años">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">
+                Descripción <span class="required-asterisk">*</span>
+              </label>
+              <textarea 
+                pTextarea
+                formControlName="description"
+                rows="4"
+                placeholder="Describe características distintivas, comportamiento, última vez visto, etc."
+                [class.field-error]="petInfoForm.get('description')?.invalid && petInfoForm.get('description')?.touched">
+              </textarea>
+              <span class="error-message" *ngIf="petInfoForm.get('description')?.hasError('required') && petInfoForm.get('description')?.touched">
+                La descripción es requerida
+              </span>
+            </div>
+          </form>
+
+          <div class="form-actions">
+            <p-button label="Cancelar" [text]="true" styleClass="btn-cancel-text" (onClick)="goBack()"></p-button>
+            <p-button 
+              label="Siguiente" 
+              icon="pi pi-arrow-right" 
+              iconPos="right"
+              styleClass="btn-primary"
+              [disabled]="!petInfoForm.valid"
+              (onClick)="onStepChange(2); activateCallback(2)">
+            </p-button>
+          </div>
+        </div>
+      </div>
+      </ng-template>
+    </p-step-panel>
+
+    <!-- PASO 2: Ubicación -->
+    <p-step-panel [value]="2">
+      <ng-template #content let-activateCallback="activateCallback">
+      <div class="step-content">
+        <form [formGroup]="locationForm">
+          <!-- MAPA PRIMERO -->
+          <div class="form-group">
+            <label class="form-label">
+              Selecciona la ubicación en el mapa <span class="required-asterisk">*</span>
+            </label>
+            <div class="map-container-wrapper">
+              <div id="map" class="leaflet-map"></div>
+            </div>
+            <p class="field-hint">
+              <i class="pi pi-info-circle" style="margin-right: 6px;"></i>
+              Haz clic en el mapa para marcar la ubicación exacta donde se perdió tu mascota
+            </p>
+          </div>
+
+          <!-- DIRECCIÓN (auto-completada) -->
+          <div class="form-group">
+            <label class="form-label">
+              Dirección <span class="required-asterisk">*</span>
+            </label>
+            <input 
+              type="text" 
+              pInputText 
+              formControlName="address"
+              placeholder="Se llenará automáticamente al seleccionar en el mapa"
+              [class.field-error]="locationForm.get('address')?.invalid && locationForm.get('address')?.touched">
+            <span class="error-message" *ngIf="locationForm.get('address')?.hasError('required') && locationForm.get('address')?.touched">
+              Selecciona una ubicación en el mapa
+            </span>
+          </div>
+
+          <!-- FECHA Y HORA (auto-completadas) -->
+          <div class="form-row-2">
+            <div class="form-group">
+              <label class="form-label">
+                Fecha en que se perdió <span class="required-asterisk">*</span>
+              </label>
+              <p-datepicker
+                formControlName="lostDate"
+                [showIcon]="true"
+                placeholder="Se llena automáticamente"
+                dateFormat="dd/mm/yy"
+                [maxDate]="today"
+                [class.field-error]="locationForm.get('lostDate')?.invalid && locationForm.get('lostDate')?.touched">
+              </p-datepicker>
+              <span class="error-message" *ngIf="locationForm.get('lostDate')?.hasError('required') && locationForm.get('lostDate')?.touched">
+                La fecha es requerida
+              </span>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Hora aproximada</label>
+              <input 
+                type="time" 
+                pInputText 
+                formControlName="lostTime"
+                placeholder="Se llena automáticamente">
+            </div>
+          </div>
+        </form>
+
+        <div class="form-actions">
+          <p-button 
+            label="Anterior" 
+            icon="pi pi-arrow-left"
+            [text]="true"
+            styleClass="btn-cancel-text"
+            (onClick)="activateCallback(1); onStepChange(1)">
+          </p-button>
+          <p-button 
+            label="Siguiente" 
+            icon="pi pi-arrow-right" 
+            iconPos="right"
+            styleClass="btn-primary"
+            [disabled]="!locationForm.valid"
+            (onClick)="activateCallback(3); onStepChange(3)">
+          </p-button>
+        </div>
+      </div>
+      </ng-template>
+    </p-step-panel>
+
+    <!-- PASO 3: Recompensa -->
+    <p-step-panel [value]="3">
+      <ng-template #content let-activateCallback="activateCallback">
+      <div class="step-content">
+        <form [formGroup]="rewardForm">
+          <!-- ¿Tiene collar? -->
+          <div class="form-group">
+            <label class="form-label">¿Tu mascota tiene collar?</label>
+            <div class="radio-options">
+              <div class="radio-option">
+                <p-radiobutton 
+                  name="hasCollar" 
+                  [value]="true" 
+                  formControlName="hasCollar"
+                  inputId="collar-yes">
+                </p-radiobutton>
+                <label for="collar-yes" class="radio-label">Sí</label>
+              </div>
+              <div class="radio-option">
+                <p-radiobutton 
+                  name="hasCollar" 
+                  [value]="false" 
+                  formControlName="hasCollar"
+                  inputId="collar-no">
+                </p-radiobutton>
+                <label for="collar-no" class="radio-label">No</label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Ofrecer recompensa -->
+          <div class="form-group reward-section">
+            <div class="checkbox-wrapper">
+              <input 
+                type="checkbox" 
+                id="offer-reward"
+                formControlName="offerReward"
+                class="form-checkbox">
+              <label for="offer-reward" class="checkbox-label">
+                <span class="checkmark"></span>
+                <span class="checkbox-text">Ofrecer recompensa</span>
+              </label>
+            </div>
+
+            <!-- Campo de monto (solo si offerReward es true) -->
+            <div class="reward-amount-wrapper" *ngIf="rewardForm.get('offerReward')?.value">
+              <label class="form-label">
+                Monto de la recompensa <span class="required-asterisk">*</span>
+              </label>
+              <div class="input-with-prefix">
+                <span class="input-prefix">$</span>
+                <input 
+                  type="number" 
+                  pInputText 
+                  formControlName="rewardAmount"
+                  placeholder="0.00"
+                  min="0"
+                  step="0.01"
+                  class="input-with-prefix-field"
+                  [class.field-error]="rewardForm.get('rewardAmount')?.invalid && rewardForm.get('rewardAmount')?.touched">
+              </div>
+              <span class="error-message" *ngIf="rewardForm.get('rewardAmount')?.hasError('required') && rewardForm.get('rewardAmount')?.touched">
+                El monto de la recompensa es requerido
+              </span>
+              <span class="error-message" *ngIf="rewardForm.get('rewardAmount')?.hasError('min') && rewardForm.get('rewardAmount')?.touched">
+                El monto debe ser mayor a 0
+              </span>
+            </div>
+          </div>
+        </form>
+
+        <div class="form-actions">
+          <p-button 
+            label="Anterior" 
+            icon="pi pi-arrow-left"
+            [text]="true"
+            styleClass="btn-cancel-text"
+            (onClick)="activateCallback(2)">
+          </p-button>
+          <p-button 
+            label="Publicar Reporte" 
+            icon="pi pi-check" 
+            iconPos="right"
+            styleClass="btn-primary"
+            [disabled]="!isFormValid()"
+            (onClick)="submitReport()">
+          </p-button>
+        </div>
+      </div>
+      </ng-template>
+    </p-step-panel>
+  </p-step-panels>
+</p-stepper>
+    </div>
   </div>
 </div>
+
+<!-- Modal para guardar mascota en perfil -->
+<p-dialog 
+  [(visible)]="showSavePetModal" 
+  [modal]="true" 
+  [closable]="true"
+  [style]="{width: '450px'}"
+  styleClass="save-pet-modal">
+  <ng-template pTemplate="header">
+    <div class="modal-header">
+      <i class="pi pi-bookmark"></i>
+      <h3>Guardar Mascota</h3>
+    </div>
+  </ng-template>
+  
+  <div class="modal-content">
+    <p class="modal-message">
+      ¿Deseas guardar esta mascota en tu perfil para futuras referencias?
+    </p>
+    <p class="modal-submessage">
+      Podrás acceder a su información desde tu sección de mascotas.
+    </p>
+  </div>
+  
+  <ng-template pTemplate="footer">
+    <div class="modal-actions">
+      <p-button 
+        label="No, gracias" 
+        styleClass="btn-secondary-modal"
+        (onClick)="saveAndContinue(false)">
+      </p-button>
+      <p-button 
+        label="Sí, guardar" 
+        icon="pi pi-check"
+        styleClass="btn-primary-modal"
+        (onClick)="saveAndContinue(true)">
+      </p-button>
+    </div>
+  </ng-template>
+</p-dialog>
+
+<p-toast></p-toast>

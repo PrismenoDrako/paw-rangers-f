@@ -1,0 +1,16 @@
+<div class="section-header">
+  <div class="header-content">
+    <i class="pi" [ngClass]="icon"></i>
+    <div class="header-text">
+      <h2 class="section-title">{{ title }}</h2>
+      <p class="section-description">{{ subtitle }}</p>
+    </div>
+  </div>
+  <button 
+    *ngIf="showViewAll"
+    class="view-all-button" 
+    (click)="onViewAllClick()">
+    Ver todos
+    <i class="pi pi-arrow-right"></i>
+  </button>
+</div>

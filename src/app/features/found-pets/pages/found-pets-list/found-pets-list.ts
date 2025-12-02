@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { FoundSearch, SearchFilters } from '../../components/found-search/found-search';
 import { FoundPetsContainer } from '../../components/found-pets-container/found-pets-container';
 import { FoundPet } from '../../components/found-pet-card/found-pet-card';
+import { Modal } from '../../components/modal/modal';
 
 @Component({
   selector: 'app-found-pets-list',
@@ -11,7 +12,8 @@ import { FoundPet } from '../../components/found-pet-card/found-pet-card';
   imports: [
     CommonModule,
     FoundSearch,
-    FoundPetsContainer
+    FoundPetsContainer,
+    Modal
   ],
   templateUrl: './found-pets-list.html',
   styleUrls: ['./found-pets-list.scss']

@@ -1,0 +1,74 @@
+<div class="alert-detail">
+  <button class="link-back" type="button" (click)="backToNotifications()">
+    <- Volver a notificaciones
+  </button>
+
+  <ng-container *ngIf="alert; else notFound">
+    <div class="alert-hero">
+      <div class="alert-hero__image" *ngIf="alert.image">
+        <img [src]="alert.image" [alt]="alert.title" />
+      </div>
+
+      <div class="pill-row hero-badges">
+        <span class="pill pill--type">{{ alert.reportType === 'lost' ? 'Mascota perdida' : 'Mascota encontrada' }}</span>
+        <span class="pill">ID reporte: {{ alert.reportId }}</span>
+        <span class="pill pill--status" [class.pill--open]="alert.status === 'open'" [class.pill--resolved]="alert.status === 'resolved'">
+          Estado: {{ alert.status === 'open' ? 'Abierta' : 'Resuelta' }}
+        </span>
+      </div>
+
+      <div class="hero-main">
+        <app-alert-summary
+          [alert]="alert"
+          [showActions]="true"
+          (viewReport)="goToReport()"
+          (markResolved)="markResolved()">
+        </app-alert-summary>
+      </div>
+    </div>
+
+    <div class="alert-layout">
+      <div class="alert-layout__column">
+        <div class="alert-section alert-photos" *ngIf="alert.reportType === 'found' && alert.foundImage">
+          <div class="photo-card">
+            <p class="photo-label">Foto encontrada</p>
+            <img [src]="alert.foundImage" [alt]="alert.title + ' encontrada'" />
+          </div>
+        </div>
+
+        <div class="alert-section" *ngIf="alert.reportType === 'lost' && alert.ownerContact">
+          <h3>Contacto</h3>
+          <div class="contact-card">
+            <h4>Dueño</h4>
+            <p class="contact-name">{{ alert.ownerContact.name }}</p>
+            <p *ngIf="alert.ownerContact.note" class="contact-note">{{ alert.ownerContact.note }}</p>
+            <div class="contact-actions">
+              <a *ngIf="alert.ownerContact.phone" [href]="'tel:' + alert.ownerContact.phone" class="btn">Llamar</a>
+              <a *ngIf="alert.ownerContact.email" [href]="'mailto:' + alert.ownerContact.email" class="btn ghost">Correo</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="alert-section">
+          <h3>Eventos</h3>
+          <app-alert-timeline [events]="alert.timeline || []"></app-alert-timeline>
+        </div>
+      </div>
+
+      <div class="alert-layout__column alert-layout__column--map" *ngIf="alert.lastSeen">
+        <div class="alert-section">
+          <h3>Zona de avistamiento</h3>
+          <app-alert-map
+            [center]="{ lat: alert.lastSeen.lat, lng: alert.lastSeen.lng }"
+            [radiusMeters]="alert.lastSeen.radiusMeters || 300"
+            [markers]="timelineMarkers">
+          </app-alert-map>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-template #notFound>
+    <p class="empty">No se encontró esta alerta.</p>
+  </ng-template>
+</div>

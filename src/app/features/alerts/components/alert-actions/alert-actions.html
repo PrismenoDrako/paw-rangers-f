@@ -1,0 +1,8 @@
+<div class="alert-actions">
+  <button type="button" class="primary" (click)="viewReport.emit()">
+    Ver reporte
+  </button>
+  <button *ngIf="showMarkResolved" type="button" class="ghost" (click)="markResolved.emit()">
+    Marcar como resuelta
+  </button>
+</div>

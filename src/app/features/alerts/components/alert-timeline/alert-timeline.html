@@ -1,0 +1,17 @@
+<div class="alert-timeline" *ngIf="events?.length; else empty">
+  <div class="timeline-item" *ngFor="let event of events">
+    <div class="dot" [class.dot--status]="event.type === 'status'"></div>
+    <div class="content">
+      <div class="title-row">
+        <h4>{{ event.title }}</h4>
+        <span class="date">{{ event.timestamp | date:'short' }}</span>
+      </div>
+      <p *ngIf="event.description">{{ event.description }}</p>
+      <span *ngIf="event.location?.label" class="meta">📍 {{ event.location?.label }}</span>
+    </div>
+  </div>
+</div>
+
+<ng-template #empty>
+  <p class="empty">Sin eventos registrados.</p>
+</ng-template>

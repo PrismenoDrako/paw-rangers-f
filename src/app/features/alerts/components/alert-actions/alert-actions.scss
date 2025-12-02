@@ -1,0 +1,26 @@
+.alert-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+
+.primary {
+  padding: 10px 16px;
+  border-radius: 10px;
+  border: none;
+  background: #4a57d3;
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.ghost {
+  padding: 10px 16px;
+  border-radius: 10px;
+  border: 1px solid rgba(51, 68, 115, 0.2);
+  background: white;
+  color: #334473;
+  font-weight: 700;
+  cursor: pointer;
+}

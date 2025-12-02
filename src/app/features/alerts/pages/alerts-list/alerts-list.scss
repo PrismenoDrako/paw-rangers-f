@@ -1,0 +1,27 @@
+.alerts-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 16px;
+}
+
+.alerts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 14px;
+}
+
+.alert-card {
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.alert-card:focus-visible {
+  outline: 2px solid #4a57d3;
+  outline-offset: 2px;
+}
+
+.alert-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
+}

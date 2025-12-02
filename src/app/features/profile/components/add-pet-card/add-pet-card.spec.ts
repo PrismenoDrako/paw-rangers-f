@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+/*import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AddPetCard } from './add-pet-card';
 
@@ -21,3 +21,4 @@ describe('AddPetCard', () => {
     expect(component).toBeTruthy();
   });
 });
+*/

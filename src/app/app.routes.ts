@@ -4,6 +4,7 @@ import { foundPetsRoutes } from './features/found-pets/found-pets.routes';
 import { profileRoutes } from './features/profile/profile.routes';
 import { homeRoutes } from './features/home/home.routes';
 
+import { notificationsRoutes } from './features/notifications/notifications.routes';
 export const routes: Routes = [
     // Ruta de inicio (página principal)
     {
@@ -33,5 +34,5 @@ export const routes: Routes = [
     
     // Rutas de perfil
     ...profileRoutes,
-    
+    ...notificationsRoutes
 ];

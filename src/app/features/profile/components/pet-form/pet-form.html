@@ -1,26 +1,46 @@
-<p-card [header]="isEditMode ? 'Editar Mascota' : 'Añadir Nueva Mascota'"
+<p-card [header]="isEditMode ? 'Editar Mascota: ' + petForm.get('name')?.value : 'Añadir Nueva Mascota'"
     styleClass="w-full shadow-lg rounded-xl border-2 border-primary-blue-500 surface-card">
-    <form (ngSubmit)="savePet()" class="p-fluid grid form-layout">
+    <form [formGroup]="petForm" (ngSubmit)="savePet()" class="p-fluid grid form-layout">
 
         <div class="field col-12">
             <label for="name">Nombre</label>
-            <input pInputText id="name" type="text" [(ngModel)]="petForm.name" name="name" required />
+            <input pInputText id="name" type="text" formControlName="name" />
         </div>
 
         <div class="field col-12 md:col-6">
             <label for="species">Especie</label>
-            <input pInputText id="species" type="text" [(ngModel)]="petForm.species" name="species" required />
+            <select id="species" formControlName="species" class="p-inputtext">
+                <option [ngValue]="null" disabled selected>Selecciona una especie</option>
+                <option *ngFor="let option of speciesOptions" [ngValue]="option">
+                    {{ option.name }}
+                </option>
+            </select>
+        </div>
+        
+        <div *ngIf="petForm.get('species')?.value?.code === 'OTHER'" class="field col-12 md:col-6">
+            <label for="customSpecies">Especifica la especie</label>
+            <input pInputText id="customSpecies" type="text" formControlName="customSpecies" />
         </div>
 
         <div class="field col-12 md:col-6">
             <label for="breed">Raza</label>
-            <input pInputText id="breed" type="text" [(ngModel)]="petForm.breed" name="breed" required />
+            <select id="breed" formControlName="breed" class="p-inputtext">
+                <option [ngValue]="null" disabled selected>Selecciona una raza</option>
+                <option *ngFor="let option of breedOptions" [ngValue]="option">
+                    {{ option.name }}
+                </option>
+            </select>
+        </div>
+        
+        <div *ngIf="petForm.get('breed')?.value?.code === 'OTHER'" class="field col-12 md:col-6">
+            <label for="customBreed">Especifica la raza</label>
+            <input pInputText id="customBreed" type="text" formControlName="customBreed" />
         </div>
 
-        <div class="field col-12 select-button-container">
+        <div class="field col-12 md:col-6 select-button-container">
             <label>Género</label>
-            <p-selectButton [options]="genderOptions" [(ngModel)]="petForm.gender" name="gender" optionLabel="label"
-                optionValue="value" [allowEmpty]="false">
+            <!-- ✅ CORREGIDO: Añadimos la plantilla para mostrar icono y texto -->
+            <p-selectButton [options]="genderOptions" formControlName="gender" optionLabel="label" optionValue="value">
                 <ng-template let-item pTemplate>
                     <i [class]="item.icon" class="mr-2"></i>
                     <span>{{item.label}}</span>
@@ -29,34 +49,32 @@
         </div>
 
         <div class="field col-12 md:col-6">
-            <label for="age">Edad (años)</label>
-            <p-inputNumber id="age" [(ngModel)]="petForm.age" name="age" [showButtons]="true" [min]="0"
-                required></p-inputNumber>
+            <label for="age">Edad (Años)</label>
+            <p-inputNumber id="age" formControlName="age" mode="decimal" [min]="0" [showButtons]="true" inputId="age"></p-inputNumber>
         </div>
 
-        <div class="field col-12 md:col-6">
-            <label for="weight">Peso (kg)</label>
-            <p-inputNumber id="weight" [(ngModel)]="petForm.weight" name="weight" [showButtons]="true" [min]="0"
-                [maxFractionDigits]="2" required></p-inputNumber>
-        </div>
-
+                
         <div class="field col-12">
-            <label for="fileUpload">Imagen de la Mascota</label>
-            <p-fileUpload id="fileUpload" mode="basic" chooseLabel="Elegir Archivo" accept="image/*"
-                maxFileSize="1000000" (onSelect)="onFileSelect($event)" [auto]="false" [showUploadButton]="false"
+            <label for="fileUpload">Foto (Opcional)</label>
+            <!-- ✅ CORRECCIÓN FINAL: Usamos (onSelect) y pasamos el evento completo. [auto] se quita para que funcione con modo 'basic'. -->
+            <p-fileUpload #fileUpload mode="basic" chooseLabel="Elegir Archivo" accept="image/*" [customUpload]="true" (onSelect)="onImageUpload($event)"
                 [showCancelButton]="false">
             </p-fileUpload>
         </div>
 
         <div class="col-12 text-center mb-3">
-            <img [src]="localImageUrl || 'https://placehold.co/200x200/294374/FFFFFF?text=Sin+Imagen'"
+            <img [src]="localImageUrl || petForm.get('imageUrl')?.value || 'https://placehold.co/200x200/294374/FFFFFF?text=Sin+Imagen'"
                 alt="Imagen de la Mascota" class="preview-image shadow-md"
-                onerror="this.onerror=null; this.src='https://placehold.co/200x200/294374/FFFFFF?text=Sin+Imagen';">
+                onerror="this.onerror=null; this.src='https://placehold.co/200x200/294374/FFFFFF?text=Sin+Imagen'">
         </div>
 
-        <div class="col-12 flex justify-content-center gap-2 mt-3">
+        <div class="col-12 flex justify-content-center gap-2 mt-3 form-actions">
             <p-button type="submit" [label]="isEditMode ? 'Guardar Cambios' : 'Añadir Mascota'" icon="pi pi-save"
                 styleClass="p-button-primary p-button-raised"></p-button>
+            
+            <p-button *ngIf="isEditMode" type="button" label="Eliminar Mascota" icon="pi pi-trash"
+                styleClass="p-button-danger p-button-raised" (onClick)="deletePet()"></p-button>
+                
             <p-button type="button" label="Cancelar" icon="pi pi-times" styleClass="p-button-outlined"
                 (onClick)="cancel()"></p-button>
         </div>

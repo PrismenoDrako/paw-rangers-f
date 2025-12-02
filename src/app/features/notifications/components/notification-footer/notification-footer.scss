@@ -1,0 +1,80 @@
+.notification-footer {
+  margin-top: 40px;
+  padding: 32px 16px 48px;
+  background: linear-gradient(180deg, rgba(238, 240, 248, 0) 0%, #eef0f8 40%);
+  display: flex;
+  justify-content: center;
+}
+
+.notification-footer__card {
+  width: min(900px, 100%);
+  border-radius: 20px;
+  padding: 28px 32px;
+  background: linear-gradient(135deg, #2f3c66, #5c6fb3);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 24px 40px rgba(13, 24, 45, 0.25);
+  color: #ffffff;
+}
+
+.notification-footer__copy {
+  max-width: 520px;
+}
+
+.eyebrow {
+  margin: 0 0 8px;
+  font-size: 0.78rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.notification-footer__copy h3 {
+  margin: 0 0 6px;
+  font-size: 1.35rem;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.notification-footer__copy p {
+  margin: 0;
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.88);
+}
+
+.configure-button {
+  border: none;
+  border-radius: 999px;
+  padding: 14px 30px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #2f3c66;
+  background-color: #ffffff;
+  cursor: pointer;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 16px 28px rgba(0, 0, 0, 0.25);
+  }
+
+  &:focus-visible {
+    outline: 3px solid rgba(255, 255, 255, 0.7);
+    outline-offset: 3px;
+  }
+}
+
+@media (max-width: 600px) {
+  .notification-footer__card {
+    padding: 24px;
+  }
+
+  .configure-button {
+    width: 100%;
+    text-align: center;
+  }
+}

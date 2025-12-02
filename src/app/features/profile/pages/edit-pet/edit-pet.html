@@ -1,0 +1,8 @@
+<div class="edit-pet-container">
+    <app-pet-form 
+        [petData]="petData"
+        (formSubmit)="onFormSubmit($event)"
+        (formCancel)="onFormCancel()"
+        (formDelete)="onFormDelete($event)">
+    </app-pet-form>
+</div>

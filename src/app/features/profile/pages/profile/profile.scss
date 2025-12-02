@@ -7,27 +7,29 @@
 
 .profile-content {
     
-    // 🚨 ESTILOS UNIFORMES PARA MIS MASCOTAS Y MIS UBICACIONES
+    // Estilos comunes para las secciones de Mis Mascotas y Mis Ubicaciones
     .profile-section-card.p-card { 
         background-color: var(--surface-card, white);
         border-radius: 12px;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-        border: 1px solid #294374 !important; 
+        //border: 1px solid #294374 !important; 
 
         .p-card-body {
             padding: 0 !important;
         }
 
         .p-card-content {
-            padding: 1.5rem !important; // 🚨 Aumentamos el padding para separación
+            padding: 1.5rem !important; 
         }
-        
-        h2 { // Para los títulos de sección (Mis Mascotas y Mis Ubicaciones)
+        //Títulos
+        h2 { 
             color: var(--text-color);
             margin-bottom: 1rem; 
-            font-size: 1.75rem; // Tamaño de título ajustado
+            font-size: 1.75rem; 
         }
     }
 
+
+    
     
 }

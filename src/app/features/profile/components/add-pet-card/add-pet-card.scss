@@ -1,11 +1,15 @@
 /* add-pet-card.component.scss */
 
+// Definición de color base para el Azul
+$primary-blue: #294374;
+$light-blue-bg: #EDF0F7;
+
 .add-pet-card {
     cursor: pointer;
-    height: 100%; 
-    min-height: 280px; 
-    background-color: #EDF0F7; 
-    border: 2px dashed #294374; 
+    height: 100%; // Ocupa toda la altura disponible en el grid
+    min-height: 280px; // Mantiene una altura mínima consistente con my-pets-cards
+    background-color: $light-blue-bg; 
+    border: 2px dashed $primary-blue; // 🚨 Borde punteado azul
     border-radius: 12px;
     transition: all 0.2s ease-in-out;
     display: flex;
@@ -13,21 +17,25 @@
     align-items: center;
     justify-content: center;
 
-
+    // Efecto de hover
     &:hover {
         background-color: var(--surface-200);
-        border-color: var(--primary-color);
+        border-color: $primary-blue;
         box-shadow: 0 0 0 0.1rem rgba(41, 67, 116, 0.25);
     }
 
+    // Asegura que el contenido interno ocupe toda la tarjeta
     .p-card-body, .p-card-content {
         height: 100%;
         padding: 0 !important;
     }
     
+    // Icono
     .pi-plus-circle {
-        color: #294374; 
+        color: $primary-blue; // Icono en azul oscuro
     }
+    
+    // Texto
     .font-semibold {
         color: var(--text-color);
     }

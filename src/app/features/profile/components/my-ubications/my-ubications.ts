@@ -1,23 +1,25 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 // PrimeNG Modules
 import { CardModule } from 'primeng/card';
-// ✅ CORRECCIÓN: Importar los componentes hijos que se usarán en la plantilla.
-import { UbicationCardComponent } from '../ubication-card/ubication-card';
-import { AddUbicationCardComponent } from '../add-ubication-card/add-ubication-card';
+import { ButtonModule } from 'primeng/button'; // 🚨 NECESARIO para el botón de "Añadir"
+// ✅ CORRECCIÓN: Importar el componente de item de lista
+import { UbicationListItemComponent } from '../ubication-list-item/ubication-list-item'; 
 
 @Component({
   selector: 'app-my-ubications', 
   standalone: true,
-  // ✅ CORRECCIÓN: Añadir los componentes hijos al array de imports.
   imports: [
     CommonModule, 
-    CardModule, 
-    UbicationCardComponent, // Componente de tarjeta de ubicación
-    AddUbicationCardComponent // Componente para añadir ubicación
+    CardModule,
+    ButtonModule, // 🚨 Añadido
+    UbicationListItemComponent // ✅ Componente de item de lista
   ],
   templateUrl: './my-ubications.html',
-  styleUrl: './my-ubications.scss'
+  // Es posible que el SCSS de ubication-card/add-ubication-card deba eliminarse si se importaba aquí
+  // Si habías importado `my-ubications.scss` y contenía estilos de las tarjetas, elimínalos de ahí.
+  styleUrl: './my-ubications.scss' 
 })
 export class MyUbicationsComponent { 
 
@@ -34,22 +36,17 @@ export class MyUbicationsComponent {
       id: 2,
       name: 'Trabajo / Oficina',
       latitude: 10.54321,
-      longitude: -75.09876,
-      user_id: 101
-    },
-    {
-      id: 3,
-      name: 'Casa de mis Padres',
-      latitude: 10.99999,
-      longitude: -75.11111,
-      user_id: 101
-    },
+      longitude: -75.12345,
+      user_id: 101 
+    }
   ];
 
-  constructor() { }
+  // Bandera o variable de estado para controlar el formulario de añadir/editar
+  isFormVisible: boolean = false; 
+  
+  constructor(private router: Router) { }
 
   openAddLocationForm(): void {
-    // Lógica para abrir un formulario o modal
-    console.log('Abriendo modal para añadir nueva ubicación...');
+    this.router.navigate(['/crear-ubicacion']);
   }
 }

@@ -1,0 +1,25 @@
+<div class="create-ubication-container">
+  <div class="header">
+    <button class="back-button" (click)="onCancel()">
+      <i class="pi pi-arrow-left"></i>
+      <span>Volver</span>
+    </button>
+  </div>
+
+  <div class="create-ubication-card">
+    <div class="section-header">
+      <h2>Editar Ubicación</h2>
+      <p>Actualiza la ubicación seleccionada en el mapa y los datos</p>
+    </div>
+
+    <div class="content">
+      <div class="map-section">
+        <app-ubication-map (locationSelected)="onLocationSelected($event)"></app-ubication-map>
+      </div>
+
+      <div class="form-section">
+        <app-ubication-form></app-ubication-form>
+      </div>
+    </div>
+  </div>
+</div>

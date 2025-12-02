@@ -1,13 +1,15 @@
 /* my-pets.scss */
+$primary-blue: #294374;
 
-/* 🚨 CORREGIDO: Se aplica el borde a la clase correcta que está en el HTML */
 .profile-section-card {
-    border: 1px solid #294374 !important; 
+    //border: 1px solid $primary-blue !important; 
     
-    /* Si deseas que el padding interno (entre el borde y el contenido) sea de 1.5rem,
-       puedes agregarlo aquí también para asegurar el estilo dentro de este componente. */
     .p-card-content {
         padding: 1.5rem !important;
     }
 
+}
+
+h2{
+    color: $primary-blue;
 }

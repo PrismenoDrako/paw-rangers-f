@@ -1,98 +1,60 @@
-// account-info.component.ts
-
-import { Component, Input, OnInit, ViewChild } from '@angular/core'; 
+// account-info.ts
+import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms'; 
+import { Router } from '@angular/router';
 
-// PrimeNG Modules
+// PrimeNG 
 import { AvatarModule } from 'primeng/avatar';
 import { ButtonModule } from 'primeng/button';
-import { InputTextModule } from 'primeng/inputtext';
-import { PasswordModule } from 'primeng/password';
-import { InputMaskModule } from 'primeng/inputmask';
-import { FileUploadModule, FileUpload } from 'primeng/fileupload'; 
-import { CardModule } from 'primeng/card'; 
+import { CardModule } from 'primeng/card';
+
 
 @Component({
-  selector: 'app-account-info',
-  standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    AvatarModule,
-    ButtonModule,
-    InputTextModule,
-    PasswordModule,
-    InputMaskModule,
-    FileUploadModule,
-    CardModule 
-  ],
-  templateUrl: './account-info.html',
-  styleUrl: './account-info.scss'
+    selector: 'app-account-info',
+    standalone: true,
+    imports: [
+        CommonModule,
+        AvatarModule,
+        ButtonModule,
+        CardModule
+    ],
+    templateUrl: './account-info.html',
+    styleUrl: './account-info.scss'
 })
 export class AccountInfoComponent implements OnInit {
-  
-  // 🚨 CORRECCIÓN: Referencia al componente de subida de archivo
-  @ViewChild('fileUpload') fileUpload!: FileUpload; 
 
-  isEditing: boolean = false; 
-  userData: any = {};
-  originalUserData: any = {};
+    // Datos compartidos que pueden ser actualizados desde account-form
+    static sharedUser: any = {
+        nombre: 'Daniel',
+        apellidoPaterno: 'Vega Bazán',
+        apellidoMaterno: 'Llontop',
+        username: 'danielvegabazan',
+        documento: '12345678',
+        email: 'danielino@gmail.com',
+        phone: '+51 927 165 937',
+        direccion: 'Urb Lourdes Mz A Dto 101',
+        currentPassword: 'Daniel123_',
+        profileImage: null
+    };
 
-  @Input() profileImageUrl: string = 'https://marketplace.canva.com/gJly0/MAGDkMgJly0/1/tl/canva-user-profile-icon-vector.-avatar-or-person-icon.-profile-picture%2C-portrait-symbol.-MAGDkMgJly0.png'; 
+    user: any = {};
+    profileImageUrl: string = '';
 
-  ngOnInit(): void {
-      this.userData = {
-          username: 'danielino06', 
-          nombre: 'Daniel', 
-          apellidoPaterno: 'Vega Bazán',
-          apellidoMaterno: 'Llontop',
-          email: 'danielino@gmail.com',
-          phone: '+51 927 165 937',
-          direccion: 'Urb Lourdes Mz A Dto 101',
-          password: '',
-          confirmPassword: ''
-      };
-      
-      this.originalUserData = { ...this.userData };
-  }
+    constructor(private router: Router) { }
 
-  onEditProfile(): void {
-    if (this.isEditing) {
-      this.saveChanges();
-    } else {
-      this.isEditing = true;
+    ngOnInit(): void {
+        // Obtener los datos del usuario compartidos
+        this.user = AccountInfoComponent.sharedUser;
+        // Obtener la imagen de perfil si existe
+        this.profileImageUrl = this.user.profileImage || '';
     }
-  }
 
-  cancelEditing(): void {
-    this.userData = { ...this.originalUserData };
-    this.isEditing = false;
-  }
-
-  saveChanges(): void {
-    console.log('Datos a guardar:', this.userData);
-    this.originalUserData = { ...this.userData }; 
-    this.isEditing = false;
-  }
-  
-  // 🚨 CORRECCIÓN: Nuevo método para activar el diálogo de subida de archivo
-  onAvatarClick(): void {
-    if (this.fileUpload) {
-        // En lugar de .click() en el objeto Angular, usamos el método 'choose()' de PrimeNG
-        this.fileUpload.choose(); 
+    /**
+     * Navega a la página de edición del perfil cuando se hace clic en el botón.
+     */
+    onEditProfile(): void {
+        console.log('Navegando a la página de edición de perfil...');
+        //Ruta a la pagina de editar perfil
+        this.router.navigate(['/editar-perfil']);
     }
-  }
-  
-  onUpload(event: any) {
-      const file = event.files[0];
-      if (file) {
-          const reader = new FileReader();
-          reader.onload = (e: any) => {
-              this.profileImageUrl = e.target.result;
-          };
-          reader.readAsDataURL(file);
-          console.log('Nueva foto seleccionada:', file.name);
-      }
-  }
 }

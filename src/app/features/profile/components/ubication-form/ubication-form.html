@@ -1,0 +1,67 @@
+<div class="form-container">
+    <form [formGroup]="locationForm" (ngSubmit)="onSave()" class="p-fluid">
+        <div class="form-section">
+            <h3 class="section-title">Dirección seleccionada</h3>
+            <p class="section-subtitle">Selecciona una ubicación en el mapa</p>
+            
+            <div class="field">
+                <label for="fullAddress">Dirección Completa</label>
+                <input 
+                    pInputText 
+                    id="fullAddress" 
+                    type="text" 
+                    formControlName="fullAddress"
+                    placeholder="Calle, número, ciudad..."
+                    readonly />
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h3 class="section-title">¿Cómo quieres llamar a esta ubicación?</h3>
+            
+            <div class="location-types">
+                <button 
+                    type="button"
+                    *ngFor="let type of locationTypeOptions"
+                    class="location-type-btn"
+                    [class.active]="locationForm.get('locationType')?.value === type.value"
+                    (click)="locationForm.patchValue({locationType: type.value})">
+                    <i [class]="type.icon"></i>
+                    <span>{{ type.label }}</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h3 class="section-title">O escribe un nombre personalizado</h3>
+            
+            <div class="field">
+                <input 
+                    pInputText 
+                    type="text" 
+                    formControlName="customName"
+                    placeholder="Casa de mamá, Veterinaria, Parque favorito" />
+            </div>
+        </div>
+
+        <div class="info-box">
+            <i class="pi pi-info-circle"></i>
+            <span>Las ubicaciones guardadas te permitirán reportar mascotas perdidas más rápido y recibir alertas de animales perdidos cerca de tus ubicaciones frecuentes.</span>
+        </div>
+
+        <div class="form-actions">
+            <p-button 
+                label="Cancelar" 
+                icon="pi pi-times"
+                styleClass="p-button-text"
+                (onClick)="onCancel()">
+            </p-button>
+            <p-button 
+                label="Guardar Ubicación" 
+                icon="pi pi-check"
+                styleClass="p-button-primary"
+                [disabled]="!locationForm.valid">
+            </p-button>
+        </div>
+    </form>
+</div>

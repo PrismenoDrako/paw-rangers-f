@@ -1,12 +1,15 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 
 // PrimeNG Modules
 import { CardModule } from 'primeng/card'; 
+import { AvatarModule } from 'primeng/avatar';
+import { ButtonModule } from 'primeng/button';
 
 import { MyPetsCardsComponent } from '../my-pets-cards/my-pets-cards';
 import { AddPetCardComponent } from '../add-pet-card/add-pet-card'; 
-import { PetFormComponent, Pet } from '../pet-form/pet-form'; 
+import { Pet } from '../pet-form/pet-form'; 
 
 @Component({
   selector: 'app-my-pets',
@@ -16,15 +19,17 @@ import { PetFormComponent, Pet } from '../pet-form/pet-form';
     CardModule, 
     MyPetsCardsComponent,
     AddPetCardComponent,
-    PetFormComponent 
+    ButtonModule
   ],
   templateUrl: './my-pets.html',
   styleUrl: './my-pets.scss'
 })
 export class MyPetsComponent {
   
-  // Datos de prueba 
-  @Input() pets: Pet[] = [
+  constructor(private router: Router) {}
+
+  // Datos de prueba - Estático para compartir entre componentes
+  static sharedPets: Pet[] = [
     { 
       id: 1, 
       name: 'Luna', 
@@ -32,7 +37,6 @@ export class MyPetsComponent {
       breed: 'Angora Turco', 
       gender: 'Hembra',
       age: 3, 
-      weight: 4.3, 
       imageUrl: 'https://i.pinimg.com/736x/c2/46/f1/c246f1428432790f5306699e716cb413.jpg'
     },
     { 
@@ -42,59 +46,22 @@ export class MyPetsComponent {
       breed: 'Labrador', 
       gender: 'Macho',
       age: 5, 
-      weight: 30, 
-      imageUrl: 'https://cdn.pixabay.com/photo/2018/05/03/22/07/dog-3372553_1280.jpg'
-    },
+      imageUrl: 'https://cdn.shopify.com/s/files/1/0550/1908/4988/files/labrador_retriever.jpg?v=1676648873'
+    }
   ];
-  
 
-  isEditing: boolean = false;
-  editingPet: Pet | null = null; // Almacena el objeto de la mascota a editar/crear
+  // Getter para acceder siempre al array actual
+  get pets(): Pet[] {
+    return MyPetsComponent.sharedPets;
+  }
 
-  constructor() { }
-  
-
+  // Navegar a página de crear mascota
   onAddPet(): void {
+    this.router.navigate(['/crear-mascota']);
+  }
 
-    this.editingPet = { 
-        name: '', species: '', breed: '', gender: 'Macho', age: 1, weight: 1
-    };
-    this.isEditing = true;
-  }
-  
-  //  Lógica para iniciar el Formulario para EDITAR
-  onPetEdit(petToEdit: Pet): void {
-    this.editingPet = petToEdit;
-    this.isEditing = true;
-  }
-  
-  // Guardar o cancelar
-  onFormClosed(updatedPet: Pet | null = null): void {
-      if (updatedPet) {
-          const index = this.pets.findIndex(p => p.id === updatedPet.id);
-          
-          if (updatedPet.id && index !== -1) {
-              // 🚨 Lógica de actualización (Editar)
-              this.pets[index] = updatedPet;
-              console.log('Mascota actualizada:', updatedPet.name);
-          } else {
-              // 🚨 Lógica de adición (Nueva Mascota)
-              updatedPet.id = this.pets.length > 0 ? Math.max(...this.pets.map(p => p.id || 0)) + 1 : 1; 
-              this.pets.push(updatedPet);
-              console.log('Mascota añadida:', updatedPet.name);
-          }
-      }
-      // Ocultar formulario y limpiar estado
-      this.isEditing = false;
-      this.editingPet = null;
-  }
-  
-  // 🚨 4. Lógica al ELIMINAR
-  onPetDelete(petId: number): void {
-      this.pets = this.pets.filter(p => p.id !== petId);
-      console.log(`Mascota con ID ${petId} eliminada.`);
-      // Cerramos el formulario después de eliminar
-      this.isEditing = false;
-      this.editingPet = null;
+  // Navegar a página de editar mascota
+  onPetEdit(pet: Pet): void {
+    this.router.navigate(['/editar-mascota', pet.id]);
   }
 }

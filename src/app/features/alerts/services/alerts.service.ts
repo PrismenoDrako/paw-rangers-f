@@ -61,7 +61,7 @@ export class AlertsService {
         label: 'Parque infantil de Piura'
       },
       ownerContact: {
-        name: 'Laura',
+        name: 'Laura González',
         phone: '+51 987 111 222',
         email: 'laura@example.com',
         address: 'Av. Grau 123, Piura'

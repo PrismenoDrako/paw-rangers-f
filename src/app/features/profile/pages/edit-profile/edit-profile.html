@@ -1,0 +1,198 @@
+<div class="edit-profile-container">
+    <div class="edit-profile-card">
+        <div class="profile-form-wrapper">
+            <!-- Formulario de editar perfil -->
+            <div class="form-section">
+                <div class="section-header">
+                    <h2>Editar Perfil</h2>
+                    <p>Actualiza tu información personal</p>
+                </div>
+
+                <form [formGroup]="profileForm" (ngSubmit)="onSubmit()" class="profile-form">
+                    <!-- Avatar con icono para editar -->
+                    <div class="avatar-container">
+                        <div class="avatar-wrapper">
+                            <img *ngIf="profileImageUrl" 
+                                 [src]="profileImageUrl" 
+                                 alt="Profile" 
+                                 class="profile-image-preview">
+                            <div *ngIf="!profileImageUrl" class="profile-avatar-default">
+                                <i class="pi pi-user"></i>
+                            </div>
+                            <button type="button" class="edit-photo-btn" (click)="onEditPhoto()">
+                                <i class="pi pi-camera"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Input file oculto para cargar imagen -->
+                    <input type="file" 
+                        id="profileImageInput" 
+                        accept="image/*" 
+                        (change)="onFileSelected($event)"
+                        style="display: none;">
+
+                    <!-- Inputs del perfil -->
+                    <div class="inputs-grid">
+                        <div class="form-group">
+                            <label>Nombre</label>
+                            <input pInputText formControlName="nombre" />
+                        </div>
+
+                        <div class="form-group">
+                            <label>Nombre de Usuario</label>
+                            <input pInputText formControlName="username" />
+                        </div>
+
+                        <div class="form-group">
+                            <label>Apellido Paterno</label>
+                            <input pInputText formControlName="apellidoPaterno" />
+                        </div>
+
+                        <div class="form-group">
+                            <label>Documento de Identidad</label>
+                            <input pInputText formControlName="documento" />
+                        </div>
+
+                        <div class="form-group">
+                            <label>Apellido Materno</label>
+                            <input pInputText formControlName="apellidoMaterno" />
+                        </div>
+
+                        <div class="form-group">
+                            <label>Correo Electrónico</label>
+                            <input pInputText formControlName="email" />
+                        </div>
+
+                        <div class="form-group">
+                            <label>Teléfono</label>
+                            <input pInputText formControlName="phone" />
+                        </div>
+
+                        <div class="form-group form-group-full">
+                            <label>Dirección</label>
+                            <input pInputText formControlName="direccion" />
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Sección de cambiar contraseña -->
+            <div class="divider"></div>
+
+            <div class="form-section">
+                <div class="section-header">
+                    <h3>Cambiar Contraseña</h3>
+                    <p>Actualiza tu contraseña de forma segura</p>
+                </div>
+
+                <!-- Aviso importante -->
+                <div class="warning-message">
+                    <i class="pi pi-lock"></i>
+                    <span><strong>Nota:</strong> Debes ingresar tu contraseña actual para guardar cualquier cambio</span>
+                </div>
+
+                <form [formGroup]="passwordForm" (ngSubmit)="onSubmitPassword()" class="password-form">
+                    <!-- Mensaje de información -->
+                    <div class="info-message">
+                        <i class="pi pi-info-circle"></i>
+                        <span>La contraseña debe tener al menos 8 caracteres</span>
+                    </div>
+
+                    <!-- Inputs de contraseña -->
+                    <div class="inputs-grid">
+                        <!-- Contraseña Actual -->
+                        <div class="form-group form-group-full">
+                            <label>Contraseña Actual</label>
+                            <div class="password-input-wrapper">
+                                <input 
+                                    pInputText 
+                                    formControlName="currentPassword"
+                                    [type]="showPasswords.current ? 'text' : 'password'"
+                                    [ngClass]="{ 'input-error': passwordForm.get('currentPassword')?.hasError('incorrectPassword') && passwordForm.get('currentPassword')?.touched }" />
+                                <button 
+                                    type="button" 
+                                    class="toggle-password-btn"
+                                    (click)="togglePasswordVisibility('current')">
+                                    <i [class]="showPasswords.current ? 'pi pi-eye-slash' : 'pi pi-eye'"></i>
+                                </button>
+                            </div>
+                            <div class="error-message" *ngIf="passwordForm.get('currentPassword')?.hasError('incorrectPassword') && passwordForm.get('currentPassword')?.touched">
+                                <i class="pi pi-exclamation-circle"></i>
+                                <span>La contraseña actual es incorrecta</span>
+                            </div>
+                        </div>
+
+                        <!-- Nueva Contraseña -->
+                        <div class="form-group form-group-full">
+                            <label>Nueva Contraseña</label>
+                            <div class="password-input-wrapper">
+                                <input 
+                                    pInputText 
+                                    formControlName="newPassword"
+                                    [type]="showPasswords.new ? 'text' : 'password'"
+                                    [ngClass]="{ 'input-error': (passwordForm.get('newPassword')?.hasError('samePassword') || passwordForm.get('newPassword')?.hasError('minlength')) && passwordForm.get('newPassword')?.touched }" />
+                                <button 
+                                    type="button" 
+                                    class="toggle-password-btn"
+                                    (click)="togglePasswordVisibility('new')">
+                                    <i [class]="showPasswords.new ? 'pi pi-eye-slash' : 'pi pi-eye'"></i>
+                                </button>
+                            </div>
+                            <div class="error-message" *ngIf="passwordForm.get('newPassword')?.hasError('samePassword') && passwordForm.get('newPassword')?.touched">
+                                <i class="pi pi-exclamation-circle"></i>
+                                <span>La nueva contraseña debe ser diferente a la actual</span>
+                            </div>
+                            <div class="error-message" *ngIf="passwordForm.get('newPassword')?.hasError('minlength') && passwordForm.get('newPassword')?.touched">
+                                <i class="pi pi-exclamation-circle"></i>
+                                <span>Mínimo 8 caracteres</span>
+                            </div>
+                        </div>
+
+                        <!-- Confirmar Contraseña -->
+                        <div class="form-group form-group-full">
+                            <label>Confirmar Contraseña</label>
+                            <div class="password-input-wrapper">
+                                <input 
+                                    pInputText 
+                                    formControlName="confirmPassword"
+                                    [type]="showPasswords.confirm ? 'text' : 'password'"
+                                    [ngClass]="{ 'input-error': passwordForm.hasError('passwordMismatch') && passwordForm.get('confirmPassword')?.touched }" />
+                                <button 
+                                    type="button" 
+                                    class="toggle-password-btn"
+                                    (click)="togglePasswordVisibility('confirm')">
+                                    <i [class]="showPasswords.confirm ? 'pi pi-eye-slash' : 'pi pi-eye'"></i>
+                                </button>
+                            </div>
+                            <div class="error-message" *ngIf="passwordForm.hasError('passwordMismatch') && passwordForm.get('confirmPassword')?.touched">
+                                <i class="pi pi-exclamation-circle"></i>
+                                <span>Las contraseñas no coinciden</span>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Botones finales (Azules) -->
+            <div class="footer-buttons">
+                <p-button 
+                    label="Cancelar" 
+                    icon="pi pi-times"
+                    (onClick)="handleCancel()"
+                    class="btn-cancel">
+                </p-button>
+
+                <p-button 
+                    label="Guardar Cambios" 
+                    icon="pi pi-check"
+                    (onClick)="handleSaveAll()"
+                    [disabled]="!profileForm.valid"
+                    [pTooltip]="profileForm.valid ? '' : 'Completa todos los campos del perfil'"
+                    tooltipPosition="top"
+                    class="btn-save">
+                </p-button>
+            </div>
+        </div>
+    </div>
+</div>

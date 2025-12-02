@@ -1,0 +1,34 @@
+<div class="lost-pets-section">
+  <div class="section-container">
+    <!-- Contenedor con borde elegante -->
+    <div class="carousel-card-container">
+      <!-- Header con título y botón -->
+      <app-lost-section-header
+        title="Mascotas Perdidas"
+        subtitle="Ayúdanos a encontrarlas"
+        icon="pi-exclamation-triangle"
+        [showViewAll]="true"
+        (viewAllClick)="viewAllLostPets()">
+      </app-lost-section-header>
+
+      <!-- Carrusel de mascotas -->
+      <p-carousel 
+        [value]="lostPets" 
+        [numVisible]="3" 
+        [numScroll]="1" 
+        [circular]="true" 
+        [responsiveOptions]="responsiveOptions" 
+        [autoplayInterval]="3000">
+        <ng-template let-pet pTemplate="item">
+          <div class="carousel-item-wrapper">
+            <app-lost-pet-card
+              [pet]="pet"
+              (cardClick)="viewDetails($event)">
+            </app-lost-pet-card>
+          </div>
+        </ng-template>
+      </p-carousel>
+    </div>
+
+  </div>
+</div>

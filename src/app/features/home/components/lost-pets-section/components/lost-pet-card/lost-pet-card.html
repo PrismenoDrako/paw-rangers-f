@@ -1,0 +1,56 @@
+<div class="pet-card" (click)="onCardClick()">
+  <div class="pet-image">
+    <img 
+      [src]="pet.image" 
+      [alt]="pet.name" 
+      onerror="this.src='assets/img/placeholder-pet.jpg'">
+    <p-tag 
+      [value]="pet.type" 
+      severity="info" 
+      styleClass="pet-type-tag" />
+    <p-tag 
+      *ngIf="getDaysLost(pet.date) > 3"
+      value="Urgente" 
+      icon="pi pi-exclamation-circle"
+      [severity]="getUrgencySeverity(getDaysLost(pet.date))"
+      styleClass="urgent-tag" />
+  </div>
+
+  <div class="pet-info">
+    <div class="pet-header">
+      <h3>{{ pet.name }}</h3>
+      <span class="days-badge">{{ getDaysLost(pet.date) }} días</span>
+    </div>
+
+    <div class="pet-details">
+      <div class="detail-item">
+        <i class="pi pi-tag"></i>
+        <span>{{ pet.breed }}</span>
+      </div>
+      <div class="detail-item">
+        <i class="pi pi-palette"></i>
+        <span>{{ pet.color }}</span>
+      </div>
+      <div class="detail-item">
+        <i class="pi pi-map-marker"></i>
+        <span>{{ pet.location }}</span>
+      </div>
+    </div>
+
+    <p class="pet-description">{{ pet.description }}</p>
+
+    <div class="pet-footer">
+      <div class="reward" *ngIf="pet.reward > 0">
+        <i class="pi pi-money-bill"></i>
+        <span>S/{{ pet.reward }}</span>
+      </div>
+      <p-button 
+        label="Ver detalles" 
+        icon="pi pi-chevron-right" 
+        iconPos="right"
+        [outlined]="true"
+        size="small"
+        severity="danger" />
+    </div>
+  </div>
+</div>

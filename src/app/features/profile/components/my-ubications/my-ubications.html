@@ -1,18 +1,20 @@
 <p-card class="profile-section-card">
     <ng-template pTemplate="title">
-        <h2 class="text-2xl font-bold mb-4">Mis Ubicaciones</h2>
+        <div class="flex align-items-center justify-content-between">
+            <h2 class="text-2xl font-bold mb-0">Mis Ubicaciones</h2>
+            <p-button 
+                label="Agregar" 
+                icon="pi pi-plus"
+                styleClass="p-button-primary p-button-sm"
+                (click)="openAddLocationForm()">
+            </p-button>
+        </div>
     </ng-template>
+    
     <ng-template pTemplate="content">
-        <!-- Contenedor responsive usando PrimeFlex/Tailwind grid -->
         <div class="grid">
-            <!-- 1. Iterar sobre las ubicaciones existentes -->
-            <div *ngFor="let location of locations" class="col-12 sm:col-6 lg:col-4 xl:col-3 mb-4">
-                <app-ubication-card [location]="location"></app-ubication-card>
-            </div>
-            
-            <!-- 2. Tarjeta para añadir nueva ubicación -->
-            <div class="col-12 sm:col-6 lg:col-4 xl:col-3 mb-4">
-                <app-add-ubication-card (addClicked)="openAddLocationForm()"></app-add-ubication-card>
+            <div *ngFor="let location of locations" class="col-12 mb-3">
+                <app-ubication-list-item [location]="location"></app-ubication-list-item> 
             </div>
         </div>
     </ng-template>

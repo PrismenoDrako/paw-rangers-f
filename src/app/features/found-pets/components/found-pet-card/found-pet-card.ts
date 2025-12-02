@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 
 export interface FoundPet {
   id: number;
+  reportRef?: string;
   type: string;
   breed?: string;
   description: string;
@@ -16,6 +17,7 @@ export interface FoundPet {
     email?: string;
   };
 }
+
 
 @Component({
   selector: 'app-found-pet-card',

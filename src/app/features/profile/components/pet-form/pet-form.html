@@ -1,5 +1,5 @@
-<p-card [header]="isEditMode ? 'Editar Mascota: ' + petForm.get('name')?.value : 'Añadir Nueva Mascota'"
-    styleClass="w-full shadow-lg rounded-xl border-2 border-primary-blue-500 surface-card">
+<p-card [header]="isEditMode ? 'Editar Mascota: ' + (petData?.name || petForm.get('name')?.value) : 'Crear Mascota'"
+    styleClass="w-full shadow-lg rounded-xl surface-card">
     <form [formGroup]="petForm" (ngSubmit)="savePet()" class="p-fluid grid form-layout">
 
         <div class="field col-12">
@@ -9,7 +9,7 @@
 
         <div class="field col-12 md:col-6">
             <label for="species">Especie</label>
-            <select id="species" formControlName="species" class="p-inputtext">
+            <select id="species" formControlName="species" class="p-inputtext" (change)="onSpeciesChange(petForm.get('species')?.value)">
                 <option [ngValue]="null" disabled selected>Selecciona una especie</option>
                 <option *ngFor="let option of speciesOptions" [ngValue]="option">
                     {{ option.name }}
@@ -24,9 +24,9 @@
 
         <div class="field col-12 md:col-6">
             <label for="breed">Raza</label>
-            <select id="breed" formControlName="breed" class="p-inputtext">
+            <select id="breed" formControlName="breed" class="p-inputtext" [disabled]="filteredBreeds.length === 0">
                 <option [ngValue]="null" disabled selected>Selecciona una raza</option>
-                <option *ngFor="let option of breedOptions" [ngValue]="option">
+                <option *ngFor="let option of filteredBreeds" [ngValue]="option">
                     {{ option.name }}
                 </option>
             </select>
@@ -39,7 +39,6 @@
 
         <div class="field col-12 md:col-6 select-button-container">
             <label>Género</label>
-            <!-- ✅ CORREGIDO: Añadimos la plantilla para mostrar icono y texto -->
             <p-selectButton [options]="genderOptions" formControlName="gender" optionLabel="label" optionValue="value">
                 <ng-template let-item pTemplate>
                     <i [class]="item.icon" class="mr-2"></i>
@@ -53,33 +52,27 @@
             <p-inputNumber id="age" formControlName="age" mode="decimal" [min]="0" [showButtons]="true" inputId="age"></p-inputNumber>
         </div>
 
-        <div class="field col-12 md:col-6">
-            <label for="weight">Peso (Kg)</label>
-            <p-inputNumber id="weight" formControlName="weight" mode="decimal" [minFractionDigits]="1" [maxFractionDigits]="2" [min]="0.1" [showButtons]="true" inputId="weight"></p-inputNumber>
-        </div>
-        
         <div class="field col-12">
-            <label for="fileUpload">Imagen de la Mascota</label>
-            <!-- ✅ CORRECCIÓN FINAL: Usamos (onSelect) y pasamos el evento completo. [auto] se quita para que funcione con modo 'basic'. -->
-            <p-fileUpload #fileUpload mode="basic" chooseLabel="Elegir Archivo" accept="image/*" [customUpload]="true" (onSelect)="onImageUpload($event)"
-                [showCancelButton]="false">
-            </p-fileUpload>
+            <label for="fileUpload">Foto (Opcional)</label>
+            <div class="file-upload-wrapper">
+                <input #fileInput type="file" id="fileUpload" accept="image/*" (change)="onImageUpload($event)" class="file-input-hidden" />
+                <p-button label="Elegir Archivo" icon="pi pi-upload" styleClass="p-button-primary p-button-raised" (onClick)="fileInput.click()"></p-button>
+            </div>
         </div>
 
         <div class="col-12 text-center mb-3">
-            <img [src]="localImageUrl || petForm.get('imageUrl')?.value || 'https://placehold.co/200x200/294374/FFFFFF?text=Sin+Imagen'"
-                alt="Imagen de la Mascota" class="preview-image shadow-md"
-                onerror="this.onerror=null; this.src='https://placehold.co/200x200/294374/FFFFFF?text=Sin+Imagen';">
+            <img *ngIf="localImageUrl" [src]="localImageUrl" alt="Imagen de la Mascota" class="preview-image shadow-md" />
+            <i *ngIf="!localImageUrl" class="pi pi-fw pi-paw pet-icon"></i>
         </div>
 
-        <div class="col-12 flex justify-content-center gap-2 mt-3">
+        <div class="col-12 flex justify-content-center gap-2 mt-3 form-actions">
             <p-button type="submit" [label]="isEditMode ? 'Guardar Cambios' : 'Añadir Mascota'" icon="pi pi-save"
                 styleClass="p-button-primary p-button-raised"></p-button>
             
             <p-button *ngIf="isEditMode" type="button" label="Eliminar Mascota" icon="pi pi-trash"
                 styleClass="p-button-danger p-button-raised" (onClick)="deletePet()"></p-button>
                 
-            <p-button type="button" label="Cancelar" icon="pi pi-times" styleClass="p-button-outlined"
+            <p-button type="button" label="Cancelar" icon="pi pi-times" styleClass="p-button-primary"
                 (onClick)="cancel()"></p-button>
         </div>
     </form>

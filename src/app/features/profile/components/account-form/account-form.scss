@@ -1,0 +1,129 @@
+/* account-form.scss - Versión Final Corregida (SIN estilos de btn-primary/btn-secondary) */
+
+$primary-blue: #264b8a;        
+$secondary-color: #294374;     
+$border-color: #dee2e6;        
+
+
+
+.profile-card-container {
+    padding: 2rem;
+    background: white;
+
+}
+
+.header {
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid #eee;
+    margin-bottom: 1.5rem;
+
+    h2 {
+        color: $secondary-color;
+        font-size: 1.75rem;
+        margin: 0;
+    }
+
+    p {
+        color: #6c757d; 
+        margin: 0.25rem 0 0 0;
+    }
+}
+
+.form-grid {
+    /* Usando tu estructura de grid CSS */
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); 
+    gap: 32px 60px; 
+    width: 85%;
+    margin: 0 auto;
+    padding-top: 1rem; /* Espacio superior para separar el avatar */
+}
+
+:host ::ng-deep .p-floatlabel {
+    display: block !important; 
+    width: 100% !important; 
+}
+
+/* Estilo de enfoque: Borde y sombra al seleccionar el campo */
+:host ::ng-deep .p-inputtext:focus {
+    border-color: $primary-blue !important;
+    box-shadow: 0 0 0 0.1rem lighten($primary-blue, 20%) !important; 
+}
+
+//Avatar y cambiar foto 
+
+.edit-photo-btn {
+    all: unset; /* Reinicia estilos por defecto del botón */
+    
+    position: absolute; /* Para posicionarlo sobre el avatar */
+    top: -5px; /* Ajuste para la parte superior del avatar */
+    right: -5px; /* Ajuste para la parte derecha del avatar */
+    
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px; 
+    height: 24px;
+    border-radius: 50%;
+    
+    /* Estilos */
+    background-color: white; 
+    border: 1px solid $border-color; 
+    color: $primary-blue; 
+    cursor: pointer;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); 
+    transition: background-color 0.2s;
+
+    &:hover {
+        background-color: #f0f0f0;
+    }
+
+    i {
+        font-size: 0.8rem;
+    }
+}
+
+/* Estilo del Avatar */
+:host ::ng-deep .editable-avatar {
+    span {
+        font-weight: bold;
+        font-size: 1.5rem;
+    }
+}
+
+//Botones 
+
+
+$primary-blue: #264b8a;   
+
+:host ::ng-deep .p-button {
+    background-color: $primary-blue !important;
+    border-color: $primary-blue !important;
+    color: #ffffff !important;
+    font-weight: 600;
+    border-radius: 10px;
+
+    &:hover {
+        background-color: darken($primary-blue, 6%) !important;
+        border-color: darken($primary-blue, 6%) !important;
+        transform: translateY(-2px);  
+        transition: .25s;
+    }
+}
+
+//Alineacion de los botones 
+.btn-area {
+    margin-top: 40px !important;    
+    display: flex;
+    justify-content: center;
+    gap: 22px;
+}
+
+.footer-btns {
+    margin-top: 2rem !important;
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #eee;
+}

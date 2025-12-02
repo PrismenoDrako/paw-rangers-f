@@ -1,0 +1,928 @@
+// ==================== VARIABLES ====================
+$primary-color: #294374;
+$primary-hover: #1f3458;
+$text-dark: #1A202C;
+$text-medium: #4A5568;
+$text-gray: #718096;
+$text-light: #A0AEC0;
+$border-color: #E2E8F0;
+$border-hover: #CBD5E0;
+$bg-light: #F7FAFC;
+$bg-gray: #FAFAFA;
+$bg-white: #FFFFFF;
+$error-color: #E53E3E;
+$success-color: #294374;
+$shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+$shadow-md: 0 4px 6px rgba(41, 67, 116, 0.1);
+$shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+
+// Mixins
+$radius-sm: 6px;
+$radius-md: 8px;
+$radius-lg: 12px;
+
+@mixin transition-smooth {
+  transition: all 0.2s ease;
+}
+
+@mixin focus-ring($color: $primary-color) {
+  outline: none;
+  border-color: $color;
+  box-shadow: 0 0 0 3px rgba($color, 0.15);
+}
+
+// ==================== STEPPER ====================
+::ng-deep {
+  .p-stepper {
+    margin-top: 2.5rem;
+    margin-bottom: 2.5rem;
+
+    .p-stepper-nav {
+      margin-top: 2rem;
+      margin-bottom: 3.5rem;
+      background: $bg-white;
+      border-bottom: none;
+      padding: 0 2.5rem 0 2.5rem;
+      display: flex;
+      justify-content: center;
+      gap: 3rem;
+
+      @media (max-width: 600px) {
+        gap: 1.5rem;
+        padding: 0 0.5rem;
+      }
+
+      .p-stepper-header {
+        flex: none;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        background: transparent;
+        border: none;
+
+        .p-stepper-action {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          background: transparent;
+          border: none;
+          padding: 0;
+          min-height: unset;
+
+          .p-stepper-number {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 38px;
+            height: 38px;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: $primary-color;
+            background: $bg-white;
+            border: 2.5px solid $primary-color;
+            border-radius: 50%;
+            margin-bottom: 0.5rem;
+            margin-top: 0.5rem;
+            transition: all 0.2s;
+          }
+
+          .p-stepper-title {
+            font-size: 1rem;
+            font-weight: 500;
+            color: $text-gray;
+            margin: 0;
+            text-align: center;
+            letter-spacing: 0.01em;
+          }
+        }
+
+        &.p-stepper-header-active {
+          .p-stepper-action {
+            .p-stepper-number {
+              background: $primary-color;
+              color: $bg-white;
+              border-color: $primary-color;
+              box-shadow: 0 2px 8px rgba(41, 67, 116, 0.25);
+            }
+            .p-stepper-title {
+              color: $primary-color;
+              font-weight: 600;
+            }
+          }
+        }
+      }
+    }
+
+    .p-stepper-separator {
+      display: flex;
+      align-items: center;
+      flex: 1;
+      height: 2px;
+      background: $border-color;
+      margin: 0 0.5rem;
+      min-width: 40px;
+      max-width: 120px;
+      border-radius: 2px;
+    }
+  }
+}
+
+
+// ==================== STEP CONTENT ====================
+.step-content {
+  padding: 1.25rem 1rem;
+  background: $bg-white;
+  animation: fadeInUp 0.3s ease;
+
+  @media (min-width: 640px) {
+    padding: 1.75rem 1.5rem;
+  }
+
+  @media (min-width: 768px) {
+    padding: 2rem;
+  }
+}
+
+.section-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: $text-dark;
+  margin: 0 0 1.25rem 0;
+  line-height: 1.4;
+
+  @media (min-width: 640px) {
+    font-size: 1.0625rem;
+    margin-bottom: 1.5rem;
+  }
+}
+
+.section-subtitle {
+  font-size: 0.8125rem;
+  color: $text-gray;
+  margin: -0.75rem 0 1.25rem 0;
+  line-height: 1.5;
+
+  @media (min-width: 640px) {
+    font-size: 0.875rem;
+    margin: -1rem 0 1.5rem 0;
+  }
+}
+
+// ==================== FORM GROUPS ====================
+.form-group {
+  margin-bottom: 1.25rem;
+
+  &:last-of-type {
+    margin-bottom: 0;
+  }
+
+  @media (min-width: 640px) {
+    margin-bottom: 1.5rem;
+  }
+}
+
+.form-label {
+  display: block;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: $text-dark;
+  margin-bottom: 0.5rem;
+  line-height: 1.4;
+
+  @media (min-width: 640px) {
+    font-size: 0.875rem;
+  }
+
+  .required-asterisk {
+    color: $error-color;
+    margin-left: 2px;
+  }
+}
+
+.field-hint {
+  font-size: 0.75rem;
+  color: $text-gray;
+  margin-top: 0.5rem;
+  display: flex;
+  align-items: center;
+  line-height: 1.4;
+
+  i {
+    flex-shrink: 0;
+  }
+}
+
+.error-message {
+  display: block;
+  font-size: 0.75rem;
+  color: $error-color;
+  margin-top: 0.375rem;
+  line-height: 1.4;
+  font-weight: 500;
+}
+
+// ==================== FORM INPUTS ====================
+.form-input,
+.form-textarea {
+  width: 100%;
+  border: 1px solid $border-color;
+  border-radius: $radius-md;
+  padding: 0.75rem;
+  font-size: 0.875rem;
+  color: $text-dark;
+  background: $bg-white;
+  @include transition-smooth;
+  font-family: inherit;
+
+  &::placeholder {
+    color: $text-light;
+  }
+
+  &:focus {
+    @include focus-ring;
+  }
+
+  &:hover:not(:focus):not(:disabled) {
+    border-color: $border-hover;
+  }
+
+  &.field-error {
+    border-color: $error-color;
+    background: rgba($error-color, 0.02);
+
+    &:focus {
+      @include focus-ring($error-color);
+    }
+  }
+
+  &:disabled,
+  &.readonly-field {
+    background: $bg-light;
+    color: $text-gray;
+    cursor: not-allowed;
+    opacity: 0.7;
+  }
+}
+
+.form-textarea {
+  resize: vertical;
+  min-height: 100px;
+  max-height: 300px;
+  line-height: 1.5;
+}
+
+::ng-deep {
+  .p-inputtext {
+    width: 100%;
+    border: 1px solid $border-color;
+    border-radius: $radius-md;
+    padding: 0.75rem;
+    font-size: 0.875rem;
+    color: $text-dark;
+    background: $bg-white;
+    @include transition-smooth;
+
+    &::placeholder {
+      color: $text-light;
+    }
+
+    &:enabled:focus {
+      @include focus-ring;
+    }
+
+    &:enabled:hover:not(:focus) {
+      border-color: $border-hover;
+    }
+
+    &.field-error {
+      border-color: $error-color;
+      background: rgba($error-color, 0.02);
+    }
+  }
+
+  .p-inputtextarea,
+  .p-textarea {
+    width: 100%;
+    border: 1px solid $border-color;
+    border-radius: $radius-md;
+    padding: 0.75rem;
+    font-size: 0.875rem;
+    font-family: inherit;
+    @include transition-smooth;
+
+    &:enabled:focus {
+      @include focus-ring;
+    }
+
+    &:enabled:hover:not(:focus) {
+      border-color: $border-hover;
+    }
+
+    &.field-error {
+      border-color: $error-color;
+      background: rgba($error-color, 0.02);
+    }
+  }
+}
+
+// ==================== SELECT / DROPDOWN ====================
+::ng-deep {
+  .p-select {
+    width: 100%;
+    border: 1px solid $border-color;
+    border-radius: $radius-md;
+    @include transition-smooth;
+    
+    .p-select-label {
+      padding: 0.75rem;
+      font-size: 0.875rem;
+      color: $text-dark;
+
+      &.p-placeholder {
+        color: $text-light;
+      }
+    }
+
+    .p-select-dropdown {
+      color: $text-gray;
+    }
+
+    &:not(.p-disabled):hover {
+      border-color: $border-hover;
+    }
+
+    &.p-focus {
+      @include focus-ring;
+    }
+
+    &.field-error {
+      border-color: $error-color;
+      background: rgba($error-color, 0.02);
+
+      &.p-focus {
+        @include focus-ring($error-color);
+      }
+    }
+  }
+
+  .p-select-overlay {
+    border-radius: $radius-md;
+    box-shadow: $shadow-lg;
+    border: 1px solid $border-color;
+
+    .p-select-option {
+      padding: 0.75rem;
+      font-size: 0.875rem;
+      @include transition-smooth;
+
+      &:hover {
+        background: rgba($primary-color, 0.08);
+      }
+
+      &.p-select-option-selected {
+        background: rgba($primary-color, 0.12);
+        color: $primary-color;
+        font-weight: 500;
+      }
+    }
+  }
+}
+
+// ==================== DATEPICKER ====================
+::ng-deep {
+  .p-datepicker {
+    width: 100%;
+    
+    .p-datepicker-input-icon-container {
+      width: 100%;
+
+      .p-inputtext {
+        width: 100%;
+        padding-right: 2.75rem;
+      }
+
+      .p-datepicker-dropdown,
+      .p-datepicker-trigger {
+        right: 0.75rem;
+        color: $text-gray;
+        @include transition-smooth;
+
+        &:hover {
+          color: $primary-color;
+        }
+      }
+    }
+
+    &.field-error {
+      .p-inputtext {
+        border-color: $error-color;
+        background: rgba($error-color, 0.02);
+      }
+    }
+  }
+
+  .p-datepicker-panel {
+    border-radius: $radius-md;
+    box-shadow: $shadow-lg;
+    border: 1px solid $border-color;
+
+    .p-datepicker-header {
+      background: $bg-light;
+      border-bottom: 1px solid $border-color;
+    }
+
+    .p-datepicker-calendar {
+      td {
+        padding: 0.25rem;
+
+        > span {
+          border-radius: $radius-sm;
+          @include transition-smooth;
+
+          &.p-datepicker-today {
+            background: rgba($primary-color, 0.1);
+            color: $primary-color;
+            font-weight: 600;
+          }
+
+          &:not(.p-disabled):hover {
+            background: rgba($primary-color, 0.12);
+          }
+
+          &.p-datepicker-day-selected {
+            background: $primary-color;
+            color: $bg-white;
+          }
+        }
+      }
+    }
+  }
+}
+
+// ==================== PHOTO UPLOAD ====================
+.photo-upload-wrapper {
+  margin-bottom: 0.5rem;
+}
+
+.photo-upload-box {
+  position: relative;
+  border: 2px dashed $border-color;
+  border-radius: $radius-lg;
+  padding: 2.5rem 1.5rem;
+  text-align: center;
+  background: $bg-light;
+  cursor: pointer;
+  @include transition-smooth;
+
+  @media (min-width: 640px) {
+    padding: 3rem 2rem;
+  }
+
+  &:hover {
+    border-color: $primary-color;
+    background: rgba($primary-color, 0.03);
+
+    .upload-icon {
+      color: $primary-color;
+      transform: scale(1.05);
+    }
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+
+  .upload-icon {
+    font-size: 2.25rem;
+    color: $text-light;
+    display: block;
+    margin-bottom: 0.75rem;
+    @include transition-smooth;
+
+    @media (min-width: 640px) {
+      font-size: 2.5rem;
+    }
+  }
+
+  .upload-main-text {
+    margin: 0 0 0.25rem 0;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: $text-dark;
+    line-height: 1.4;
+
+    @media (min-width: 640px) {
+      font-size: 0.9375rem;
+    }
+  }
+
+  .upload-help-text {
+    margin: 0;
+    font-size: 0.75rem;
+    color: $text-gray;
+    line-height: 1.4;
+
+    @media (min-width: 640px) {
+      font-size: 0.8125rem;
+    }
+  }
+}
+
+.photo-preview-wrapper {
+  position: relative;
+  width: 100%;
+  border-radius: $radius-lg;
+  overflow: hidden;
+  border: 1px solid $border-color;
+  background: $bg-light;
+  box-shadow: $shadow-sm;
+
+  .preview-image {
+    width: 100%;
+    display: block;
+    max-height: 350px;
+    object-fit: contain;
+    background: $bg-light;
+
+    @media (min-width: 640px) {
+      max-height: 400px;
+    }
+  }
+
+  .remove-photo-button {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba($error-color, 0.95);
+    color: $bg-white;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    @include transition-smooth;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(4px);
+
+    &:hover {
+      background: $error-color;
+      transform: scale(1.1);
+      box-shadow: 0 4px 12px rgba($error-color, 0.4);
+    }
+
+    &:active {
+      transform: scale(0.95);
+    }
+
+    i {
+      font-size: 0.875rem;
+      font-weight: 600;
+    }
+  }
+}
+
+// ==================== RADIO BUTTONS ====================
+.radio-options {
+  display: flex;
+  gap: 2rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+
+  @media (min-width: 640px) {
+    gap: 2rem;
+  }
+}
+
+.radio-option {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+
+  .radio-label {
+    font-size: 0.875rem;
+    color: $text-dark;
+    cursor: pointer;
+    margin: 0;
+    user-select: none;
+    @include transition-smooth;
+  }
+
+  &:hover .radio-label {
+    color: $primary-color;
+  }
+}
+
+::ng-deep {
+  .p-radiobutton {
+    .p-radiobutton-box {
+      border: 2px solid $border-color;
+      width: 20px;
+      height: 20px;
+      @include transition-smooth;
+
+      &.p-highlight {
+        border-color: $primary-color;
+        background: $primary-color;
+      }
+
+      .p-radiobutton-icon {
+        width: 10px;
+        height: 10px;
+        background-color: $bg-white;
+        border-radius: 50%;
+      }
+    }
+
+    &:not(.p-disabled) {
+      &:has(.p-radiobutton-box:hover) {
+        .p-radiobutton-box {
+          border-color: $primary-color;
+        }
+      }
+
+      &:has(.p-radiobutton-box.p-focus) {
+        .p-radiobutton-box {
+          @include focus-ring;
+        }
+      }
+    }
+  }
+}
+
+// ==================== MAP ====================
+.map-container-wrapper {
+  border: 1px solid $border-color;
+  border-radius: $radius-lg;
+  overflow: hidden;
+  background: $bg-light;
+  margin-bottom: 0.5rem;
+  box-shadow: $shadow-sm;
+  min-height: 280px;
+
+  @media (min-width: 640px) {
+    min-height: 320px;
+  }
+
+  @media (min-width: 768px) {
+    min-height: 350px;
+  }
+}
+
+.leaflet-map {
+  width: 100%;
+  height: 280px !important;
+  min-height: 280px;
+  background: #e5e7eb;
+  position: relative;
+  z-index: 1;
+
+  @media (min-width: 640px) {
+    height: 320px !important;
+    min-height: 320px;
+  }
+
+  @media (min-width: 768px) {
+    height: 350px !important;
+    min-height: 350px;
+  }
+}
+
+// Estilos para Leaflet
+::ng-deep {
+  .leaflet-container {
+    font-family: inherit;
+    height: 100%;
+    width: 100%;
+    background: #e5e7eb;
+  }
+
+  .leaflet-tile-container {
+    background: #e5e7eb;
+  }
+
+  .leaflet-control-attribution {
+    font-size: 10px;
+  }
+
+  .leaflet-popup-content-wrapper {
+    border-radius: $radius-md;
+    box-shadow: $shadow-md;
+  }
+
+  .leaflet-popup-tip-container {
+    .leaflet-popup-tip {
+      box-shadow: $shadow-sm;
+    }
+  }
+}
+
+// ==================== FORM ROW ====================
+.form-row-2 {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+
+  @media (min-width: 640px) {
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+
+  @media (min-width: 768px) {
+    gap: 1.5rem;
+  }
+}
+
+// ==================== ACTIONS ====================
+.form-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 2.5rem;      // Aumenta el espacio superior
+  padding-top: 1rem;        // Aumenta el espacio interno arriba
+  padding-bottom: 2rem;     // Nuevo: espacio interno abajo
+  padding-left: 1.5rem;     // Nuevo: espacio interno a la izquierda
+  padding-right: 1.5rem;    // Nuevo: espacio interno a la derecha
+  border-top: 1px solid $border-color;
+
+  @media (min-width: 640px) {
+    margin-top: 3rem;
+    gap: 1.5rem;
+    padding-left: 2.5rem;
+    padding-right: 2.5rem;
+  }
+}
+
+::ng-deep {
+  .p-button {
+    font-family: inherit;
+    @include transition-smooth;
+    border-radius: $radius-md;
+    font-weight: 500;
+
+    &:focus {
+      box-shadow: 0 0 0 3px rgba($primary-color, 0.2);
+    }
+  }
+
+  .btn-cancel-text {
+    .p-button {
+      background: transparent;
+      border: none;
+      color: $text-gray;
+      font-size: 0.875rem;
+      padding: 0.75rem 1rem;
+
+      &:hover {
+        background: rgba($text-gray, 0.08);
+        color: $text-dark;
+      }
+
+      &:active {
+        transform: scale(0.98);
+      }
+
+      &:focus {
+        box-shadow: none;
+      }
+    }
+  }
+
+  .btn-primary {
+    .p-button {
+      background: $primary-color;
+      border: none;
+      padding: 0.75rem 1.25rem;
+      font-size: 0.875rem;
+      color: $bg-white;
+      box-shadow: $shadow-sm;
+
+      @media (min-width: 640px) {
+        padding: 0.75rem 1.5rem;
+      }
+
+      .p-button-icon {
+        font-size: 0.875rem;
+      }
+
+      &:hover {
+        background: $primary-hover;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba($primary-color, 0.3);
+      }
+
+      &:active {
+        transform: translateY(0);
+        box-shadow: $shadow-sm;
+      }
+
+      &:focus {
+        box-shadow: 0 0 0 3px rgba($primary-color, 0.25);
+      }
+
+      &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+      }
+    }
+  }
+}
+
+// ==================== TOAST ====================
+::ng-deep {
+  .p-toast {
+    opacity: 0.97;
+
+    .p-toast-message {
+      border-radius: $radius-lg;
+      box-shadow: $shadow-lg;
+      backdrop-filter: blur(10px);
+
+      &.p-toast-message-success {
+        background: rgba($success-color, 0.95);
+        border: 1px solid rgba($success-color, 0.4);
+      }
+
+      &.p-toast-message-error {
+        background: rgba($error-color, 0.95);
+        border: 1px solid rgba($error-color, 0.4);
+      }
+
+      &.p-toast-message-warn {
+        background: rgba(#294374, 0.95);
+        border: 1px solid rgba(#294374, 0.4);
+      }
+    }
+  }
+}
+
+// ==================== ANIMATIONS ====================
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// ==================== MOBILE OPTIMIZATION ====================
+@media (max-width: 479px) {
+  .report-header {
+    padding: 0.875rem;
+
+    .header-content {
+      .header-title {
+        font-size: 1rem;
+      }
+
+      .header-subtitle {
+        font-size: 0.75rem;
+      }
+    }
+  }
+
+  .step-content {
+    padding: 1rem 0.875rem;
+  }
+
+  .section-title {
+    font-size: 0.9375rem;
+  }
+
+  .form-actions {
+    flex-direction: column-reverse;
+    gap: 0.625rem;
+
+    ::ng-deep .p-button {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+
+  .photo-upload-box {
+    padding: 2rem 1rem;
+
+    .upload-icon {
+      font-size: 2rem;
+    }
+  }
+}
+
+// ==================== ACCESSIBILITY ====================
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

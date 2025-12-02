@@ -12,17 +12,6 @@
       </div>
     </div>
 
-    <div class="alert-summary__actions" *ngIf="alert.reportType === 'found' && alert.finderContact">
-      <div class="contact-inline">
-        <p class="contact-name">{{ alert.finderContact.name }}</p>
-        <p *ngIf="alert.finderContact.note" class="contact-note">{{ alert.finderContact.note }}</p>
-        <p *ngIf="alert.finderContact.address" class="contact-note">{{ alert.finderContact.address }}</p>
-      </div>
-      <div class="contact-actions">
-        <a *ngIf="alert.finderContact.phone" [href]="'tel:' + alert.finderContact.phone" class="btn">Llamar</a>
-        <a *ngIf="alert.finderContact.email" [href]="'mailto:' + alert.finderContact.email" class="btn ghost">Correo</a>
-      </div>
-    </div>
   </div>
 </section>
 

@@ -1,0 +1,80 @@
+@use 'sass:color';
+
+$primary-color: #294374;
+$success-color: #27ae60;
+$white: #ffffff;
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+
+  .header-content {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    > i {
+      font-size: 2.5rem;
+      color: $success-color;
+    }
+
+    .header-text {
+      .section-title {
+        font-size: 2rem;
+        font-weight: 700;
+        color: $primary-color;
+        margin: 0 0 0.25rem 0;
+      }
+
+      .section-description {
+        font-size: 1rem;
+        color: #666;
+        margin: 0;
+      }
+    }
+  }
+
+  .view-all-button {
+    padding: 0.75rem 1.5rem;
+    background: transparent;
+    border: 2px solid $primary-color;
+    color: $primary-color;
+    border-radius: 25px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background: $primary-color;
+      color: $white;
+      transform: translateX(4px);
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .section-header {
+    .header-content {
+      > i {
+        font-size: 2rem;
+      }
+
+      .header-text .section-title {
+        font-size: 1.5rem;
+      }
+    }
+
+    .view-all-button {
+      font-size: 0.9375rem;
+      padding: 0.625rem 1.25rem;
+    }
+  }
+}

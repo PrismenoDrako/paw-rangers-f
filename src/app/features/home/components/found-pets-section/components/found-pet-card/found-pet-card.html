@@ -1,0 +1,45 @@
+<div class="pet-card" (click)="onCardClick()">
+  <div class="pet-image">
+    <img [src]="pet.image" [alt]="'Mascota encontrada'" onerror="this.src='assets/img/placeholder-pet.jpg'">
+    <div class="pet-type-badge">{{ pet.type }}</div>
+    <div class="found-badge">
+      <i class="pi pi-check-circle"></i>
+      Encontrado
+    </div>
+  </div>
+
+  <div class="pet-info">
+    <div class="pet-header">
+      <h3>{{ pet.breed }}</h3>
+      <span class="days-found">{{ getDaysFound(pet.date) }} días</span>
+    </div>
+
+    <div class="pet-details">
+      <div class="detail-item">
+        <i class="pi pi-palette"></i>
+        <span>{{ pet.color }}</span>
+      </div>
+      <div class="detail-item">
+        <i class="pi pi-map-marker"></i>
+        <span>{{ pet.location }}</span>
+      </div>
+      <div class="detail-item">
+        <i class="pi pi-user"></i>
+        <span>{{ pet.contactName }}</span>
+      </div>
+    </div>
+
+    <p class="pet-description">{{ pet.description }}</p>
+
+    <div class="pet-footer">
+      <div class="date-info">
+        <i class="pi pi-calendar"></i>
+        <span>{{ pet.date | date: 'dd/MM/yyyy' }}</span>
+      </div>
+      <button class="details-button">
+        Ver detalles
+        <i class="pi pi-chevron-right"></i>
+      </button>
+    </div>
+  </div>
+</div>

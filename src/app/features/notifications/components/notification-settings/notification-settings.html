@@ -32,7 +32,7 @@
   </div>
 
   <footer class="settings-actions">
-    <button type="button" class="btn-secondary" (click)="resetChanges()" [disabled]="saving">Cancelar</button>
+    <button type="button" class="btn-secondary" (click)="cancel()" [disabled]="saving">Cancelar</button>
     <button type="button" class="btn-save" (click)="saveSettings()" [disabled]="saving">
       {{ saving ? 'Guardando…' : 'Guardar configuración' }}
     </button>

@@ -29,29 +29,6 @@
         }
       </div>
       
-      <div class="filter-options">
-        <div class="filter-group">
-          <label class="filter-label">Con collar</label>
-          <label class="checkbox-wrapper">
-            <input 
-              type="checkbox" 
-              [(ngModel)]="filters.hasCollar"
-              (ngModelChange)="onFiltersChange()" />
-            <span class="checkmark"></span>
-          </label>
-        </div>
-        
-        <div class="filter-group">
-          <label class="filter-label">Recientes (24h)</label>
-          <label class="checkbox-wrapper">
-            <input 
-              type="checkbox" 
-              [(ngModel)]="filters.recentOnly"
-              (ngModelChange)="onFiltersChange()" />
-            <span class="checkmark"></span>
-          </label>
-        </div>
       </div>
-    </div>
   }
 </div>

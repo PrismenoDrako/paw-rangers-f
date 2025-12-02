@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms'; 
 import { CommonModule } from '@angular/common';
 
@@ -7,21 +7,34 @@ import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { CardModule } from 'primeng/card';
-import { SelectButtonModule } from 'primeng/selectbutton'; 
-import { FileUploadModule } from 'primeng/fileupload';
+import { SelectButtonModule } from 'primeng/selectbutton';
 
 
 // --- Interfaces para mejor tipado ---
 export interface Pet {
   id?: number;
   name: string;
-  species: string;
+  speciesId?: number; // ID de la especie (para BD)
+  species: string;   // Nombre de la especie
+  breedId?: number;  // ID de la raza (para BD)
   breed: string;
   gender: string;
   age: number;
-  weight: number;
   imageUrl?: string; // URL después de guardar
   imageFile?: File; // Archivo binario para subir
+}
+
+export interface Species {
+  id: number;
+  name: string;
+  code: string;
+}
+
+export interface Breed {
+  id: number;
+  name: string;
+  code: string;
+  speciesId: number; // ID de la especie a la que pertenece
 }
 
 interface DropdownOption {
@@ -35,165 +48,252 @@ interface DropdownOption {
   imports: [
     CommonModule, 
     FormsModule, 
-    ReactiveFormsModule, // Añadir ReactiveFormsModule
+    ReactiveFormsModule,
     ButtonModule, 
     InputTextModule, 
     InputNumberModule, 
     CardModule,
     SelectButtonModule,
-    FileUploadModule,
   ],
   templateUrl: './pet-form.html',
   styleUrl: './pet-form.scss'
 })
-export class PetFormComponent implements OnInit {
+export class PetFormComponent implements OnInit, OnChanges {
   
-  @Input() petData: Pet | null = null; // 🚨 Input para auto-relleno
+  @Input() petData: Pet | null = null;
   @Output() formSubmit = new EventEmitter<Pet>();
   @Output() formCancel = new EventEmitter<void>();
-  @Output() formDelete = new EventEmitter<number>(); // ✅ CORREGIDO: Unificamos el nombre del evento
+  @Output() formDelete = new EventEmitter<number>();
 
   petForm: FormGroup;
   isEditMode: boolean = false;
-  localImageUrl: string | ArrayBuffer | null = null; // Para previsualización temporal
+  localImageUrl: string | null = null;
 
-  // ✅ CORREGIDO: Restauramos la estructura de objetos para que el HTML pueda mostrar el icono y la etiqueta.
   genderOptions = [
     { label: 'Macho', value: 'Macho', icon: 'pi pi-mars' },
     { label: 'Hembra', value: 'Hembra', icon: 'pi pi-venus' }
   ];
 
-  // 🚨 Opciones (asumiendo datos)
-  speciesOptions: DropdownOption[] = [
-      { name: 'Perro', code: 'DOG' },
-      { name: 'Gato', code: 'CAT' },
-      { name: 'Ave', code: 'BIRD' },
-      { name: 'Otro', code: 'OTHER' },
-  ];
-  breedOptions: DropdownOption[] = [
-      { name: 'Labrador', code: 'LAB' },
-      { name: 'Angora Turco', code: 'ANG' },
-      { name: 'Mestizo', code: 'MIX' },
-      { name: 'Otro', code: 'OTHER' },
+  // Datos simulados de Species (En producción vendrían de la BD)
+  speciesOptions: Species[] = [
+      { id: 1, name: 'Perro', code: 'DOG' },
+      { id: 2, name: 'Gato', code: 'CAT' },
+      { id: 3, name: 'Ave', code: 'BIRD' },
+      { id: 4, name: 'Otro', code: 'OTHER' },
   ];
 
+  // Datos simulados de Breeds (En producción vendrían de la BD)
+  allBreeds: Breed[] = [
+      // Razas de Perros
+      { id: 1, name: 'Labrador', code: 'LAB', speciesId: 1 },
+      { id: 2, name: 'Schnauzer', code: 'SCHN', speciesId: 1 },
+      { id: 3, name: 'Pastor Alemán', code: 'GSD', speciesId: 1 },
+      { id: 4, name: 'Mestizo', code: 'MIX_DOG', speciesId: 1 },
+      
+      // Razas de Gatos
+      { id: 5, name: 'Angora Turco', code: 'ANG', speciesId: 2 },
+      { id: 6, name: 'Persa', code: 'PERS', speciesId: 2 },
+      { id: 7, name: 'Siamés', code: 'SIAM', speciesId: 2 },
+      { id: 8, name: 'Mestizo', code: 'MIX_CAT', speciesId: 2 },
+      
+      // Razas de Aves
+      { id: 9, name: 'Canario', code: 'CAN', speciesId: 3 },
+      { id: 10, name: 'Loro', code: 'PAR', speciesId: 3 },
+      { id: 11, name: 'Loro Verde', code: 'PARV', speciesId: 3 },
+      
+      // Otros
+      { id: 12, name: 'Conejo', code: 'RAB', speciesId: 4 },
+      { id: 13, name: 'Hamster', code: 'HAM', speciesId: 4 },
+  ];
+
+  // Razas filtradas según la especie seleccionada
+  filteredBreeds: Breed[] = [];
 
   constructor(private fb: FormBuilder) {
-    this.petForm = this.fb.group({
+    this.petForm = this.createFormGroup();
+
+    // Listener para filtrar razas cuando cambia la especie
+    this.petForm.get('species')?.valueChanges.subscribe((species: Species | null) => {
+      this.onSpeciesChange(species);
+    });
+  }
+
+  private createFormGroup(): FormGroup {
+    return this.fb.group({
         id: [null],
         name: ['', Validators.required],
         species: [null, Validators.required],
+        speciesId: [null],
         customSpecies: [''],
-        breed: [null],
+        breed: [null, Validators.required],
+        breedId: [null],
         customBreed: [''],
         gender: ['Macho', Validators.required],
         age: [1, [Validators.required, Validators.min(0)]],
-        weight: [1, [Validators.required, Validators.min(0.1)]],
-        imageFile: [null], // Archivo binario para subir
-        imageUrl: [null] // URL existente
+        imageFile: [null],
+        imageUrl: [null]
     });
   }
 
   ngOnInit(): void {
-    // 🚨 Determinar modo (Editar o Añadir)
-    this.isEditMode = !!this.petData && !!this.petData.id;
+    this.initializeForm();
+  }
 
-    // 🚨 Auto-relleno si estamos editando
-    if (this.isEditMode && this.petData) {
-        // 1. Cargar imagen existente
-        this.localImageUrl = this.petData.imageUrl || null; 
-
-        // 2. Setear valores
-        this.petForm.patchValue({
-            id: this.petData.id,
-            name: this.petData.name,
-            gender: this.petData.gender,
-            age: this.petData.age,
-            weight: this.petData.weight,
-            imageUrl: this.petData.imageUrl,
-        });
-        
-        // 3. Rellenar campos de Especie (Requiere buscar el objeto)
-        this.setDropdownValue('species', this.petData.species, this.speciesOptions, 'customSpecies');
-
-        // 4. Rellenar campos de Raza (Requiere buscar el objeto)
-        this.setDropdownValue('breed', this.petData.breed, this.breedOptions, 'customBreed');
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['petData'] && !changes['petData'].firstChange) {
+      // Si petData cambió (no es el primer cambio), reinicializar el formulario
+      this.initializeForm();
     }
   }
 
-  // Función auxiliar para rellenar Dropdowns y campos Custom
-  setDropdownValue(controlName: string, storedValue: string, options: DropdownOption[], customControlName: string) {
-      // Ajuste para el género, ej: 'Gata' -> 'Gato'
-      const baseValue = storedValue.endsWith('a') ? 
-                      storedValue.slice(0, -1) + 'o' : 
-                      storedValue;
+  private initializeForm(): void {
+    // Resetear el formulario completamente
+    this.petForm.reset();
+    this.localImageUrl = null;
+    this.filteredBreeds = [];
+    
+    this.isEditMode = !!this.petData && !!this.petData.id;
 
-      const option = options.find(opt => opt.name.toLowerCase() === baseValue.toLowerCase());
+    if (this.isEditMode && this.petData) {
+        console.log('Initializing form for pet:', this.petData.name);
+        
+        // Cargar imagen si existe
+        this.localImageUrl = this.petData.imageUrl || null;
 
-      if (option) {
-          this.petForm.get(controlName)?.setValue(option);
-      } else {
-          // Si no es una opción predefinida, asumimos 'Otro' y rellenamos el campo custom
-          const otherOption = options.find(opt => opt.code === 'OTHER');
-          this.petForm.get(controlName)?.setValue(otherOption);
-          this.petForm.get(customControlName)?.setValue(storedValue);
-      }
+        const selectedSpecies = this.speciesOptions.find(s => 
+          s.name.toLowerCase() === this.petData!.species.toLowerCase()
+        );
+        
+        if (selectedSpecies) {
+          // Filtrar razas según especie primero
+          this.onSpeciesChange(selectedSpecies);
+        }
+
+        // Patchear valores
+        const formValue: any = {
+            id: this.petData.id,
+            name: this.petData.name,
+            species: selectedSpecies || null,
+            speciesId: this.petData.speciesId || selectedSpecies?.id,
+            gender: this.petData.gender,
+            age: this.petData.age,
+            imageUrl: this.petData.imageUrl,
+        };
+
+        // Buscar la raza si existe
+        if (selectedSpecies) {
+          const selectedBreed = this.filteredBreeds.find(b => 
+            b.name.toLowerCase() === this.petData!.breed.toLowerCase()
+          );
+          
+          if (selectedBreed) {
+            formValue.breed = selectedBreed;
+            formValue.breedId = selectedBreed.id;
+          }
+        }
+
+        this.petForm.patchValue(formValue);
+        this.petForm.markAsPristine();
+        this.petForm.markAsUntouched();
+    } else {
+      // Modo creación
+      this.petForm.patchValue({
+        gender: 'Macho',
+        age: 1
+      });
+      this.petForm.markAsPristine();
+      this.petForm.markAsUntouched();
+    }
   }
 
-  // 🚨 Manejo de la subida de imagen (Previsualización)
-  onImageUpload(event: { files: File[] }) {
-    // El evento 'onSelect' de p-fileUpload nos da un objeto con los archivos.
-    const file = event.files[0];
+  // Filtrar razas según especie seleccionada
+  onSpeciesChange(species: Species | null): void {
+    if (!species) {
+      this.filteredBreeds = [];
+      this.petForm.get('breed')?.reset();
+      return;
+    }
+
+    if (species.code === 'OTHER') {
+      this.filteredBreeds = [];
+      this.petForm.get('breed')?.reset();
+    } else {
+      this.filteredBreeds = this.allBreeds.filter(b => b.speciesId === species.id);
+      // Agregar opción "Otra raza" al final
+      this.filteredBreeds.push({ id: 999, name: 'Otra raza', code: 'OTHER', speciesId: species.id });
+      this.petForm.get('breed')?.reset();
+    }
+  }
+
+  // Manejo de la subida de imagen (Previsualización)
+  onImageUpload(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
     if (file) {
-      this.petForm.get('imageFile')?.setValue(file); // Guarda el archivo binario
       const reader = new FileReader();
-      reader.onload = e => {
-        // ✅ CORREGIDO: Aseguramos que el target y el result existan
-        if (e.target && e.target.result) {
-          this.localImageUrl = e.target.result; // Muestra el preview
+      reader.onload = (e) => {
+        if (e.target?.result) {
+          this.localImageUrl = e.target.result as string;
+          this.petForm.get('imageFile')?.setValue(file);
         }
       };
       reader.readAsDataURL(file);
     }
   }
-  
-  // Función para obtener el nombre final de Especie y Raza con ajuste de género
-  getPetDisplayNames(formValue: any) {
-    let species = formValue.species.code === 'OTHER' ? formValue.customSpecies : formValue.species.name;
-    let breed = formValue.breed.code === 'OTHER' ? formValue.customBreed : formValue.breed.name;
-
-    // Ajuste para el género femenino (en español, esto es necesario)
-    if (formValue.gender === 'Hembra') {
-      if (species === 'Perro') species = 'Perra';
-      if (species === 'Gato') species = 'Gata';
-    }
-    return { species, breed };
-  }
 
   savePet() {
+    console.log('Form status:', this.petForm.status);
+    console.log('Form errors:', this.petForm.errors);
+    console.log('Form controls:', Object.keys(this.petForm.controls).map(key => ({
+      key,
+      valid: this.petForm.get(key)?.valid,
+      value: this.petForm.get(key)?.value
+    })));
+
     if (this.petForm.invalid) {
+      console.log('Form is invalid, marking all as touched');
       Object.values(this.petForm.controls).forEach(control => {
         control.markAsTouched();
       });
+      alert('Por favor completa todos los campos requeridos');
       return;
     }
 
     const formValue = this.petForm.value;
-    const displayNames = this.getPetDisplayNames(formValue);
+    const selectedSpecies: Species = formValue.species;
+    const selectedBreed: Breed = formValue.breed;
 
-    // Creamos el objeto Pet para enviar
+    // Validaciones adicionales
+    if (!selectedSpecies) {
+      alert('Debes seleccionar una especie');
+      return;
+    }
+
+    if (selectedSpecies.code !== 'OTHER' && !selectedBreed) {
+      alert('Debes seleccionar una raza');
+      return;
+    }
+
+    let species = selectedSpecies.code === 'OTHER' ? formValue.customSpecies : selectedSpecies.name;
+    let breed = selectedBreed && selectedBreed.code !== 'OTHER' ? selectedBreed.name : formValue.customBreed;
+
+    // Ajuste para género femenino
+    if (formValue.gender === 'Hembra') {
+      if (species === 'Perro') species = 'Perra';
+      if (species === 'Gato') species = 'Gata';
+    }
+
     const petToSave: Pet = {
       id: formValue.id,
       name: formValue.name,
-      species: displayNames.species,
-      breed: displayNames.breed,
+      speciesId: selectedSpecies.code === 'OTHER' ? undefined : selectedSpecies.id,
+      species: species,
+      breedId: selectedBreed ? selectedBreed.id : undefined,
+      breed: breed,
       gender: formValue.gender,
       age: formValue.age,
-      weight: formValue.weight,
-      // 🚨 Mantiene la URL existente si no se sube una nueva.
-      imageUrl: this.petForm.get('imageUrl')?.value, 
-      // 🚨 Adjunta el archivo binario para que el componente padre lo suba.
-      imageFile: this.petForm.get('imageFile')?.value
+      imageUrl: formValue.imageUrl || this.localImageUrl || undefined,
+      imageFile: formValue.imageFile
     };
 
     console.log(`Guardando (${this.isEditMode ? 'Edición' : 'Nueva Mascota'})`, petToSave);
@@ -204,11 +304,9 @@ export class PetFormComponent implements OnInit {
     this.formCancel.emit();
   }
   
-  // 🚨 Método para ELIMINAR MASCOTA
   deletePet() {
       if (!this.isEditMode || !this.petData || !this.petData.id) return;
 
-      // ✅ Añadimos una confirmación para seguridad
       if (confirm(`¿Estás seguro de que quieres eliminar a ${this.petData.name}? Esta acción es irreversible.`)) {
           this.formDelete.emit(this.petData.id);
       }

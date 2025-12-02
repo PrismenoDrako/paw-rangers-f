@@ -2,15 +2,20 @@ import { Routes } from '@angular/router';
 import { lostPetsRoutes } from './features/lost-pets/lost-pets.routes';
 import { foundPetsRoutes } from './features/found-pets/found-pets.routes';
 import { profileRoutes } from './features/profile/profile.routes';
+import { homeRoutes } from './features/home/home.routes';
+
 import { notificationsRoutes } from './features/notifications/notifications.routes';
 import { alertsRoutes } from './features/alerts/alerts.routes';
 export const routes: Routes = [
     // Ruta de inicio (página principal)
     {
         path: '',
-        redirectTo: '/lost-pets',
+        redirectTo: '/home',
         pathMatch: 'full'
     },
+
+    // Rutas de home
+    ...homeRoutes,
 
     // Rutas de animales perdidos
     ...lostPetsRoutes,

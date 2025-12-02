@@ -17,6 +17,7 @@ export interface FoundPet {
   };
 }
 
+
 @Component({
   selector: 'app-found-pet-card',
   standalone: true,

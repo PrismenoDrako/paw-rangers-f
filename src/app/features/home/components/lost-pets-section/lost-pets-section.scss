@@ -1,0 +1,126 @@
+@use 'sass:color';
+
+$primary-color: #294374;
+$danger-color: #fbfbfb;
+$white: #ffffff;
+
+.lost-pets-section {
+  width: 100%;
+  padding: 20px;
+  padding-bottom: 40px;
+  background: #ffffff;
+}
+
+.section-container {
+  max-width: none;
+  margin: 0;
+  padding: 0;
+}
+
+// Contenedor elegante con borde rojo/naranja para urgencia
+.carousel-card-container {
+  background: #fff;
+  border-radius: 14px;
+  padding: 2rem;
+  padding-bottom: 2.5rem;
+  box-shadow: 0 2px 8px rgba(255, 118, 117, 0.1);
+  transition: box-shadow 0.3s ease;
+  width: 100%;
+  margin-bottom: 1rem;
+
+  &:hover {
+    box-shadow: 0 4px 16px rgba(255, 118, 117, 0.15);
+  }
+}
+
+// Estilos del carrusel
+.carousel-item-wrapper {
+  padding: 0.5rem;
+}
+
+.section-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 3rem;
+
+  ::ng-deep .report-button {
+    padding: 1rem 2.5rem !important;
+    font-size: 1.125rem !important;
+    font-weight: 700 !important;
+    box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
+
+    &:hover {
+      background: color.adjust($danger-color, $lightness: -10%) !important;
+      border-color: color.adjust($danger-color, $lightness: -10%) !important;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(231, 76, 60, 0.4);
+    }
+  }
+}
+
+// Estilos del carrusel PrimeNG
+.carousel-card-container ::ng-deep {
+  .p-carousel {
+    margin-top: 1.5rem;
+
+    .p-carousel-content {
+      .p-carousel-prev,
+      .p-carousel-next {
+        width: 3rem;
+        height: 3rem;
+        border-radius: 50%;
+        background: $danger-color;
+        color: $white;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 8px rgba(231, 76, 60, 0.2);
+
+        &:hover {
+          background: color.adjust($danger-color, $lightness: -10%);
+          box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
+        }
+
+        &:disabled {
+          background: #ccc;
+          box-shadow: none;
+        }
+      }
+
+      .p-carousel-indicators {
+        padding: 1.5rem 0 0.5rem 0;
+
+        .p-carousel-indicator button {
+          width: 0.75rem;
+          height: 0.75rem;
+          border-radius: 50%;
+          background: #ddd;
+          transition: all 0.3s ease;
+
+          &:hover {
+            background: color.adjust($danger-color, $lightness: 20%);
+          }
+        }
+
+        .p-carousel-indicator.p-highlight button {
+          background: $danger-color;
+          width: 2rem;
+          border-radius: 1rem;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .lost-pets-section {
+    padding: 15px;
+  }
+
+  .carousel-card-container {
+    padding: 1.5rem;
+  }
+
+  .section-actions ::ng-deep .report-button {
+    font-size: 1rem !important;
+    padding: 0.875rem 2rem !important;
+  }
+}

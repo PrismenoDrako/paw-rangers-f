@@ -154,6 +154,21 @@ $input-border-color: var(--surface-300, #ccc); // Gris claro para el borde del i
                     box-shadow: 0 0 0 0.2rem rgba(41, 67, 116, 0.25);
                 }
             }
+
+            /* Asegura posicionamiento correcto del toggle de contraseña */
+            :host ::ng-deep .p-password {
+                width: 100%;
+                .p-inputtext {
+                    padding-right: 2.5rem !important; /* espacio para el icono */
+                }
+                .p-password-toggle-mask {
+                    right: 0.75rem !important; /* fija el icono a la derecha */
+                    top: 50% !important;
+                    transform: translateY(-50%);
+                    position: absolute !important;
+                }
+                .p-password-panel { display: none !important; } /* sin panel de reglas */
+            }
         }
         
         .password-section {

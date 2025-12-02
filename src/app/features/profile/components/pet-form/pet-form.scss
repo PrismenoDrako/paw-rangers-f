@@ -76,11 +76,22 @@ $input-border-color: var(--surface-300, #ccc); // Gris claro para el borde del i
 
 /* Estilos para la imagen de previsualización */
 .preview-image {
-    height: 200px; /* ✅ Altura fija */
-    width: 200px; /* ✅ Ancho fijo */
-    object-fit: fill; /* ✅ Estira la imagen para llenar el contenedor, sin recortar */
+    width: 100%; /* Ocupa todo el ancho disponible del contenedor */
+    height: auto; /* Mantiene proporciones */
+    max-height: 320px; /* Limita altura en desktop para no estirar de más */
+    object-fit: contain; /* No recorta la imagen */
     border-radius: 12px;
     border: 3px solid $primary-blue;
+    background-color: #EDF0F7; /* Fondo neutro si hay bandas */
+}
+
+/* Ajustes responsivos para el preview */
+@media screen and (max-width: 768px) {
+    .preview-image {
+        max-height: 260px; /* Un poco menos alto en móvil */
+        display: block;
+        margin: 0 auto;
+    }
 }
 
 /* Estilos para FileUpload (Botón de Imagen) */
@@ -142,5 +153,31 @@ $input-border-color: var(--surface-300, #ccc); // Gris claro para el borde del i
 @media screen and (max-width: 768px) {
     .form-layout {
         padding: 0 0.5rem;
+    }
+
+    /* Apilar botones en móvil */
+    :host ::ng-deep .p-card .p-card-content .flex.justify-content-center.gap-2.mt-3,
+    .button-group,
+    .form-actions {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 0.75rem !important;
+        align-items: center !important; /* centra horizontalmente todos los botones */
+    }
+
+    :host ::ng-deep .p-card .p-card-content .flex.justify-content-center.gap-2.mt-3 > .p-button,
+    .button-group > .p-button,
+    .form-actions > .p-button,
+    :host ::ng-deep .p-card .p-card-content .flex.justify-content-center.gap-2.mt-3 > p-button,
+    .button-group > p-button,
+    .form-actions > p-button {
+        width: 100% !important; /* todos a ancho completo para consistencia */
+        max-width: 360px; /* evita que ocupen demasiado en pantallas un poco más grandes */
+    }
+
+    /* Asegurar que el botón Cancelar esté centrado y tenga el mismo ancho que los otros */
+    :host ::ng-deep .form-actions p-button[ng-reflect-label='Cancelar'],
+    :host ::ng-deep .form-actions p-button:last-child {
+        align-self: center !important;
     }
 }

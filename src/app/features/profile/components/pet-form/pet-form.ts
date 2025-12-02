@@ -19,7 +19,6 @@ export interface Pet {
   breed: string;
   gender: string;
   age: number;
-  weight: number;
   imageUrl?: string; // URL después de guardar
   imageFile?: File; // Archivo binario para subir
 }
@@ -88,8 +87,7 @@ export class PetFormComponent implements OnInit {
         customBreed: [''],
         gender: ['Macho', Validators.required],
         age: [1, [Validators.required, Validators.min(0)]],
-        weight: [1, [Validators.required, Validators.min(0.1)]],
-        imageFile: [null], // Archivo binario para subir
+                imageFile: [null], // Archivo binario para subir
         imageUrl: [null] // URL existente
     });
   }
@@ -109,8 +107,7 @@ export class PetFormComponent implements OnInit {
             name: this.petData.name,
             gender: this.petData.gender,
             age: this.petData.age,
-            weight: this.petData.weight,
-            imageUrl: this.petData.imageUrl,
+                        imageUrl: this.petData.imageUrl,
         });
         
         // 3. Rellenar campos de Especie (Requiere buscar el objeto)
@@ -189,8 +186,7 @@ export class PetFormComponent implements OnInit {
       breed: displayNames.breed,
       gender: formValue.gender,
       age: formValue.age,
-      weight: formValue.weight,
-      // 🚨 Mantiene la URL existente si no se sube una nueva.
+            // 🚨 Mantiene la URL existente si no se sube una nueva.
       imageUrl: this.petForm.get('imageUrl')?.value, 
       // 🚨 Adjunta el archivo binario para que el componente padre lo suba.
       imageFile: this.petForm.get('imageFile')?.value

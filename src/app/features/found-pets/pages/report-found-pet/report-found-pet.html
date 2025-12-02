@@ -1,170 +1,18 @@
 <div class="report-found-page">
-  <div class="report-header">
+  <!-- Header con fondo gris claro -->
+  <div class="page-header">
     <button class="back-btn" (click)="goBack()">
       <i class="pi pi-arrow-left"></i>
     </button>
-    <h1 class="page-title">Reportar Animal Encontrado</h1>
-    <p class="page-subtitle">Ayuda a reunir familias reportando el animal que encontraste</p>
+    <div class="header-text">
+      <h1>Reportar Animal Encontrado</h1>
+      <p>Ayuda a reunir familias reportando el animal que encontraste</p>
+    </div>
   </div>
 
-  <div class="report-content">
-    <!-- Información del Animal Encontrado -->
-    <div class="form-section">
-      <h3 class="section-title">Información del Animal Encontrado</h3>
-      
-      <div class="form-grid">
-        <div class="form-group">
-          <label for="animalType" class="form-label">
-            Tipo de Animal <span class="required">*</span>
-          </label>
-          <input 
-            id="animalType"
-            type="text" 
-            class="form-input"
-            placeholder="Ej: Perro, Gato"
-            [(ngModel)]="formData.animalType"
-            (ngModelChange)="onFormChange()" />
-        </div>
-        
-        <div class="form-group">
-          <label for="breed" class="form-label">
-            Raza / Descripción Física <span class="optional">(Opcional)</span>
-          </label>
-          <input 
-            id="breed"
-            type="text" 
-            class="form-input"
-            placeholder="Ej: Labrador, Mestizo, Gato naranja"
-            [(ngModel)]="formData.breed"
-            (ngModelChange)="onFormChange()" />
-        </div>
-      </div>
-      
-      <!-- Foto del Animal -->
-      <div class="form-group">
-        <label class="form-label">
-          Foto del Animal
-        </label>
-        <div class="photo-upload-area" (click)="triggerFileInput()">
-          @if (formData.photo) {
-            <img [src]="formData.photo" alt="Animal encontrado" class="uploaded-photo" />
-            <div class="photo-overlay">
-              <i class="pi pi-camera"></i>
-              <span>Cambiar foto</span>
-            </div>
-          } @else {
-            <div class="upload-placeholder">
-              <i class="pi pi-camera"></i>
-              <p>Toma o sube una foto</p>
-              <small>PNG, JPG hasta 10MB</small>
-            </div>
-          }
-        </div>
-        <input #fileInput type="file" hidden accept="image/*" (change)="onPhotoSelected($event)" />
-      </div>
-      
-      <!-- ¿Tiene collar? -->
-      <div class="form-group">
-        <label class="form-label">¿Lleva collar o identificación?</label>
-        <div class="radio-group">
-          <label class="radio-option">
-            <input 
-              type="radio" 
-              name="hasCollar" 
-              [value]="true"
-              [(ngModel)]="formData.hasCollar"
-              (ngModelChange)="onFormChange()" />
-            <span class="radio-mark"></span>
-            Sí
-          </label>
-          <label class="radio-option">
-            <input 
-              type="radio" 
-              name="hasCollar" 
-              [value]="false"
-              [(ngModel)]="formData.hasCollar"
-              (ngModelChange)="onFormChange()" />
-            <span class="radio-mark"></span>
-            No
-          </label>
-        </div>
-      </div>
-    </div>
-
-    <!-- Ubicación del Hallazgo -->
-    <div class="form-section">
-      <h3 class="section-title">Ubicación del Hallazgo</h3>
-      
-      <div class="map-container">
-        <div class="map-placeholder" (click)="openMapSelector()">
-          <i class="pi pi-map-marker"></i>
-          <p>Mapa interactivo</p>
-          <small>Toca en el mapa para marcar la ubicación</small>
-        </div>
-      </div>
-      
-      <div class="form-group">
-        <label for="location" class="form-label">
-          Dirección o Referencia <span class="required">*</span>
-        </label>
-        <input 
-          id="location"
-          type="text" 
-          class="form-input"
-          placeholder="Ej: Cerca del parque central, Avenida Principal"
-          [(ngModel)]="formData.location"
-          (ngModelChange)="onFormChange()" />
-      </div>
-    </div>
-
-    <!-- Descripción y Estado -->
-    <div class="form-section">
-      <h3 class="section-title">Descripción y Estado <span class="required">*</span></h3>
-      
-      <div class="form-group">
-        <textarea 
-          class="form-textarea"
-          rows="5"
-          placeholder="Describe el estado del animal, su comportamiento, condiciones en las que lo encontraste, si está herido o asustado..."
-          [(ngModel)]="formData.description"
-          (ngModelChange)="onFormChange()"></textarea>
-      </div>
-    </div>
-
-    <!-- Tu Información de Contacto -->
-    <div class="form-section">
-      <h3 class="section-title">Tu Información de Contacto</h3>
-      
-      <div class="form-group">
-        <label for="contactPhone" class="form-label">
-          Teléfono <span class="required">*</span>
-        </label>
-        <input 
-          id="contactPhone"
-          type="tel" 
-          class="form-input"
-          placeholder="Tu número de teléfono"
-          [(ngModel)]="formData.contactPhone"
-          (ngModelChange)="onFormChange()" />
-      </div>
-      
-      <div class="warning-box">
-        <i class="pi pi-info-circle"></i>
-        <span>Consejo: Mantén al animal en un lugar seguro mientras esperas contacto del dueño. Si el animal está herido, considera llevarlo a un veterinario.</span>
-      </div>
-    </div>
-
-    <!-- Acciones del formulario -->
-    <div class="form-actions">
-      <button class="btn btn-secondary" (click)="onCancel()">
-        Cancelar
-      </button>
-      <button 
-        class="btn btn-primary" 
-        (click)="onSubmit()"
-        [disabled]="!isFormValid()">
-        Publicar Reporte
-      </button>
-    </div>
+  <!-- Contenido con el formulario -->
+  <div class="page-content">
+    <app-report-found-forms (formSubmit)="onFormSubmit($event)">
+    </app-report-found-forms>
   </div>
 </div>

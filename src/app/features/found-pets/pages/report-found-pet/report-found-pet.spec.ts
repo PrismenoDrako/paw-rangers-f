@@ -21,7 +21,7 @@ describe('ReportFoundPet', () => {
         { provide: Router, useValue: routerSpyObj }
       ]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(ReportFoundPet);
     component = fixture.componentInstance;
@@ -36,7 +36,7 @@ describe('ReportFoundPet', () => {
 
   it('should validate form correctly', () => {
     expect(component.isFormValid()).toBe(false);
-    
+
     component.formData = {
       animalType: 'Perro',
       breed: 'Labrador',
@@ -46,13 +46,13 @@ describe('ReportFoundPet', () => {
       description: 'Test description',
       contactPhone: '123456789'
     };
-    
+
     expect(component.isFormValid()).toBe(true);
   });
 
   it('should go back when goBack is called', () => {
     component.goBack();
-    
+
     expect(locationSpy.back).toHaveBeenCalled();
   });
 });

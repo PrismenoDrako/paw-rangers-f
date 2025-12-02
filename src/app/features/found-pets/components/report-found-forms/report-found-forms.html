@@ -1,0 +1,257 @@
+<p-toast></p-toast>
+
+<div class="report-form-container">
+  <div class="report-form-card">
+    <p-stepper [linear]="true" [value]="1">
+
+      <!-- Tabs de navegación -->
+      <p-step-list>
+        <p-step [value]="1">Información</p-step>
+        <p-step [value]="2">Ubicación</p-step>
+        <p-step [value]="3">Contacto</p-step>
+      </p-step-list>
+      <p-step-panels>
+        
+        <!-- ==================== PASO 1: INFORMACIÓN ==================== -->
+        <p-step-panel [value]="1">
+          <ng-template #content let-activateCallback="activateCallback">
+            <div class="step-content" [formGroup]="reportFoundForm">
+              <h2 class="section-title">Información del Animal Encontrado</h2>
+
+              <div formGroupName="petDetails">
+
+                <!-- Foto del Animal -->
+                <div class="form-group">
+                  <label class="form-label">
+                    Foto del Animal
+                    <span class="required-asterisk">*</span>
+                  </label>
+
+                  <div class="photo-upload-wrapper" *ngIf="!photoPreview">
+                    <div class="photo-upload-box" (click)="triggerFileInput()">
+                      <i class="pi pi-camera upload-icon"></i>
+                      <p class="upload-main-text">Toma o sube una foto</p>
+                      <p class="upload-help-text">Esto ayudará al dueño a identificarlo</p>
+                      <input type="file" accept="image/*" (change)="onPhotoSelect($event)" #fileInput
+                        style="display: none;">
+                    </div>
+                  </div>
+
+                  <div class="photo-preview-wrapper" *ngIf="photoPreview">
+                    <img [src]="photoPreview" alt="Vista previa" class="preview-image">
+                    <button type="button" class="remove-photo-button" (click)="removePhoto()">
+                      <i class="pi pi-times"></i>
+                    </button>
+                  </div>
+
+                  <small *ngIf="isFieldInvalid('petDetails', 'photo')" class="error-message">
+                    {{ getErrorMessage('petDetails', 'photo') }}
+                  </small>
+                </div>
+
+
+                <!-- Especie -->
+                <div class="form-group">
+                  <label for="species" class="form-label">
+                    Especie
+                    <span class="required-asterisk">*</span>
+                  </label>
+                  <p-select id="species" formControlName="species" [options]="speciesOptions"
+                    placeholder="Perro, Gato..." optionLabel="label" optionValue="value" styleClass="form-select"
+                    [class.field-error]="isFieldInvalid('petDetails', 'species')">
+                  </p-select>
+                  <small *ngIf="isFieldInvalid('petDetails', 'species')" class="error-message">
+                    {{ getErrorMessage('petDetails', 'species') }}
+                  </small>
+                </div>
+
+
+                <!-- Descripción -->
+                <div class="form-group">
+                  <label for="description" class="form-label">
+                    Descripción
+                    <span class="required-asterisk">*</span>
+                  </label>
+                  <textarea id="description" pTextarea formControlName="description" rows="4"
+                    placeholder="Color, tamaño, estado del animal, si tiene collar o identificación..."
+                    class="form-textarea" [class.field-error]="isFieldInvalid('petDetails', 'description')">
+                  </textarea>
+                  <small *ngIf="isFieldInvalid('petDetails', 'description')" class="error-message">
+                    {{ getErrorMessage('petDetails', 'description') }}
+                  </small>
+                </div>
+
+                <!-- ¿Lleva collar? -->
+                <div class="form-group">
+                  <label class="form-label">¿Lleva collar o identificación?</label>
+                  <div class="radio-options">
+                    <div class="radio-option">
+                      <p-radiobutton formControlName="hasCollar" value="si" inputId="collarSi">
+                      </p-radiobutton>
+                      <label for="collarSi" class="radio-label">Sí</label>
+                    </div>
+                    <div class="radio-option">
+                      <p-radiobutton formControlName="hasCollar" value="no" inputId="collarNo">
+                      </p-radiobutton>
+                      <label for="collarNo" class="radio-label">No</label>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+
+              <!-- Botones de acción -->
+              <div class="form-actions">
+                <p-button label="Cancelar" [text]="true" styleClass="btn-cancel-text">
+                </p-button>
+                <p-button label="Siguiente" icon="pi pi-arrow-right" iconPos="right" styleClass="btn-primary"
+                  [disabled]="reportFoundForm.get('petDetails')?.invalid" (onClick)="activateCallback(2)">
+                </p-button>
+              </div>
+            </div>
+          </ng-template>
+        </p-step-panel>
+
+        <!-- ==================== PASO 2: UBICACIÓN ==================== -->
+        <p-step-panel [value]="2">
+          <ng-template #content let-activateCallback="activateCallback">
+            <div class="step-content" [formGroup]="reportFoundForm" (click)="ensureMapInitialized()">
+              <h2 class="section-title">Ubicación del Hallazgo</h2>
+
+              <div formGroupName="location">
+
+                <!-- Mapa -->
+                <div class="form-group">
+                  <label class="form-label">
+                    Selecciona donde encontraste la mascota
+                    <span class="required-asterisk">*</span>
+                  </label>
+                  <div class="map-container-wrapper">
+                    <div #mapContainer id="mapContainer" class="leaflet-map"></div>
+                  </div>
+                  <p class="field-hint">
+                    <i class="pi pi-map-marker" style="margin-right: 4px;"></i>
+                    Haz clic en el mapa para marcar la ubicación exacta
+                  </p>
+                </div>
+
+                <!-- Dirección -->
+                <div class="form-group">
+                  <label for="address" class="form-label">Dirección</label>
+                  <input id="address" type="text" pInputText formControlName="address" [readonly]="true"
+                    placeholder="Se completará automáticamente" class="form-input readonly-field" />
+                </div>
+
+                <!-- Fecha y Hora en fila -->
+                <div class="form-row-2">
+                  <div class="form-group">
+                    <label for="foundDate" class="form-label">
+                      Fecha
+                      <span class="required-asterisk">*</span>
+                    </label>
+                    <p-datepicker id="foundDate" formControlName="foundDate" dateFormat="dd/mm/yy"
+                      placeholder="Selecciona fecha" [showIcon]="true" [maxDate]="maxDate" styleClass="form-datepicker"
+                      [class.field-error]="isFieldInvalid('location', 'foundDate')">
+                    </p-datepicker>
+                    <small *ngIf="isFieldInvalid('location', 'foundDate')" class="error-message">
+                      {{ getErrorMessage('location', 'foundDate') }}
+                    </small>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="foundTime" class="form-label">
+                      Hora
+                      <span class="required-asterisk">*</span>
+                    </label>
+                    <input id="foundTime" type="time" pInputText formControlName="foundTime" class="form-input"
+                      [class.field-error]="isFieldInvalid('location', 'foundTime')" />
+                    <small *ngIf="isFieldInvalid('location', 'foundTime')" class="error-message">
+                      {{ getErrorMessage('location', 'foundTime') }}
+                    </small>
+                  </div>
+                </div>
+
+              </div>
+
+              <!-- Botones de acción -->
+              <div class="form-actions">
+                <p-button label="Atrás" icon="pi pi-arrow-left" [text]="true" styleClass="btn-cancel-text"
+                  (onClick)="activateCallback(1); onStepChange(1)">
+                </p-button>
+                <p-button label="Siguiente" icon="pi pi-arrow-right" iconPos="right" styleClass="btn-primary"
+                  [disabled]="reportFoundForm.get('location')?.invalid"
+                  (onClick)="activateCallback(3); onStepChange(3)">
+                </p-button>
+              </div>
+            </div>
+          </ng-template>
+        </p-step-panel>
+
+        <!-- ==================== PASO 3: CONTACTO ==================== -->
+        <p-step-panel [value]="3">
+          <ng-template #content let-activateCallback="activateCallback">
+            <div class="step-content" [formGroup]="reportFoundForm">
+              <h2 class="section-title">Información de Contacto</h2>
+              <p class="section-subtitle">Para que el dueño pueda contactarte</p>
+
+              <div formGroupName="contactInfo">
+
+                <!-- Nombre -->
+                <div class="form-group">
+                  <label for="finderName" class="form-label">
+                    Nombre
+                    <span class="required-asterisk">*</span>
+                  </label>
+                  <input id="finderName" type="text" pInputText formControlName="finderName"
+                    placeholder="Tu nombre completo" class="form-input"
+                    [class.field-error]="isFieldInvalid('contactInfo', 'finderName')" />
+                  <small *ngIf="isFieldInvalid('contactInfo', 'finderName')" class="error-message">
+                    {{ getErrorMessage('contactInfo', 'finderName') }}
+                  </small>
+                </div>
+
+                <!-- Teléfono -->
+                <div class="form-group">
+                  <label for="phone" class="form-label">
+                    Contacto
+                    <span class="required-asterisk">*</span>
+                  </label>
+                  <input id="phone" type="tel" pInputText formControlName="phone" placeholder="967012326" maxlength="9"
+                    class="form-input" [class.field-error]="isFieldInvalid('contactInfo', 'phone')" />
+                  <small *ngIf="isFieldInvalid('contactInfo', 'phone')" class="error-message">
+                    {{ getErrorMessage('contactInfo', 'phone') }}
+                  </small>
+                </div>
+
+                <!-- Email -->
+                <div class="form-group">
+                  <label for="email" class="form-label">
+                    Correo
+                    <span class="required-asterisk">*</span>
+                  </label>
+                  <input id="email" type="email" pInputText formControlName="email" placeholder="tu.email@ejemplo.com"
+                    class="form-input" [class.field-error]="isFieldInvalid('contactInfo', 'email')" />
+                  <small *ngIf="isFieldInvalid('contactInfo', 'email')" class="error-message">
+                    {{ getErrorMessage('contactInfo', 'email') }}
+                  </small>
+                </div>
+
+              </div>
+
+              <!-- Botones de acción -->
+              <div class="form-actions">
+                <p-button label="Atrás" icon="pi pi-arrow-left" [text]="true" styleClass="btn-cancel-text"
+                  (onClick)="activateCallback(2); onStepChange(2)">
+                </p-button>
+                <p-button label="Enviar Reporte" icon="pi pi-check" iconPos="right" styleClass="btn-primary"
+                  [disabled]="reportFoundForm.invalid" (onClick)="submitReport()">
+                </p-button>
+              </div>
+            </div>
+          </ng-template>
+        </p-step-panel>
+
+      </p-step-panels>
+    </p-stepper>
+  </div>
+</div>

@@ -8,13 +8,27 @@ $shadow-menu: 0 4px 12px rgba(0, 0, 0, 0.15);
 // ==================== FAB WRAPPER ====================
 .fab-wrapper {
   position: fixed;
-  bottom: 2rem;
+  bottom: 90px; // Por encima de la navegación (70px) + margen
   right: 2rem;
-  z-index: 1000;
+  z-index: 900; // Menor que la navegación (1000)
   display: flex;
   flex-direction: column;
   align-items: flex-end;
   gap: 1rem;
+  
+  @media (max-width: 1024px) {
+    bottom: 85px;
+  }
+  
+  @media (max-width: 768px) {
+    bottom: 80px;
+    right: 1.5rem;
+  }
+  
+  @media (max-width: 480px) {
+    bottom: 75px;
+    right: 1rem;
+  }
 }
 
 // ==================== BACKDROP ====================
@@ -109,30 +123,25 @@ $shadow-menu: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 // ==================== RESPONSIVE ====================
-@media (max-width: 768px) {
-  .fab-wrapper {
-    bottom: 1.5rem;
-    right: 1.5rem;
-  }
-
+@media (max-width: 480px) {
   .fab-button {
-    width: 56px;
-    height: 56px;
+    width: 52px;
+    height: 52px;
 
     i {
-      font-size: 1.5rem;
+      font-size: 1.375rem;
     }
   }
 
   .fab-menu-item {
-    padding: 0.75rem 1.25rem;
+    padding: 0.625rem 1rem;
 
     i {
-      font-size: 1.125rem;
+      font-size: 1rem;
     }
 
     span {
-      font-size: 0.875rem;
+      font-size: 0.8125rem;
     }
   }
 }

@@ -35,4 +35,9 @@ export class NotificationSettingsComponent implements OnInit {
   resetChanges(): void {
     this.notificationPreferences = { ...this.preferencesService.currentPreferences };
   }
+
+  cancel(): void {
+    this.resetChanges();
+    this.router.navigate(['/notificaciones']);
+  }
 }

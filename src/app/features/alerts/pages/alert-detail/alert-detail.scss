@@ -46,6 +46,34 @@
   justify-self: start;
 }
 
+.alert-meta {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+  margin: 6px 0 2px;
+}
+
+.meta-card {
+  border: 1px solid rgba(51, 68, 115, 0.15);
+  border-radius: 10px;
+  padding: 10px 12px;
+  background: #f7f8fc;
+}
+
+.meta-label {
+  margin: 0 0 4px;
+  font-size: 0.85rem;
+  color: #4f5675;
+  font-weight: 600;
+}
+
+.meta-value {
+  margin: 0;
+  font-size: 1rem;
+  color: #334473;
+  font-weight: 700;
+}
+
 .pill-row {
   display: flex;
   flex-wrap: wrap;
@@ -92,8 +120,17 @@
   background: none;
   color: #4a57d3;
   font-weight: 700;
+  font-size: 0.95rem;
   cursor: pointer;
   align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 6px;
+}
+
+.link-back .pi {
+  font-size: 0.95rem;
 }
 
 .alert-section {
@@ -177,24 +214,65 @@
 .contact-card {
   border: 1px solid rgba(51, 68, 115, 0.12);
   border-radius: 10px;
-  padding: 12px;
+  padding: 8px 10px;
   background: #f7f8fc;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 4px;
   height: 100%;
+}
+
+.contact-card h4 {
+  margin: 0 0 4px;
+  color: #334473;
+}
+
+.contact-owner {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  margin: 0;
+}
+
+.contact-owner__label {
+  font-weight: 700;
+  color: #334473;
+  text-decoration: none;
+}
+
+.contact-owner__name {
+  font-weight: 400;
+  color: #334473;
+  text-decoration: none;
 }
 
 .contact-name {
   margin: 0;
   font-weight: 700;
   color: #334473;
+  text-decoration: none;
 }
 
 .contact-note {
   margin: 0;
   color: #4f5675;
   font-size: 0.95rem;
+}
+
+.contact-meta {
+  display: grid;
+  gap: 1px;
+}
+
+.contact-meta__item {
+  margin: 0;
+  font-size: 0.95rem;
+  color: #334473;
+}
+
+.contact-meta__label {
+  font-weight: 700;
+  margin-right: 4px;
 }
 
 .contact-actions {

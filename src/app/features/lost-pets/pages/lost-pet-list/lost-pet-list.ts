@@ -42,20 +42,35 @@ export class LostPetList implements OnInit {
   }
 
   private loadLostPets(): void {
-    // Datos de ejemplo - en producción vienen del servicio
+    // Datos de ejemplo - en produccion vienen del servicio
     this.lostPets = [
+      {
+        id: 101,
+        name: 'Luna',
+        type: 'Gato',
+        breed: 'Gris atigrado',
+        description: 'Vista por ultima vez cerca del parque central. Lleva collar morado.',
+        location: 'Parque central',
+        lostDate: new Date(Date.now() - 19 * 24 * 60 * 60 * 1000), // Hace 19 dias
+        image: 'https://cdn0.uncomo.com/es/posts/4/6/4/mau_egipcio_53464_1_600.jpg',
+        contactInfo: {
+          name: 'Laura',
+          phone: '+51 987 111 222',
+          email: 'laura@example.com'
+        }
+      },
       {
         id: 1,
         name: 'Zeus',
         type: 'Perro',
-        breed: 'Pastor Alemán',
+        breed: 'Pastor Aleman',
         description: 'Perdido cerca del parque central. Muy amigable, responde a su nombre.',
         location: 'Centro, Ciudad',
         lostDate: new Date(Date.now() - 2 * 60 * 60 * 1000), // Hace 2 horas
         image: 'https://images.unsplash.com/photo-1551717743-49959800b1f6?w=400&h=400&fit=crop',
         reward: 100,
         contactInfo: {
-          name: 'María García',
+          name: 'Maria Garcia',
           phone: '+1234567890',
           email: 'maria@email.com'
         }
@@ -65,9 +80,9 @@ export class LostPetList implements OnInit {
         name: 'Naranjo',
         type: 'Gato',
         breed: 'Mestizo',
-        description: 'Gato naranja perdido en el barrio. Es muy tímido.',
+        description: 'Gato naranja perdido en el barrio. Es muy timido.',
         location: 'Zona Norte',
-        lostDate: new Date(Date.now() - 24 * 60 * 60 * 1000), // Hace 1 día
+        lostDate: new Date(Date.now() - 24 * 60 * 60 * 1000), // Hace 1 dia
         image: 'https://images.unsplash.com/photo-1574158622682-e40e69881006?w=400&h=400&fit=crop',
         reward: 120,
         contactInfo: {
@@ -80,13 +95,13 @@ export class LostPetList implements OnInit {
         name: 'Luna',
         type: 'Perro',
         breed: 'Labrador',
-        description: 'Perra dorada muy cariñosa. Se perdió durante una tormenta.',
+        description: 'Perra dorada muy carinosa. Se perdio durante una tormenta.',
         location: 'Surco',
         lostDate: new Date(Date.now() - 6 * 60 * 60 * 1000), // Hace 6 horas
         image: 'https://images.unsplash.com/photo-1518717758536-85ae29035b6d?w=400&h=400&fit=crop',
         reward: 200,
         contactInfo: {
-          name: 'Ana López',
+          name: 'Ana Lopez',
           phone: '+1122334455'
         }
       },
@@ -97,7 +112,7 @@ export class LostPetList implements OnInit {
         breed: 'Persa',
         description: 'Gato blanco de pelo largo. No lleva collar.',
         location: 'Miraflores',
-        lostDate: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000), // Hace 3 días
+        lostDate: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000), // Hace 3 dias
         image: 'https://images.unsplash.com/photo-1596854407944-bf87f6fdd49e?w=400&h=400&fit=crop',
         contactInfo: {
           name: 'Pedro Silva',
@@ -123,7 +138,7 @@ export class LostPetList implements OnInit {
 
   applyFilters(): void {
     this.filteredPets = this.lostPets.filter(pet => {
-      // Filtro por búsqueda
+      // Filtro por busqueda
       if (this.searchTerm) {
         const searchLower = this.searchTerm.toLowerCase();
         const matchesSearch = 
@@ -135,7 +150,7 @@ export class LostPetList implements OnInit {
         if (!matchesSearch) return false;
       }
       
-      // Filtro por categoría
+      // Filtro por categoria
       if (this.selectedCategory && this.selectedCategory !== 'todos') {
         switch (this.selectedCategory) {
           case 'perros':
@@ -173,12 +188,12 @@ export class LostPetList implements OnInit {
 
   onContact(pet: LostPet): void {
     console.log('Contacting about:', pet.name);
-    // Implementar lógica de contacto
+    // Implementar logica de contacto
   }
 
   onOpenMap(pet: LostPet): void {
     console.log('Opening map for:', pet.name);
-    // Implementar lógica de mapa
+    // Implementar logica de mapa
   }
 
   goToReport(): void {

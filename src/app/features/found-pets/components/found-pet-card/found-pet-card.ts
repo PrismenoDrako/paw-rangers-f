@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 
 export interface FoundPet {
   id: number;
+  reportRef?: string;
   type: string;
   breed?: string;
   description: string;

@@ -6,8 +6,7 @@ $white: #ffffff;
 
 .lost-pets-section {
   width: 100%;
-  padding: 20px;
-  padding-bottom: 40px;
+  padding: 14px 12px 32px;
   background: #ffffff;
 }
 
@@ -21,8 +20,8 @@ $white: #ffffff;
 .carousel-card-container {
   background: #fff;
   border-radius: 14px;
-  padding: 2rem;
-  padding-bottom: 2.5rem;
+  padding: 1.5rem;
+  padding-bottom: 2rem;
   box-shadow: 0 2px 8px rgba(255, 118, 117, 0.1);
   transition: box-shadow 0.3s ease;
   width: 100%;
@@ -35,7 +34,7 @@ $white: #ffffff;
 
 // Estilos del carrusel
 .carousel-item-wrapper {
-  padding: 0.5rem;
+  padding: 0.35rem;
 }
 
 .section-actions {
@@ -112,11 +111,12 @@ $white: #ffffff;
 
 @media (max-width: 768px) {
   .lost-pets-section {
-    padding: 15px;
+    padding: 12px 8px 24px;
   }
 
   .carousel-card-container {
-    padding: 1.5rem;
+    padding: 1.25rem;
+    padding-bottom: 1.5rem;
   }
 
   .section-actions ::ng-deep .report-button {

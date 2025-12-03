@@ -80,6 +80,12 @@ app-notification-header {
   color: inherit;
 }
 
+.settings-icon-button .pi {
+  font-size: 20px;
+  line-height: 1;
+  color: inherit;
+}
+
 .settings-icon-button:hover {
   transform: translateY(-2px);
   box-shadow: 0 18px 30px rgba(0, 0, 0, 0.18);

@@ -1,23 +1,35 @@
 <div class="form-container">
-    <form [formGroup]="locationForm" (ngSubmit)="onSave()" class="p-fluid">
+    <form [formGroup]="locationForm" class="p-fluid">
         <div class="form-section">
             <h3 class="section-title">Dirección seleccionada</h3>
             <p class="section-subtitle">Selecciona una ubicación en el mapa</p>
             
             <div class="field">
-                <label for="fullAddress">Dirección Completa</label>
+                <label for="mapAddress">Dirección del mapa</label>
+                <input 
+                    pInputText 
+                    id="mapAddress" 
+                    type="text" 
+                    [value]="locationData?.address || ''"
+                    placeholder="Se cargará automáticamente"
+                    readonly />
+            </div>
+
+            <div class="field">
+                <label for="fullAddress">Dirección Completa <span class="optional">(Opcional)</span></label>
                 <input 
                     pInputText 
                     id="fullAddress" 
                     type="text" 
                     formControlName="fullAddress"
-                    placeholder="Calle, número, ciudad..."
-                    readonly />
+                    placeholder="Calle, número, ciudad, referencias..." />
+                <small class="text-color-secondary">Si no completas este campo, se usará la dirección del mapa</small>
             </div>
         </div>
 
         <div class="form-section">
             <h3 class="section-title">¿Cómo quieres llamar a esta ubicación?</h3>
+            <p class="section-subtitle">Selecciona un tipo o escribe un nombre personalizado</p>
             
             <div class="location-types">
                 <button 
@@ -33,14 +45,15 @@
         </div>
 
         <div class="form-section">
-            <h3 class="section-title">O escribe un nombre personalizado</h3>
+            <h3 class="section-title">O escribe un nombre personalizado <span class="optional">(Opcional)</span></h3>
             
             <div class="field">
                 <input 
                     pInputText 
                     type="text" 
                     formControlName="customName"
-                    placeholder="Casa de mamá, Veterinaria, Parque favorito" />
+                    placeholder="Casa de mamá, Veterinaria, Parque favorito..." />
+                <small class="text-color-secondary">Si dejas este campo vacío, se usará el tipo de ubicación seleccionado</small>
             </div>
         </div>
 
@@ -54,14 +67,18 @@
                 label="Cancelar" 
                 icon="pi pi-times"
                 styleClass="p-button-text"
-                (onClick)="onCancel()">
+                (click)="onCancel()">
             </p-button>
             <p-button 
                 label="Guardar Ubicación" 
                 icon="pi pi-check"
                 styleClass="p-button-primary"
-                [disabled]="!locationForm.valid">
+                [disabled]="!locationForm.valid || !locationData || isSaving"
+                [loading]="isSaving"
+                (click)="onSave()">
             </p-button>
         </div>
     </form>
 </div>
+
+<p-toast position="top-right"></p-toast>

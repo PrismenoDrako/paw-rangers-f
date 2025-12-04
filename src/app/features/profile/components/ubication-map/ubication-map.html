@@ -1,7 +1,9 @@
 <div class="map-container">
-    <div class="map-placeholder" (click)="onMapClick()">
-        <i class="pi pi-map-marker"></i>
-        <p class="map-title">Mapa interactivo</p>
-        <p class="map-subtitle">Toca y arrastra el marcador para seleccionar la ubicación exacta</p>
+    @if (!mapInitialized) {
+    <div class="map-loading">
+        <p-progressSpinner [style]="{'width': '50px', 'height': '50px'}" strokeWidth="4"></p-progressSpinner>
+        <p>Cargando mapa...</p>
     </div>
+    }
+    <div #mapElement class="map" [class.hidden]="!mapInitialized"></div>
 </div>

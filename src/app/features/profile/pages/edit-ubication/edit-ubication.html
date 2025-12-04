@@ -12,14 +12,21 @@
       <p>Actualiza la ubicación seleccionada en el mapa y los datos</p>
     </div>
 
-    <div class="content">
-      <div class="map-section">
-        <app-ubication-map (locationSelected)="onLocationSelected($event)"></app-ubication-map>
+    @if (isLoading) {
+      <div class="loading-container">
+        <p-progressSpinner [style]="{'width': '50px', 'height': '50px'}" strokeWidth="4"></p-progressSpinner>
+        <p>Cargando ubicación...</p>
       </div>
+    } @else {
+      <div class="content">
+        <div class="map-section">
+          <app-ubication-map (locationSelected)="onLocationSelected($event)"></app-ubication-map>
+        </div>
 
-      <div class="form-section">
-        <app-ubication-form></app-ubication-form>
+        <div class="form-section">
+          <app-ubication-form></app-ubication-form>
+        </div>
       </div>
-    </div>
+    }
   </div>
 </div>

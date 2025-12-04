@@ -1,32 +1,32 @@
 <div class="news-banner">
-  <div class="news-container">
-    
-
-    <div class="news-slider">
-      
-
-      <div class="news-content">
-        <div class="news-item" [class]="getNewsTypeClass(newsItems[currentIndex].type)">
-          <div class="news-icon">
-            <i class="pi" [ngClass]="newsItems[currentIndex].icon"></i>
-          </div>
-          <div class="news-body">
-            <h3>{{ newsItems[currentIndex].title }}</h3>
-            <p>{{ newsItems[currentIndex].description }}</p>
-           
-          </div>
-        </div>
+  <div class="news-content">
+    <div class="news-item" [class]="getNewsTypeClass(newsItems[currentIndex].type)">
+      <div class="news-text-section">
+        <h2 class="news-title">{{ newsItems[currentIndex].title }}</h2>
+        <p class="news-description">{{ newsItems[currentIndex].description }}</p>
+        @if (newsItems[currentIndex].buttonText) {
+          <button class="news-button" (click)="onButtonClick(newsItems[currentIndex])">
+            <i class="pi" [ngClass]="newsItems[currentIndex].buttonIcon"></i>
+            <span>{{ newsItems[currentIndex].buttonText }}</span>
+          </button>
+        }
       </div>
-
+      @if (newsItems[currentIndex].image) {
+        <div class="news-image">
+          <img [src]="newsItems[currentIndex].image" [alt]="newsItems[currentIndex].title">
+        </div>
+      }
     </div>
 
     <div class="news-indicators">
-      <span 
-        *ngFor="let item of newsItems; let i = index"
-        class="indicator"
-        [class.active]="i === currentIndex"
-        (click)="goToNews(i)">
-      </span>
+      @for (item of newsItems; track item.id; let i = $index) {
+        <button 
+          class="indicator"
+          [class.active]="i === currentIndex"
+          (click)="goToNews(i)"
+          [attr.aria-label]="'Ir a noticia ' + (i + 1)">
+        </button>
+      }
     </div>
   </div>
 </div>

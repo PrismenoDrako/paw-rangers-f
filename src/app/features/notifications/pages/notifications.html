@@ -6,11 +6,7 @@
     class="settings-icon-button"
     (click)="openSettings()"
     aria-label="Configurar preferencias">
-    <svg viewBox="0 0 24 24" aria-hidden="true">
-      <circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="1.6" />
-      <path d="M12 8.5v3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
-      <path d="M9 12h6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
-    </svg>
+    <i class="pi pi-cog" aria-hidden="true"></i>
   </button>
 </div>
 
@@ -43,6 +39,7 @@
           <app-notification-item
             *ngFor="let notification of group.items"
             [notification]="notification"
+            (notificationClick)="openNotification($event)"
             (openDetail)="openNotification($event)">
           </app-notification-item>
         </div>
@@ -69,6 +66,7 @@
           <app-notification-item
             *ngFor="let notification of group.items"
             [notification]="notification"
+            (notificationClick)="openNotification($event)"
             (openDetail)="openNotification($event)">
           </app-notification-item>
         </div>

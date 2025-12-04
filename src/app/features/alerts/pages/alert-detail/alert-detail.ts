@@ -43,8 +43,8 @@ export class AlertDetailComponent {
 
   goToReport(): void {
     if (!this.alert) return;
-    const base = this.alert.reportType === 'lost' ? '/animales-perdidos' : '/found-pets';
-    this.router.navigate([`${base}/${this.alert.reportId}`]);
+    const base = this.alert.reportType === 'lost' ? '/animales-perdidos' : '/animales-encontrados';
+    this.router.navigate([base], { queryParams: { ref: this.alert.reportId } });
   }
 
   markResolved(): void {

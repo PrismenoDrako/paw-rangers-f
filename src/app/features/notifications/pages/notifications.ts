@@ -152,11 +152,15 @@ export class NotificationsComponent implements OnDestroy {
 
   openNotification(notification: NotificationItem): void {
     this.markAsRead(notification);
+    // No redirigir interacciones (foro) por ahora
+    if (notification.type === 'foro') {
+      return;
+    }
+
     if (notification.targetUrl) {
-      this.router.navigate([notification.targetUrl]);
+      this.router.navigateByUrl(notification.targetUrl);
     }
   }
-
   private createPetNotifications(): NotificationItem[] {
     const seeds: NotificationSeed[] = [
       {
@@ -190,7 +194,7 @@ export class NotificationsComponent implements OnDestroy {
         type: 'mascota',
         category: 'adoption',
         read: false,
-        targetUrl: '/lost-pets'
+        targetUrl: '/animales-perdidos'
       },
       {
         id: 'pet-4',
@@ -201,7 +205,7 @@ export class NotificationsComponent implements OnDestroy {
         type: 'mascota',
         category: 'treatment',
         read: true,
-        targetUrl: '/lost-pets'
+        targetUrl: '/animales-perdidos'
       },
       {
         id: 'pet-5',
@@ -212,7 +216,7 @@ export class NotificationsComponent implements OnDestroy {
         type: 'mascota',
         category: 'photo_update',
         read: false,
-        targetUrl: '/lost-pets'
+        targetUrl: '/animales-perdidos'
       },
       {
         id: 'pet-6',
@@ -240,8 +244,7 @@ export class NotificationsComponent implements OnDestroy {
         date: '2025-11-13T10:27:00',
         type: 'foro',
         category: 'like',
-        read: false,
-        targetUrl: '/profile'
+        read: false
       },
       {
         id: 'forum-2',
@@ -251,8 +254,7 @@ export class NotificationsComponent implements OnDestroy {
         date: '2025-11-13T05:10:00',
         type: 'foro',
         category: 'reply',
-        read: true,
-        targetUrl: '/profile'
+        read: true
       },
       {
         id: 'forum-3',
@@ -262,8 +264,7 @@ export class NotificationsComponent implements OnDestroy {
         date: '2025-11-12T11:20:00',
         type: 'foro',
         category: 'mention',
-        read: false,
-        targetUrl: '/profile'
+        read: false
       },
       {
         id: 'forum-4',
@@ -273,8 +274,7 @@ export class NotificationsComponent implements OnDestroy {
         date: '2025-11-11T08:00:00',
         type: 'foro',
         category: 'summary',
-        read: true,
-        targetUrl: '/profile'
+        read: true
       },
       {
         id: 'forum-5',
@@ -284,8 +284,7 @@ export class NotificationsComponent implements OnDestroy {
         date: '2025-11-09T19:45:00',
         type: 'foro',
         category: 'message',
-        read: false,
-        targetUrl: '/profile'
+        read: false
       },
       {
         id: 'forum-6',
@@ -295,8 +294,7 @@ export class NotificationsComponent implements OnDestroy {
         date: '2025-11-05T13:30:00',
         type: 'foro',
         category: 'poll',
-        read: true,
-        targetUrl: '/profile'
+        read: true
       }
     ];
 

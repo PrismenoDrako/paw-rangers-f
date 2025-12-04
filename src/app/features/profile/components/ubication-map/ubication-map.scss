@@ -1,46 +1,72 @@
 $primary-blue: #294374;
+$border-color: #e0e0e0;
 
 .map-container {
-    width: 100%;
-    height: 100%;
-    min-height: 600px;
-    background-color: #e8eef5;
-    border-radius: 8px;
-    overflow: hidden;
-}
+  width: 100%;
+  height: 100%;
+  background-color: #e8eef5;
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
 
-.map-placeholder {
+  .map {
     width: 100%;
     height: 100%;
+    flex: 1;
+    border-radius: 8px;
+
+    &.hidden {
+      display: none;
+    }
+  }
+
+  .map-loading {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+    gap: 1rem;
+    z-index: 10;
+    background-color: #e8eef5;
 
-    &:hover {
-        background-color: #dfe6ed;
+    p {
+      margin: 0;
+      color: $primary-blue;
+      font-size: 0.938rem;
+      font-weight: 500;
     }
+  }
+}
 
-    i {
-        font-size: 3rem;
-        color: $primary-blue;
-        margin-bottom: 1rem;
-    }
+// Estilos de Leaflet personalizados
+:host ::ng-deep {
+  .leaflet-container {
+    background: #e8eef5;
+    font-family: inherit;
+    width: 100% !important;
+    height: 100% !important;
+  }
 
-    .map-title {
-        font-size: 1rem;
-        font-weight: 600;
-        color: var(--text-color);
-        margin: 0 0 0.5rem 0;
-    }
+  .leaflet-control {
+    border: 1px solid $border-color;
+    border-radius: 4px;
+  }
 
-    .map-subtitle {
-        font-size: 0.875rem;
-        color: var(--text-color-secondary);
-        margin: 0;
-        max-width: 300px;
-        text-align: center;
+  .leaflet-marker-icon {
+    filter: hue-rotate(-10deg) saturate(1.2);
+  }
+
+  .leaflet-popup {
+    .leaflet-popup-content {
+      font-size: 0.875rem;
+      color: #333;
     }
+  }
 }

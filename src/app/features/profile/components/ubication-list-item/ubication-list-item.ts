@@ -1,10 +1,13 @@
-import { Component, Input } from '@angular/core'; 
+import { Component, Input, Output, EventEmitter } from '@angular/core'; 
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
-import { CardModule } from 'primeng/card'; // Usamos Card para el borde y sombra
-import { BadgeModule } from 'primeng/badge'; // Opcional, para el ícono de casa/trabajo
+import { CardModule } from 'primeng/card';
+import { BadgeModule } from 'primeng/badge';
 import { TooltipModule } from 'primeng/tooltip';
+import { ConfirmationService, MessageService } from 'primeng/api';
+import { ToastModule } from 'primeng/toast';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
 
 @Component({
   selector: 'app-ubication-list-item', 
@@ -13,19 +16,27 @@ import { TooltipModule } from 'primeng/tooltip';
     CommonModule,
     ButtonModule,
     CardModule,
-    BadgeModule, // Para el estilo del icono
-    TooltipModule
+    BadgeModule,
+    TooltipModule,
+    ToastModule,
+    ConfirmDialogModule
   ],
   templateUrl: './ubication-list-item.html',
-  styleUrl: './ubication-list-item.scss' 
+  styleUrl: './ubication-list-item.scss',
+  providers: [ConfirmationService, MessageService]
 })
 export class UbicationListItemComponent { 
   
-  @Input() location: any; // Recibe el objeto de ubicación
+  @Input() location: any;
+  @Output() locationDeleted = new EventEmitter<string>();
+  isDeleting = false;
   
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private confirmationService: ConfirmationService,
+    private messageService: MessageService
+  ) {}
   
-  // Función para devolver el ícono según el nombre de la ubicación (ej. Casa, Trabajo)
   getIcon(): string {
     const name = this.location.name.toLowerCase();
     if (name.includes('casa') || name.includes('hogar')) {
@@ -41,7 +52,45 @@ export class UbicationListItemComponent {
   }
 
   onDeleteLocation(): void {
-    console.log('Se ha pulsado eliminar para:', this.location.name);
-    // Aquí se emitirá un evento (deleteLocation) más adelante.
+    this.confirmationService.confirm({
+      message: `¿Estás seguro que deseas eliminar la ubicación "${this.location.name}"?`,
+      header: 'Confirmar eliminación',
+      icon: 'pi pi-exclamation-triangle',
+      acceptButtonStyleClass: 'p-button-danger',
+      accept: () => {
+        this.isDeleting = true;
+        
+        try {
+          // Eliminar del localStorage
+          const saved = localStorage.getItem('ubications');
+          if (saved) {
+            let ubications = JSON.parse(saved);
+            ubications = ubications.filter((u: any) => u.id !== this.location.id);
+            localStorage.setItem('ubications', JSON.stringify(ubications));
+          }
+
+          this.isDeleting = false;
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Éxito',
+            detail: 'Ubicación eliminada correctamente',
+            life: 2000
+          });
+          this.locationDeleted.emit(this.location.id);
+        } catch (error) {
+          this.isDeleting = false;
+          console.error('Error al eliminar:', error);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'Error al eliminar la ubicación',
+            life: 3000
+          });
+        }
+      },
+      reject: () => {
+        // Usuario canceló
+      }
+    });
   }
 }

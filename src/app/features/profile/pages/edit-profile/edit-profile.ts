@@ -6,6 +6,8 @@ import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { AvatarModule } from 'primeng/avatar';
 import { TooltipModule } from 'primeng/tooltip';
+import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, AbstractControl, ValidationErrors } from '@angular/forms';
 import { AccountInfoComponent } from '../../components/account-info/account-info';
 
@@ -20,10 +22,12 @@ import { AccountInfoComponent } from '../../components/account-info/account-info
         InputTextModule,
         AvatarModule,
         TooltipModule,
+        ToastModule,
         ReactiveFormsModule
     ],
     templateUrl: './edit-profile.html',
-    styleUrl: './edit-profile.scss'
+    styleUrl: './edit-profile.scss',
+    providers: [MessageService]
 })
 export class EditProfilePage implements OnInit {
     
@@ -37,7 +41,7 @@ export class EditProfilePage implements OnInit {
         confirm: false
     };
 
-    constructor(private router: Router, private fb: FormBuilder) {}
+    constructor(private router: Router, private fb: FormBuilder, private messageService: MessageService) {}
 
     ngOnInit(): void {
         // Cargar la imagen de perfil guardada si existe
@@ -193,7 +197,14 @@ export class EditProfilePage implements OnInit {
                 AccountInfoComponent.sharedUser.currentPassword = newPassword;
             }
 
-            this.router.navigate(['/perfil']);
+            this.messageService.add({
+                severity: 'success',
+                summary: 'Éxito',
+                detail: 'Perfil actualizado correctamente',
+                life: 1500
+            });
+
+            setTimeout(() => this.router.navigate(['/perfil']), 1500);
         } else {
             this.profileForm.markAllAsTouched();
             console.warn('Formulario de perfil inválido.');

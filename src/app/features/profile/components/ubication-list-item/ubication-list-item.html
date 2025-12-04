@@ -10,17 +10,20 @@
             <p-button 
                 icon="pi pi-pen-to-square" 
                 styleClass="p-button-text p-button-secondary p-button-sm" 
-                (onClick)="onEditLocation()"
+                (click)="onEditLocation()"
                 pTooltip="Editar Ubicación" 
                 tooltipPosition="top">
             </p-button>
             <p-button 
                 icon="pi pi-trash" 
                 styleClass="p-button-danger p-button-text p-button-sm" 
-                (onClick)="onDeleteLocation()"
+                (click)="onDeleteLocation()"
                 pTooltip="Eliminar Ubicación" 
                 tooltipPosition="top">
             </p-button>
         </div>
     </div>
 </div>
+
+<p-confirmDialog></p-confirmDialog>
+<p-toast position="top-right"></p-toast>

@@ -1,0 +1,100 @@
+@if (showContactModal && selectedPet) {
+<div class="modal-overlay" (click)="close()">
+  <div class="contact-modal" (click)="$event.stopPropagation()">
+
+    <div class="modal-header">
+      <div class="header-info">
+        <h3 class="modal-title">{{ selectedPet.name }}</h3>
+        <span class="modal-subtitle">{{ selectedPet.location }}</span>
+      </div>
+      <button class="close-btn" (click)="close()">
+        <i class="pi pi-times"></i>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <div class="pet-image-container">
+        <img [src]="selectedPet.image" [alt]="selectedPet.name" class="pet-modal-image" />
+      </div>
+
+      <div class="pet-details">
+        <div class="pet-info-section">
+          <h4 class="section-title">
+            <i class="pi pi-info-circle"></i>
+            Información del Animal
+          </h4>
+          <div class="info-grid">
+            <div class="info-item">
+              <span class="info-label">Especie / Raza</span>
+              <span class="info-value">{{ selectedPet.type }} · {{ selectedPet.breed }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Perdido</span>
+              <span class="info-value">{{ getTimeAgo(selectedPet.lostDate) }}</span>
+            </div>
+          </div>
+          <div class="description">
+            <p>{{ selectedPet.description }}</p>
+          </div>
+        </div>
+
+        <div class="contact-section">
+          <h4 class="section-title">
+            <i class="pi pi-user"></i>
+            Contacto del dueño
+          </h4>
+          <div class="contact-list">
+            <div class="contact-item">
+              <div class="contact-icon">
+                <i class="pi pi-user"></i>
+              </div>
+              <div class="contact-content">
+                <span class="contact-label">Nombre</span>
+                <span class="contact-value">{{ selectedPet.contactInfo.name }}</span>
+              </div>
+            </div>
+
+            <div class="contact-item">
+              <div class="contact-icon">
+                <i class="pi pi-phone"></i>
+              </div>
+              <div class="contact-content">
+                <span class="contact-label">Teléfono</span>
+                <a [href]="'tel:' + selectedPet.contactInfo.phone" class="contact-link">
+                  {{ selectedPet.contactInfo.phone }}
+                </a>
+              </div>
+            </div>
+
+            @if (selectedPet.contactInfo.email) {
+            <div class="contact-item">
+              <div class="contact-icon">
+                <i class="pi pi-envelope"></i>
+              </div>
+              <div class="contact-content">
+                <span class="contact-label">Email</span>
+                <a [href]="'mailto:' + selectedPet.contactInfo.email" class="contact-link">
+                  {{ selectedPet.contactInfo.email }}
+                </a>
+              </div>
+            </div>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn-secondary" (click)="close()">
+        <i class="pi pi-times"></i>
+        Cerrar
+      </button>
+      <button class="btn-primary" (click)="callOwner()">
+        <i class="pi pi-phone"></i>
+        Llamar Ahora
+      </button>
+    </div>
+
+  </div>
+</div>
+}

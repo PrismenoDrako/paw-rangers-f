@@ -81,3 +81,10 @@
     </div>
   </div>
 </div>
+
+<app-lost-contact-modal
+  [showContactModal]="showContactModal"
+  [selectedPet]="selectedPet"
+  (onClose)="closeContactModal()"
+  (onCallOwner)="callOwner($event)">
+</app-lost-contact-modal>

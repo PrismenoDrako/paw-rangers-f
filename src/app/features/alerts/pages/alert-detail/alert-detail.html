@@ -1,45 +1,59 @@
-<div class="alert-detail">
+<div class="alert-detail" [ngClass]="{ 'is-found': alert?.reportType === 'found' }">
   <button class="link-back" type="button" (click)="backToNotifications()">
     <i class="pi pi-arrow-left"></i>
     Volver a notificaciones
   </button>
 
   <ng-container *ngIf="alert; else notFound">
-    <div class="alert-hero">
-      <div class="alert-hero__image" *ngIf="alert.image">
+    <div class="hero-card">
+      <div class="hero-content">
+        <div class="pill-row hero-badges">
+          <span class="pill pill--status" [class.pill--open]="alert.status === 'open'" [class.pill--resolved]="alert.status === 'resolved'">
+            {{ alert.status === 'open' ? 'Alerta abierta' : 'Resuelta' }}
+          </span>
+          <span class="pill pill--type">{{ alert.reportType === 'lost' ? 'Mascota perdida' : 'Mascota encontrada' }}</span>
+          <span class="pill pill--id">ID: {{ alert.reportId }}</span>
+        </div>
+
+        <h1 class="hero-title">{{ alert.title.replace('Mascota perdida: ', '').replace('Mascota encontrada: ', '') }}</h1>
+        <p class="hero-subtitle">
+          {{ alert.reportType === 'lost' ? 'Perdida · alerta urgente' : 'Encontrada · requiere contacto' }}
+        </p>
+
+        <p class="hero-description">{{ alert.description }}</p>
+
+        <div class="hero-actions">
+          <a
+            *ngIf="contactPet?.contactInfo?.phone"
+            class="btn primary"
+            [href]="'tel:' + contactPet?.contactInfo?.phone">
+            📞 {{ contactButtonLabel }}
+          </a>
+          <button class="btn ghost" type="button" (click)="openInMap()">Ver en mapa</button>
+          <button class="btn ghost" type="button" (click)="goToReport()">Ver reporte completo</button>
+          <div class="status-menu" *ngIf="alert?.ownedByCurrentUser">
+            <button type="button" class="btn ghost" (click)="toggleStatusMenu()">Marcar reporte</button>
+            <div class="status-dropdown" *ngIf="showStatusMenu">
+              <button type="button" (click)="markResolved()">Marcar como resuelta</button>
+              <button type="button" (click)="markInFollowUp()">Dejar en seguimiento</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="quick-meta" *ngIf="alert.lastSeen || alert.createdAt">
+          <div class="chip" *ngIf="alert.lastSeen?.label">
+            <i class="pi pi-map-marker"></i>
+            <span>Última vez vista: {{ alert.lastSeen?.label }}</span>
+          </div>
+          <div class="chip" *ngIf="alert.createdAt">
+            <i class="pi pi-clock"></i>
+            <span>{{ alert.createdAt | date:'MMM d, h:mm a' }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-image" *ngIf="alert.image">
         <img [src]="alert.image" [alt]="alert.title" />
-      </div>
-
-      <div class="pill-row hero-badges">
-        <span class="pill pill--type">{{ alert.reportType === 'lost' ? 'Mascota perdida' : 'Mascota encontrada' }}</span>
-        <span class="pill">ID reporte: {{ alert.reportId }}</span>
-        <span class="pill pill--status" [class.pill--open]="alert.status === 'open'" [class.pill--resolved]="alert.status === 'resolved'">
-          Estado: {{ alert.status === 'open' ? 'Abierta' : 'Resuelta' }}
-        </span>
-      </div>
-
-      <div class="hero-main">
-        <app-alert-summary
-          [alert]="alert"
-          [showActions]="true"
-          (viewReport)="goToReport()"
-          (markResolved)="markResolved()">
-        </app-alert-summary>
-      </div>
-    </div>
-
-    <div class="alert-meta" *ngIf="alert.location || alert.lastSeen || alert.createdAt">
-      <div class="meta-card" *ngIf="alert.location">
-        <p class="meta-label">Ubicación reportada</p>
-        <p class="meta-value">{{ alert.location }}</p>
-      </div>
-      <div class="meta-card" *ngIf="alert.lastSeen?.label">
-        <p class="meta-label">Lugar de avistamiento</p>
-        <p class="meta-value">{{ alert.lastSeen?.label }}</p>
-      </div>
-      <div class="meta-card" *ngIf="alert.createdAt">
-        <p class="meta-label">Creado</p>
-        <p class="meta-value">{{ alert.createdAt | date:'medium' }}</p>
       </div>
     </div>
 
@@ -52,26 +66,39 @@
           </div>
         </div>
 
-        <div class="alert-section" *ngIf="alert.reportType === 'lost' && alert.ownerContact">
+        <div class="alert-section contact-section" *ngIf="alert.reportType === 'lost' && alert.ownerContact">
           <h3>Contacto</h3>
           <div class="contact-card">
-            <h4 class="contact-owner">
-              <span class="contact-owner__label">Dueño:</span>
-              <span class="contact-owner__name">{{ alert.ownerContact.name }}</span>
-            </h4>
-            <p *ngIf="alert.ownerContact.note" class="contact-note">{{ alert.ownerContact.note }}</p>
-            <div class="contact-meta">
-              <p *ngIf="alert.ownerContact.address" class="contact-meta__item">
-                <span class="contact-meta__label">Dirección:</span>
-                <span>{{ alert.ownerContact.address }}</span>
-              </p>
-              <p *ngIf="alert.location" class="contact-meta__item">
-                <span class="contact-meta__label">Zona:</span>
-                <span>{{ alert.location }}</span>
-              </p>
+            <div class="contact-row">
+              <div class="contact-icon"><i class="pi pi-user"></i></div>
+              <div class="contact-text">
+                <span class="contact-label">Dueño</span>
+                <span class="contact-value">{{ alert.ownerContact.name }}</span>
+              </div>
+            </div>
+            <div class="contact-row" *ngIf="alert.ownerContact.phone">
+              <div class="contact-icon"><i class="pi pi-phone"></i></div>
+              <div class="contact-text">
+                <span class="contact-label">Teléfono</span>
+                <a [href]="'tel:' + alert.ownerContact.phone" class="contact-link">{{ alert.ownerContact.phone }}</a>
+              </div>
+            </div>
+            <div class="contact-row" *ngIf="alert.ownerContact.email">
+              <div class="contact-icon"><i class="pi pi-envelope"></i></div>
+              <div class="contact-text">
+                <span class="contact-label">Correo</span>
+                <a [href]="'mailto:' + alert.ownerContact.email" class="contact-link">{{ alert.ownerContact.email }}</a>
+              </div>
+            </div>
+            <div class="contact-row" *ngIf="alert.location">
+              <div class="contact-icon"><i class="pi pi-map"></i></div>
+              <div class="contact-text">
+                <span class="contact-label">Zona</span>
+                <span class="contact-value">{{ alert.location }}</span>
+              </div>
             </div>
             <div class="contact-actions">
-              <a *ngIf="alert.ownerContact.phone" [href]="'tel:' + alert.ownerContact.phone" class="btn">Llamar</a>
+              <a *ngIf="alert.ownerContact.phone" [href]="'tel:' + alert.ownerContact.phone" class="btn primary">Llamar</a>
               <a *ngIf="alert.ownerContact.email" [href]="'mailto:' + alert.ownerContact.email" class="btn ghost">Correo</a>
             </div>
           </div>
@@ -100,3 +127,10 @@
     <p class="empty">No se encontró esta alerta.</p>
   </ng-template>
 </div>
+
+<app-lost-contact-modal
+  [showContactModal]="showContactModal"
+  [selectedPet]="contactPet"
+  (onClose)="closeContactModal()"
+  (onCallOwner)="callOwner($event)">
+</app-lost-contact-modal>

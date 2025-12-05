@@ -28,6 +28,7 @@ export interface Alert {
   description: string;
   type: AlertType;
   status: AlertStatus;
+  ownedByCurrentUser?: boolean;
   image?: string;
   referenceImage?: string;
   foundImage?: string;

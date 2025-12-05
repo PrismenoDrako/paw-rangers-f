@@ -1,0 +1,44 @@
+<div class="map-explorer">
+  <div class="map-explorer__panel">
+    <div class="panel__header">
+      <div>
+        <p class="eyebrow">Explorar en mapa</p>
+        <h1>Reportes en tu zona</h1>
+        <p class="subtitle">Filtra por tipo y abre cada pin para ver el detalle o navegar al reporte.</p>
+      </div>
+      <div class="legend">
+        <span class="legend__item lost"><span class="dot"></span>Perdidos</span>
+        <span class="legend__item found"><span class="dot"></span>Encontrados</span>
+        <span class="legend__item alert"><span class="dot"></span>Alertas</span>
+      </div>
+    </div>
+
+    <div class="filters">
+      <button
+        type="button"
+        *ngFor="let filter of filters"
+        class="chip"
+        [class.active]="filter.active"
+        (click)="toggleFilter(filter.id)">
+        {{ filter.label }}
+      </button>
+    </div>
+
+    <div class="info-card" *ngIf="lastFocused">
+      <div class="info-card__badge" [ngClass]="lastFocused.type">{{ lastFocused.type }}</div>
+      <div class="info-card__text">
+        <div class="info-card__title">{{ lastFocused.title }}</div>
+        <div class="info-card__subtitle">{{ lastFocused.subtitle }}</div>
+      </div>
+      <a *ngIf="lastFocused.route" class="info-card__link" [routerLink]="lastFocused.route">Ver</a>
+    </div>
+  </div>
+
+  <div class="map-explorer__map">
+    <app-full-map
+      [markers]="filteredMarkers"
+      [focusId]="focusId"
+      (markerFocused)="onMarkerFocused($event)">
+    </app-full-map>
+  </div>
+</div>

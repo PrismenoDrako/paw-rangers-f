@@ -4,6 +4,7 @@ import { foundPetsRoutes } from './features/found-pets/found-pets.routes';
 import { profileRoutes } from './features/profile/profile.routes';
 import { homeRoutes } from './features/home/home.routes';
 import { alertsRoutes } from './features/alerts/alerts.routes';
+import { mapExplorerRoutes } from './features/map-explorer/map-explorer.routes';
 
 import { notificationsRoutes } from './features/notifications/notifications.routes';
 export const routes: Routes = [
@@ -16,6 +17,9 @@ export const routes: Routes = [
 
     // Rutas de home
     ...homeRoutes,
+
+    // Mapa explorador
+    ...mapExplorerRoutes,
 
     // Rutas de animales perdidos
     ...lostPetsRoutes,

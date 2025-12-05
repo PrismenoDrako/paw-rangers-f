@@ -10,6 +10,8 @@ export interface LostPet {
   location: string;
   lostDate: Date;
   image: string;
+  lat?: number;
+  lng?: number;
   reward?: number;
   contactInfo: {
     name: string;

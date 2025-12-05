@@ -1,6 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
 import { PetFormComponent, Pet } from '../../components/pet-form/pet-form';
 import { MyPetsComponent } from '../../components/my-pets/my-pets';
 import { Subscription } from 'rxjs';
@@ -8,9 +10,10 @@ import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-edit-pet',
   standalone: true,
-  imports: [CommonModule, PetFormComponent],
+  imports: [CommonModule, PetFormComponent, ToastModule],
   templateUrl: './edit-pet.html',
   styleUrl: './edit-pet.scss',
+  providers: [MessageService]
 })
 export class EditPet implements OnInit, OnDestroy {
   petData: Pet | null = null;
@@ -18,7 +21,8 @@ export class EditPet implements OnInit, OnDestroy {
 
   constructor(
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private messageService: MessageService
   ) { }
 
   ngOnInit(): void {
@@ -84,15 +88,21 @@ export class EditPet implements OnInit, OnDestroy {
         MyPetsComponent.sharedPets[index] = updatedPet;
         console.log('Pet updated in array:', updatedPet);
         console.log('Current pets array:', MyPetsComponent.sharedPets);
+        
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Éxito',
+          detail: `${petData.name} ha sido actualizado correctamente`,
+          life: 1500
+        });
+        
+        setTimeout(() => this.router.navigate(['/perfil']), 1500);
       } else {
         console.error('Pet not found in array with id:', petData.id);
         alert('Error: No se encontró la mascota a actualizar');
         return;
       }
     }
-    
-    console.log('Navigating to /perfil');
-    this.router.navigate(['/perfil']);
   }
 
   onFormCancel(): void {

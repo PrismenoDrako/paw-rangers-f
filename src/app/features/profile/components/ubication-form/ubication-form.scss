@@ -43,6 +43,21 @@ $border-color: #e0e0e0;
     font-size: 0.875rem;
     font-weight: 500;
     color: $text-dark;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    
+    .optional {
+      font-size: 0.75rem;
+      color: $text-light;
+      font-weight: 400;
+    }
+  }
+  
+  small {
+    font-size: 0.75rem;
+    color: $text-light;
+    margin-top: -0.25rem;
   }
   
   input {

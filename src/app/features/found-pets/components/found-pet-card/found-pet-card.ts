@@ -11,6 +11,8 @@ export interface FoundPet {
   foundDate: Date;
   image: string;
   hasCollar: boolean;
+  lat?: number;
+  lng?: number;
   contactInfo: {
     name: string;
     phone: string;

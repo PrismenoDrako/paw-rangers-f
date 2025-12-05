@@ -2,6 +2,7 @@
   display: flex;
   flex-direction: column;
   gap: 14px;
+  overflow: visible;
 }
 
 .timeline-item {
@@ -9,29 +10,32 @@
   grid-template-columns: 18px 1fr;
   gap: 10px;
   align-items: start;
+  min-width: 0;
 }
 
 .dot {
-  width: 14px;
-  height: 14px;
+  width: 16px;
+  height: 16px;
   border-radius: 50%;
-  background: #4a57d3;
+  background: #e04632;
   margin-top: 6px;
 }
 
 .dot--status {
-  background: #cf5d33;
+  background: #4a57d3;
 }
 
 .content h4 {
   margin: 0;
   font-size: 1rem;
   color: #334473;
+  word-break: break-word;
 }
 
 .content p {
   margin: 4px 0 0;
-  color: #4f5675;
+  color: #2f354a;
+  word-break: break-word;
 }
 
 .title-row {

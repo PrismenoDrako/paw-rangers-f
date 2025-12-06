@@ -17,9 +17,24 @@ $white: #ffffff;
     align-items: center;
     gap: 1rem;
 
-    > i {
-      font-size: 2.5rem;
-      color: $danger-color;
+    .icon-circle {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: $danger-color;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      line-height: 1;
+
+      > i {
+        font-size: 2rem;
+        color: $white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
     }
 
     .header-text {
@@ -60,21 +75,218 @@ $white: #ffffff;
   }
 }
 
+@media (max-width: 1440px) {
+  .section-header {
+    .header-content {
+      .icon-circle {
+        width: 58px;
+        height: 58px;
+        
+        > i {
+          font-size: 1.9rem;
+        }
+      }
+      
+      .header-text h2 {
+        font-size: 1.9rem;
+      }
+    }
+  }
+}
+
+@media (max-width: 1200px) {
+  .section-header {
+    .header-content {
+      .icon-circle {
+        width: 56px;
+        height: 56px;
+        
+        > i {
+          font-size: 1.8rem;
+        }
+      }
+      
+      .header-text h2 {
+        font-size: 1.8rem;
+      }
+    }
+  }
+}
+
+@media (max-width: 1024px) {
+  .section-header {
+    .header-content {
+      .icon-circle {
+        width: 54px;
+        height: 54px;
+        
+        > i {
+          font-size: 1.7rem;
+        }
+      }
+      
+      .header-text h2 {
+        font-size: 1.7rem;
+      }
+    }
+  }
+}
+
 @media (max-width: 768px) {
   .section-header {
     .header-content {
-      > i {
-        font-size: 2rem;
+      .icon-circle {
+        width: 50px;
+        height: 50px;
+
+        > i {
+          font-size: 1.5rem;
+        }
       }
 
       .header-text h2 {
         font-size: 1.5rem;
+      }
+      
+      .header-text p {
+        font-size: 0.95rem;
       }
     }
 
     .view-all-button {
       font-size: 0.9375rem;
       padding: 0.625rem 1.25rem;
+    }
+  }
+}
+
+@media (max-width: 640px) {
+  .section-header {
+    gap: 0.75rem;
+    margin-bottom: 1.25rem;
+    
+    .header-content {
+      .icon-circle {
+        width: 48px;
+        height: 48px;
+
+        > i {
+          font-size: 1.4rem;
+        }
+      }
+
+      .header-text h2 {
+        font-size: 1.4rem;
+      }
+      
+      .header-text p {
+        font-size: 0.9rem;
+      }
+    }
+
+    .view-all-button {
+      padding: 0.5rem;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      
+      span {
+        display: none;
+      }
+      
+      i {
+        margin: 0;
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .section-header {
+    gap: 0.625rem;
+    margin-bottom: 1rem;
+    
+    .header-content {
+      .icon-circle {
+        width: 44px;
+        height: 44px;
+
+        > i {
+          font-size: 1.25rem;
+        }
+      }
+
+      .header-text h2 {
+        font-size: 1.25rem;
+      }
+      
+      .header-text p {
+        font-size: 0.85rem;
+      }
+    }
+
+    .view-all-button {
+      padding: 0.5rem;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      
+      span {
+        display: none;
+      }
+      
+      i {
+        margin: 0;
+      }
+    }
+  }
+}
+
+@media (max-width: 360px) {
+  .section-header {
+    .header-content {
+      gap: 0.625rem;
+      
+      .icon-circle {
+        width: 40px;
+        height: 40px;
+
+        > i {
+          font-size: 1.1rem;
+        }
+      }
+
+      .header-text h2 {
+        font-size: 1.1rem;
+      }
+      
+      .header-text p {
+        font-size: 0.8rem;
+      }
+    }
+
+    .view-all-button {
+      padding: 0.5rem;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      
+      span {
+        display: none;
+      }
+      
+      i {
+        margin: 0;
+      }
     }
   }
 }

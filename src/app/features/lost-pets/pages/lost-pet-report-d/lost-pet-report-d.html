@@ -32,14 +32,35 @@
           <label class="form-label">¿Es una de tus mascotas?</label>
           <div class="pets-grid">
             <div 
-              *ngFor="let pet of userPets"
               class="pet-option"
-              [class.selected]="selectedPet?.id === pet.id"
-              (click)="selectUserPet(pet)">
+              [class.selected]="selectedPetId === '1'"
+              (click)="togglePet(1)">
               <div class="pet-image-container">
-                <img [src]="pet.image" [alt]="pet.name" class="pet-image">
+                <img src="https://images.unsplash.com/photo-1552053831-71594a27632d?w=400&h=400&fit=crop" alt="Max" class="pet-image">
                 <div class="pet-overlay">
-                  <span class="pet-name">{{ pet.name }}</span>
+                  <span class="pet-name">Max</span>
+                </div>
+              </div>
+            </div>
+            <div 
+              class="pet-option"
+              [class.selected]="selectedPetId === '2'"
+              (click)="togglePet(2)">
+              <div class="pet-image-container">
+                <img src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=400&h=400&fit=crop" alt="Luna" class="pet-image">
+                <div class="pet-overlay">
+                  <span class="pet-name">Luna</span>
+                </div>
+              </div>
+            </div>
+            <div 
+              class="pet-option"
+              [class.selected]="selectedPetId === '3'"
+              (click)="togglePet(3)">
+              <div class="pet-image-container">
+                <img src="https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=400&h=400&fit=crop" alt="Rocky" class="pet-image">
+                <div class="pet-overlay">
+                  <span class="pet-name">Rocky</span>
                 </div>
               </div>
             </div>
@@ -58,7 +79,7 @@
         </div>
 
         <!-- Formulario visible solo después de seleccionar -->
-        <div *ngIf="petSelected" class="form-container" [@slideDown]>
+        <div *ngIf="selectedPetId || isReportingOther" class="form-container" [@slideDown]>
           <!-- Foto (solo si es "Otra mascota") -->
           <div class="form-group" *ngIf="isReportingOther">
             <label class="form-label">Foto de la Mascota</label>
@@ -121,6 +142,23 @@
 
             <div class="form-row-2">
               <div class="form-group">
+                <label class="form-label">
+                  Género <span class="required-asterisk">*</span>
+                </label>
+                <p-select 
+                  formControlName="gender"
+                  [options]="genderOptions"
+                  placeholder="Selecciona el género"
+                  optionLabel="label"
+                  optionValue="value"
+                  [class.field-error]="petInfoForm.get('gender')?.invalid && petInfoForm.get('gender')?.touched">
+                </p-select>
+                <span class="error-message" *ngIf="petInfoForm.get('gender')?.hasError('required') && petInfoForm.get('gender')?.touched">
+                  El género es requerido
+                </span>
+              </div>
+
+              <div class="form-group">
                 <label class="form-label">Raza</label>
                 <input 
                   type="text" 
@@ -128,7 +166,9 @@
                   formControlName="breed"
                   placeholder="Ej: Labrador">
               </div>
+            </div>
 
+            <div class="form-row-2">
               <div class="form-group">
                 <label class="form-label">Edad</label>
                 <input 
@@ -308,7 +348,7 @@
                 Monto de la recompensa <span class="required-asterisk">*</span>
               </label>
               <div class="input-with-prefix">
-                <span class="input-prefix">$</span>
+                <span class="input-prefix">S/</span>
                 <input 
                   type="number" 
                   pInputText 
@@ -394,5 +434,13 @@
     </div>
   </ng-template>
 </p-dialog>
+
+<!-- Modal de mascotas similares -->
+<app-similar-pets-modal
+  [(visible)]="showSimilarPetsModal"
+  [similarPets]="similarPets"
+  [isFoundReport]="isFoundReport"
+  (visibleChange)="onSimilarModalClose()">
+</app-similar-pets-modal>
 
 <p-toast></p-toast>

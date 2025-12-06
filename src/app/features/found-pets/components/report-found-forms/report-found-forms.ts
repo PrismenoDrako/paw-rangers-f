@@ -1,6 +1,7 @@
 import { Component, OnInit, AfterViewInit, OnDestroy, Output, EventEmitter, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 
 // PrimeNG Imports
 import { StepperModule } from 'primeng/stepper';
@@ -12,6 +13,12 @@ import { RadioButtonModule } from 'primeng/radiobutton';
 import { DatePickerModule } from 'primeng/datepicker';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
+
+// Services
+import { SimilarityService, SimilarPet } from '../../../../core/services/similarity.service';
+
+// Components
+import { SimilarPetsModalComponent } from '../../../../shared/components/similar-pets-modal/similar-pets-modal';
 
 // Leaflet
 import * as L from 'leaflet';
@@ -45,7 +52,8 @@ interface SpeciesOption {
     SelectModule,
     RadioButtonModule,
     DatePickerModule,
-    ToastModule
+    ToastModule,
+    SimilarPetsModalComponent
   ],
   providers: [MessageService],
   templateUrl: './report-found-forms.html',
@@ -65,6 +73,11 @@ export class ReportFoundForms implements OnInit, AfterViewInit, OnDestroy {
   selectedLocation: { lat: number; lng: number } | null = null;
   locationAddress: string = '';
   currentStep: number = 1;
+
+  // Modal de mascotas similares
+  showSimilarPetsModal = false;
+  similarPets: SimilarPet[] = [];
+  isFoundReport = true;
 
   speciesOptions: SpeciesOption[] = [
     { label: 'Perro', value: 'perro' },
@@ -102,7 +115,9 @@ export class ReportFoundForms implements OnInit, AfterViewInit, OnDestroy {
 
   constructor(
     private messageService: MessageService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private router: Router,
+    private similarityService: SimilarityService
   ) { }
 
   ngOnInit() {
@@ -288,46 +303,74 @@ export class ReportFoundForms implements OnInit, AfterViewInit, OnDestroy {
       container.innerHTML = '';
       console.log('📦 Contenedor limpio y listo');
 
-      // Crear mapa
-      console.log('📍 Creando instancia de mapa en Piura, Perú [-5.1945, -80.6328]');
-      this.map = L.map(container, {
-        center: [-5.1945, -80.6328],
-        zoom: 13,
-        zoomControl: true,
-        scrollWheelZoom: true,
-        doubleClickZoom: true,
-        touchZoom: true,
-        dragging: true
-      });
+      // Coordenadas por defecto (Piura, Perú)
+      const defaultLat = -5.1945;
+      const defaultLng = -80.6328;
+      const defaultZoom = 13;
 
-      console.log('🌍 Agregando capa de OpenStreetMap...');
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; OpenStreetMap',
-        maxZoom: 19,
-        minZoom: 3
-      }).addTo(this.map);
+      // Función para inicializar el mapa
+      const initializeMapWithCoords = (lat: number, lng: number, zoom: number) => {
+        console.log('📍 Creando instancia de mapa en [' + lat + ', ' + lng + ']');
+        this.map = L.map(container, {
+          center: [lat, lng],
+          zoom: zoom,
+          zoomControl: true,
+          scrollWheelZoom: true,
+          doubleClickZoom: true,
+          touchZoom: true,
+          dragging: true
+        });
 
-      // Click event
-      this.map.on('click', (e: L.LeafletMouseEvent) => {
-        console.log('🖱️ Click en mapa:', e.latlng);
-        this.onMapClick(e);
-      });
+        console.log('🌍 Agregando capa de OpenStreetMap...');
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: '&copy; OpenStreetMap',
+          maxZoom: 19,
+          minZoom: 3
+        }).addTo(this.map);
 
-      // Load event
-      this.map.on('load', () => {
-        console.log('✅ Mapa cargado completamente');
-      });
+        // Click event
+        this.map.on('click', (e: L.LeafletMouseEvent) => {
+          console.log('🖱️ Click en mapa:', e.latlng);
+          this.onMapClick(e);
+        });
 
-      // Forzar redimensionamiento
-      setTimeout(() => {
-        if (this.map) {
-          this.map.invalidateSize();
-          console.log('📏 Mapa redimensionado');
-        }
-      }, 100);
+        // Load event
+        this.map.on('load', () => {
+          console.log('✅ Mapa cargado completamente');
+        });
 
-      this.mapInitialized = true;
-      console.log('✅✅✅ MAPA INICIALIZADO EXITOSAMENTE ✅✅✅');
+        // Forzar redimensionamiento
+        setTimeout(() => {
+          if (this.map) {
+            this.map.invalidateSize();
+            console.log('📏 Mapa redimensionado');
+          }
+        }, 100);
+
+        this.mapInitialized = true;
+        console.log('✅✅✅ MAPA INICIALIZADO EXITOSAMENTE ✅✅✅');
+      };
+
+      // Intentar obtener la ubicación actual del usuario
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const userLat = position.coords.latitude;
+            const userLng = position.coords.longitude;
+            console.log('📍 Ubicación del usuario detectada:', userLat, userLng);
+            initializeMapWithCoords(userLat, userLng, defaultZoom);
+          },
+          (error) => {
+            console.warn('⚠️ Error obteniendo ubicación:', error);
+            // Si falla, usar coordenadas por defecto
+            initializeMapWithCoords(defaultLat, defaultLng, defaultZoom);
+          }
+        );
+      } else {
+        console.warn('⚠️ Geolocalización no disponible en este navegador');
+        // Si no hay geolocalización, usar coordenadas por defecto
+        initializeMapWithCoords(defaultLat, defaultLng, defaultZoom);
+      }
 
     } catch (error: any) {
       console.error('❌❌❌ ERROR CRÍTICO AL INICIALIZAR MAPA:', error);
@@ -431,6 +474,9 @@ export class ReportFoundForms implements OnInit, AfterViewInit, OnDestroy {
       const mapped: any = {
         photo: this.uploadedPhoto ?? this.photoPreview ?? null,
         species: rawData?.petDetails?.species ?? '',
+        breed: '', // Campo no definido en formulario
+        gender: '', // Campo no definido en formulario
+        age: '', // Campo no definido en formulario
         description: rawData?.petDetails?.description ?? '',
         hasCollar: (rawData?.petDetails?.hasCollar === 'si') ? true : false,
         location: {
@@ -466,6 +512,26 @@ export class ReportFoundForms implements OnInit, AfterViewInit, OnDestroy {
         detail: 'Tu reporte de mascota encontrada ha sido registrado exitosamente'
       });
 
+      // Buscar mascotas perdidas similares
+      const petData = {
+        species: mapped.species || '',
+        breed: mapped.breed || '',
+        gender: mapped.gender || '',
+        age: typeof mapped.age === 'number' ? mapped.age : undefined,
+        description: mapped.description || ''
+      };
+      this.similarPets = this.similarityService.findSimilarLostPets(petData);
+
+      // Mostrar modal si hay mascotas similares
+      if (this.similarPets.length > 0) {
+        this.showSimilarPetsModal = true;
+      } else {
+        // Si no hay mascotas similares, navegar después de 2 segundos
+        setTimeout(() => {
+          this.router.navigate(['/animales-encontrados']);
+        }, 2000);
+      }
+
     } else {
       this.messageService.add({
         severity: 'warn',
@@ -474,11 +540,15 @@ export class ReportFoundForms implements OnInit, AfterViewInit, OnDestroy {
       });
     }
   }
-// ...existing code...
 
-  cancelReport(): void {
-    this.formCancel.emit();
+  onSimilarModalClose(): void {
+    this.showSimilarPetsModal = false;
+    // Navegar después de cerrar el modal
+    setTimeout(() => {
+      this.router.navigate(['/animales-encontrados']);
+    }, 500);
   }
+// ...existing code...
 
   // ==================== HELPERS ====================
 
@@ -497,5 +567,10 @@ export class ReportFoundForms implements OnInit, AfterViewInit, OnDestroy {
       return `Mínimo ${minLength} caracteres`;
     }
     return '';
+  }
+
+  cancelReport(): void {
+    // Navegar de vuelta a la lista de mascotas encontradas
+    this.router.navigate(['/animales-encontrados']);
   }
 }

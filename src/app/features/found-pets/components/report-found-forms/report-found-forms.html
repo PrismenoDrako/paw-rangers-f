@@ -102,7 +102,7 @@
 
               <!-- Botones de acción -->
               <div class="form-actions">
-                <p-button label="Cancelar" [text]="true" styleClass="btn-cancel-text">
+                <p-button label="Cancelar" [text]="true" styleClass="btn-cancel-text" (onClick)="cancelReport()">
                 </p-button>
                 <p-button label="Siguiente" icon="pi pi-arrow-right" iconPos="right" styleClass="btn-primary"
                   [disabled]="reportFoundForm.get('petDetails')?.invalid" (onClick)="activateCallback(2)">
@@ -255,3 +255,11 @@
     </p-stepper>
   </div>
 </div>
+
+<!-- Modal de mascotas similares -->
+<app-similar-pets-modal
+  [(visible)]="showSimilarPetsModal"
+  [similarPets]="similarPets"
+  [isFoundReport]="isFoundReport"
+  (visibleChange)="onSimilarModalClose()">
+</app-similar-pets-modal>

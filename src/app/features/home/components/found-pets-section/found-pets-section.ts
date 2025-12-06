@@ -97,6 +97,11 @@ export class FoundPetsSection implements OnInit {
       },
       {
         breakpoint: '767px',
+        numVisible: 2,
+        numScroll: 1
+      },
+      {
+        breakpoint: '480px',
         numVisible: 1,
         numScroll: 1
       }

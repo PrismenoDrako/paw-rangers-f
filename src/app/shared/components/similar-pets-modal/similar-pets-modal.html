@@ -1,0 +1,75 @@
+<p-dialog [(visible)]="visible" [header]="getTitle()" [modal]="true" [style]="{'width': '90vw', 'max-width': '700px'}"
+    [draggable]="false" (onHide)="onClose()">
+
+    <div class="similar-pets-container">
+        <!-- Descripción -->
+        <p class="description-text mb-4">
+            {{ getDescription() }}
+        </p>
+
+        <!-- Lista de mascotas similares -->
+        <div class="pets-list">
+            <div *ngFor="let pet of similarPets" class="pet-card mb-3">
+                <p-card>
+                    <div class="pet-content">
+                        <!-- Imagen -->
+                        <div class="pet-image-wrapper">
+                            <img *ngIf="pet.imageUrl" [src]="pet.imageUrl" [alt]="pet.name" class="pet-image">
+                            <div *ngIf="!pet.imageUrl" class="pet-image-placeholder">
+                                <i class="pi pi-paw"></i>
+                            </div>
+                        </div>
+
+                        <!-- Información -->
+                        <div class="pet-info">
+                            <h3 class="pet-name">{{ pet.name }}</h3>
+
+                            <div class="pet-details">
+                                <div class="detail-item">
+                                    <span class="label">Especie:</span>
+                                    <span class="value">{{ pet.species }}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="label">Raza:</span>
+                                    <span class="value">{{ pet.breed }}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="label">Género:</span>
+                                    <span class="value">{{ pet.gender }}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="label">Edad:</span>
+                                    <span class="value">{{ pet.age }} años</span>
+                                </div>
+                            </div>
+
+                            <p class="pet-description">
+                                <strong>Descripción:</strong> {{ pet.description }}
+                            </p>
+
+                            <!-- Similitud -->
+                            <div class="similarity-section">
+                                <div class="similarity-badge"
+                                    [style.background-color]="getSimilarityColor(pet.similarity)">
+                                    <span class="similarity-percentage">{{ pet.similarity }}%</span>
+                                    <span class="similarity-label">{{ getSimilarityLabel(pet.similarity) }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <ng-template pTemplate="footer">
+                        <p-button label="Ver Detalles" icon="pi pi-eye" styleClass="p-button-primary p-button-sm"
+                            (onClick)="onPetSelected(pet)">
+                        </p-button>
+                    </ng-template>
+                </p-card>
+            </div>
+        </div>
+    </div>
+
+    <ng-template pTemplate="footer">
+        <p-button label="Cerrar" icon="pi pi-times" (onClick)="onClose()" styleClass="p-button-outlined">
+        </p-button>
+    </ng-template>
+</p-dialog>

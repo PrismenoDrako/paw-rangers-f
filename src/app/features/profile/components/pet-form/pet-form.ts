@@ -8,6 +8,9 @@ import { InputTextModule } from 'primeng/inputtext';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { CardModule } from 'primeng/card';
 import { SelectButtonModule } from 'primeng/selectbutton';
+import { ConfirmationService, MessageService } from 'primeng/api';
+import { ToastModule } from 'primeng/toast';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
 
 
 // --- Interfaces para mejor tipado ---
@@ -54,9 +57,12 @@ interface DropdownOption {
     InputNumberModule, 
     CardModule,
     SelectButtonModule,
+    ToastModule,
+    ConfirmDialogModule,
   ],
   templateUrl: './pet-form.html',
-  styleUrl: './pet-form.scss'
+  styleUrl: './pet-form.scss',
+  providers: [ConfirmationService, MessageService]
 })
 export class PetFormComponent implements OnInit, OnChanges {
   
@@ -109,7 +115,11 @@ export class PetFormComponent implements OnInit, OnChanges {
   // Razas filtradas según la especie seleccionada
   filteredBreeds: Breed[] = [];
 
-  constructor(private fb: FormBuilder) {
+  constructor(
+    private fb: FormBuilder,
+    private confirmationService: ConfirmationService,
+    private messageService: MessageService
+  ) {
     this.petForm = this.createFormGroup();
 
     // Listener para filtrar razas cuando cambia la especie
@@ -307,8 +317,18 @@ export class PetFormComponent implements OnInit, OnChanges {
   deletePet() {
       if (!this.isEditMode || !this.petData || !this.petData.id) return;
 
-      if (confirm(`¿Estás seguro de que quieres eliminar a ${this.petData.name}? Esta acción es irreversible.`)) {
-          this.formDelete.emit(this.petData.id);
-      }
+      this.confirmationService.confirm({
+        message: `¿Estás seguro que deseas eliminar a "${this.petData.name}"?`,
+        header: 'Confirmar eliminación',
+        icon: 'pi pi-exclamation-triangle',
+        acceptButtonStyleClass: 'p-button-danger',
+        rejectButtonStyleClass: 'p-button-secondary',
+        accept: () => {
+          this.formDelete.emit(this.petData?.id);
+        },
+        reject: () => {
+          // Usuario canceló
+        }
+      });
   }
 }

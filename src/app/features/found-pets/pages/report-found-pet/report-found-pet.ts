@@ -23,13 +23,11 @@ export class ReportFoundPet {
     console.log('Datos del formulario recibidos:', formData);
     
     // Aquí podrías enviar los datos a un servicio/API
-    // Simular envío exitoso
+    // El mensaje de éxito ya se muestra desde el componente hijo
     setTimeout(() => {
-      alert('¡Reporte de mascota encontrada enviado exitosamente! Gracias por ayudar a reunir familias.');
-      
       // Navegar de vuelta a la lista de mascotas encontradas
       this.router.navigate(['/animales-encontrados']);
-    }, 500);
+    }, 1500);
   }
 
   onFormCancel(): void {

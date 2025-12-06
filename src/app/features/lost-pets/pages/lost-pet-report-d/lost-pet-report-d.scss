@@ -838,10 +838,10 @@ $radius-lg: 12px;
     .p-button {
       background: transparent;
       border: none;
-      color: $text-gray;
+      color: $primary-color;
 
       &:hover {
-        background: rgba($text-gray, 0.08);
+        background: rgba($primary-color, 0.08);
       }
     }
   }
@@ -955,8 +955,345 @@ $radius-lg: 12px;
   }
 }
 
-// ==================== RESPONSIVE ====================
-// ==================== RESPONSIVE ====================
+// ==================== STEPPER CUSTOM STYLES ====================
+:host ::ng-deep {
+  // Stepper styling
+  .p-stepper {
+    .p-stepper-list {
+      .p-stepper-item {
+        .p-stepper-title {
+          color: $text-gray !important;
+          font-weight: 500;
+          
+          &.p-stepper-title-active {
+            color: $primary-color !important;
+            font-weight: 600;
+          }
+        }
+        
+        .p-stepper-number {
+          background: $bg-light !important;
+          color: $text-gray !important;
+          border: 2px solid $border-color !important;
+          
+          &.p-stepper-number-active {
+            background: $primary-color !important;
+            color: white !important;
+            border-color: $primary-color !important;
+          }
+        }
+        
+        .p-stepper-separator {
+          background: $border-color !important;
+          
+          &.p-stepper-separator-active {
+            background: $primary-color !important;
+          }
+        }
+      }
+    }
+    
+    // Stepper panels connector line
+    .p-stepper-panels {
+      .p-stepper-content {
+        border-left: 2px solid $primary-color !important;
+        
+        &::before {
+          background: $primary-color !important;
+          border-color: $primary-color !important;
+        }
+        
+        &.p-stepper-content-active::before {
+          background: $primary-color !important;
+        }
+      }
+    }
+    
+    // Additional stepper line overrides
+    .p-stepper-content[data-pc-section="content"]::before {
+      background-color: $primary-color !important;
+    }
+  }
+
+  // Button styling overrides - more specific
+  .p-button {
+    &.p-button-success,
+    &:not(.p-button-text):not(.p-button-outlined) {
+      background: $primary-color !important;
+      border-color: $primary-color !important;
+      color: white !important;
+      
+      &:enabled:hover {
+        background: $primary-hover !important;
+        border-color: $primary-hover !important;
+      }
+      
+      &:focus-visible {
+        box-shadow: 0 0 0 0.2rem rgba(41, 67, 116, 0.5) !important;
+      }
+      
+      &:not(:disabled):active {
+        background: $primary-hover !important;
+        border-color: $primary-hover !important;
+      }
+    }
+    
+    &.p-button-text {
+      color: $primary-color !important;
+      
+      &:hover {
+        background: rgba($primary-color, 0.1) !important;
+      }
+    }
+  }
+
+  // Force override for any green colors that might appear
+  .p-component {
+    &[style*="background: #10b981"],
+    &[style*="background-color: #10b981"],
+    &[style*="background: rgb(16, 185, 129)"] {
+      background: $primary-color !important;
+    }
+    
+    &[style*="color: #10b981"],
+    &[style*="color: rgb(16, 185, 129)"] {
+      color: $primary-color !important;
+    }
+  }
+  
+  // Select dropdown styles
+  .p-select {
+    border: 2px solid $border-color !important;
+    border-radius: $radius-md !important;
+    
+    &:focus, &.p-focus {
+      border-color: $primary-color !important;
+      box-shadow: 0 0 0 3px rgba($primary-color, 0.15) !important;
+    }
+    
+    .p-select-dropdown {
+      color: $primary-color !important;
+    }
+    
+    &.p-select-open {
+      border-color: $primary-color !important;
+    }
+  }
+  
+  // Input styles
+  .p-inputtext {
+    border: 2px solid $border-color !important;
+    border-radius: $radius-md !important;
+    
+    &:focus {
+      border-color: $primary-color !important;
+      box-shadow: 0 0 0 3px rgba($primary-color, 0.15) !important;
+    }
+  }
+  
+  // Textarea styles
+  .p-textarea {
+    border: 2px solid $border-color !important;
+    border-radius: $radius-md !important;
+    
+    &:focus {
+      border-color: $primary-color !important;
+      box-shadow: 0 0 0 3px rgba($primary-color, 0.15) !important;
+    }
+  }
+  
+  // Checkbox styles
+  .p-checkbox {
+    .p-checkbox-box {
+      border: 2px solid $border-color !important;
+      
+      &.p-highlight {
+        background: $primary-color !important;
+        border-color: $primary-color !important;
+      }
+      
+      &:focus {
+        border-color: $primary-color !important;
+        box-shadow: 0 0 0 3px rgba($primary-color, 0.15) !important;
+      }
+    }
+  }
+  
+  // Radio button styles  
+  .p-radiobutton {
+    .p-radiobutton-box {
+      border: 2px solid $border-color !important;
+      
+      &.p-highlight {
+        background: $primary-color !important;
+        border-color: $primary-color !important;
+        
+        .p-radiobutton-icon {
+          background: white !important;
+          border-radius: 50% !important;
+          width: 8px !important;
+          height: 8px !important;
+        }
+      }
+      
+      &:focus {
+        border-color: $primary-color !important;
+        box-shadow: 0 0 0 3px rgba($primary-color, 0.15) !important;
+      }
+    }
+    
+    &:not(.p-disabled):hover .p-radiobutton-box {
+      border-color: $primary-color !important;
+    }
+  }
+  
+  // DatePicker styles
+  .p-datepicker {
+    .p-datepicker-today span {
+      background: rgba($primary-color, 0.1) !important;
+      color: $primary-color !important;
+    }
+    
+    .p-datepicker-selected span {
+      background: $primary-color !important;
+      color: white !important;
+    }
+    
+    .p-datepicker-header {
+      .p-datepicker-next, .p-datepicker-prev {
+        color: $primary-color !important;
+        
+        &:hover {
+          background: rgba($primary-color, 0.1) !important;
+        }
+      }
+    }
+  }
+
+  // Input Number styles
+  .p-inputnumber {
+    .p-inputtext {
+      border: 2px solid $border-color !important;
+      
+      &:focus {
+        border-color: $primary-color !important;
+        box-shadow: 0 0 0 3px rgba($primary-color, 0.15) !important;
+      }
+    }
+    
+    .p-inputnumber-buttons {
+      .p-inputnumber-button {
+        border-color: $border-color !important;
+        color: $primary-color !important;
+        
+        &:hover {
+          background: rgba($primary-color, 0.1) !important;
+        }
+      }
+    }
+  }
+}
+
+// ==================== GLOBAL PRIMENG OVERRIDES ====================
+// Force all PrimeNG components to use our blue theme
+.p-button-success,
+.p-button.p-button-success {
+  background: $primary-color !important;
+  border-color: $primary-color !important;
+  
+  &:hover {
+    background: $primary-hover !important;
+    border-color: $primary-hover !important;
+  }
+  
+  &:focus {
+    box-shadow: 0 0 0 0.2rem rgba(41, 67, 116, 0.5) !important;
+  }
+  
+  &:not(:disabled):active {
+    background: $primary-hover !important;
+    border-color: $primary-hover !important;
+  }
+}
+
+.p-button-text {
+  color: $primary-color !important;
+  
+  &:hover {
+    background: rgba($primary-color, 0.1) !important;
+  }
+}
+
+// Stepper step panels - force blue line progress
+.p-stepper .p-stepper-panels {
+  .p-stepper-content {
+    border-left: 2px solid $border-color;
+    
+    &.p-stepper-content-active {
+      border-left-color: $primary-color !important;
+    }
+  }
+}
+
+// Stepper specific overrides
+.p-stepper .p-stepper-list .p-stepper-item .p-stepper-title.p-stepper-title-active,
+.p-stepper .p-stepper-list .p-stepper-item.p-stepper-item-active .p-stepper-title {
+  color: $primary-color !important;
+}
+
+.p-stepper .p-stepper-list .p-stepper-item .p-stepper-number.p-stepper-number-active,
+.p-stepper .p-stepper-list .p-stepper-item.p-stepper-item-active .p-stepper-number {
+  background: $primary-color !important;
+  border-color: $primary-color !important;
+}
+
+.p-stepper .p-stepper-list .p-stepper-item .p-stepper-separator.p-stepper-separator-active {
+  background: $primary-color !important;
+}
+
+// Additional button overrides for specific cases
+.p-button:not(.p-button-text):not(.p-button-outlined) {
+  background: $primary-color !important;
+  border-color: $primary-color !important;
+  
+  &:hover {
+    background: $primary-hover !important;
+    border-color: $primary-hover !important;
+  }
+}
+
+// Checkbox override - force blue when checked
+.p-checkbox .p-checkbox-box.p-highlight,
+.p-checkbox:not(.p-disabled) .p-checkbox-box.p-highlight {
+  background: $primary-color !important;
+  border-color: $primary-color !important;
+  
+  &:hover {
+    background: $primary-hover !important;
+    border-color: $primary-hover !important;
+  }
+}
+
+  // Radio button override - force blue when selected  
+.p-radiobutton .p-radiobutton-box.p-highlight,
+.p-radiobutton:not(.p-disabled) .p-radiobutton-box.p-highlight {
+  background: $primary-color !important;
+  border-color: $primary-color !important;
+}
+
+.p-radiobutton .p-radiobutton-box.p-highlight .p-radiobutton-icon {
+  background: white !important;
+}
+
+// Step panel progress line override
+.p-stepper-panels .p-stepper-content {
+  border-left: 2px solid $primary-color !important;
+}
+
+.p-stepper .p-stepper-panels .p-stepper-content::before {
+  background-color: $primary-color !important;
+  border-color: $primary-color !important;
+}// ==================== RESPONSIVE ====================
 @media (max-width: 768px) {
   .report-page {
     padding: 16px;
@@ -991,5 +1328,67 @@ $radius-lg: 12px;
   .back-btn {
     font-size: 13px;
     padding: 6px 12px;
+  }
+}
+
+// ==================== STEPPER TITLES BLUE ====================
+:host ::ng-deep {
+  // FORCE ALL STEPPER TITLES TO BLUE - NO MORE GREEN BULLSHIT
+  .p-stepper-title,
+  .p-stepper .p-stepper-title,
+  .p-stepper-item .p-stepper-title,
+  .p-stepper-header .p-stepper-title,
+  .p-stepper-step .p-stepper-title,
+  span.p-stepper-title,
+  .p-stepper-title-active,
+  .p-stepper-item-active .p-stepper-title,
+  .p-stepper-item-completed .p-stepper-title {
+    color: #294374 !important;
+  }
+
+  // Nuclear option - force all text in stepper (but exclude pet names)
+  p-stepper span:not(.pet-name) {
+    color: #294374 !important;
+  }
+}
+
+// ==================== PET NAMES WHITE ====================
+.pet-name {
+  color: white !important;
+}
+
+// ==================== BUTTON TEXT AND ICON WHITE ====================
+::ng-deep {
+  .btn-primary .p-button,
+  .p-button-success,
+  .p-button.p-button-success {
+    color: white !important;
+    
+    .p-button-label,
+    .p-button-icon,
+    span,
+    i {
+      color: white !important;
+    }
+    
+    &:hover {
+      color: white !important;
+      
+      .p-button-label,
+      .p-button-icon,
+      span,
+      i {
+        color: white !important;
+      }
+    }
+  }
+  
+  // Force white text on all primary buttons
+  .p-button:not(.p-button-text):not(.p-button-outlined) {
+    color: white !important;
+    
+    * {
+      color: white !important;
+    }
   }
 }

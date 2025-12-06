@@ -843,10 +843,7 @@ $radius-lg: 12px;
       box-shadow: $shadow-lg;
       backdrop-filter: blur(10px);
 
-      &.p-toast-message-success {
-        background: rgba($success-color, 0.95);
-        border: 1px solid rgba($success-color, 0.4);
-      }
+      // Use PrimeNG default success colors
 
       &.p-toast-message-error {
         background: rgba($error-color, 0.95);
@@ -870,6 +867,114 @@ $radius-lg: 12px;
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+// ==================== STEPPER TITLES BLUE - NUCLEAR OVERRIDE ====================
+:host ::ng-deep {
+  // FORCE ALL STEPPER TITLES TO BLUE - NO MORE GREEN SHIT
+  .p-stepper-title,
+  .p-stepper .p-stepper-title,
+  .p-stepper-item .p-stepper-title,
+  .p-stepper-header .p-stepper-title,
+  .p-stepper-step .p-stepper-title,
+  span.p-stepper-title,
+  .p-stepper-title-active,
+  .p-stepper-item-active .p-stepper-title,
+  .p-stepper-item-completed .p-stepper-title {
+    color: #294374 !important;
+  }
+
+  // Nuclear option - force all text in stepper
+  p-stepper span {
+    color: #294374 !important;
+  }
+
+  // FORCE STEPPER ACTIVE LINES TO BLUE
+  .p-stepper .p-stepper-list .p-stepper-item .p-stepper-title.p-stepper-title-active,
+  .p-stepper .p-stepper-list .p-stepper-item.p-stepper-item-active .p-stepper-title {
+    color: #294374 !important;
+  }
+}
+
+// ==================== BUTTON COLOR OVERRIDES ====================
+::ng-deep {
+  // Force all PrimeNG buttons from green to custom blue
+  .p-button:not(.p-button-text):not(.p-button-outlined),
+  .p-button-success,
+  .p-button.p-button-success {
+    background-color: #294374 !important;
+    border-color: #294374 !important;
+    color: white !important;
+    
+    .p-button-label,
+    .p-button-icon,
+    span,
+    i {
+      color: white !important;
+    }
+    
+    &:hover {
+      background-color: #1f3458 !important;
+      border-color: #1f3458 !important;
+      color: white !important;
+      
+      .p-button-label,
+      .p-button-icon,
+      span,
+      i {
+        color: white !important;
+      }
+    }
+    
+    &:focus {
+      background-color: #294374 !important;
+      border-color: #294374 !important;
+      box-shadow: 0 0 0 3px rgba(41, 67, 116, 0.25) !important;
+      color: white !important;
+    }
+    
+    &:active {
+      background-color: #1a2951 !important;
+      border-color: #1a2951 !important;
+      color: white !important;
+    }
+  }
+  
+  // Force radio button colors
+  .p-radiobutton-checked .p-radiobutton-box,
+  .p-radiobutton .p-radiobutton-box.p-highlight {
+    background-color: #294374 !important;
+    border-color: #294374 !important;
+  }
+  
+  // Force form field focus borders to blue
+  .p-inputtext:focus,
+  .p-textarea:focus,
+  .p-select:focus,
+  .p-select-focused,
+  .p-datepicker:focus,
+  .p-inputtext:focus-visible,
+  .p-textarea:focus-visible,
+  .p-select:focus-visible {
+    border-color: #294374 !important;
+    box-shadow: 0 0 0 3px rgba(41, 67, 116, 0.2) !important;
+  }
+  
+  .p-select:not(.p-disabled).p-focus {
+    border-color: #294374 !important;
+    box-shadow: 0 0 0 3px rgba(41, 67, 116, 0.2) !important;
+  }
+  
+  // Force stepper colors
+  .p-stepper .p-stepper-panels .p-stepper-content::before,
+  .p-stepper-content::before {
+    background: #294374 !important;
+  }
+  
+  .p-stepper .p-stepper-panels .p-stepper-content,
+  .p-stepper-content {
+    border-left-color: #294374 !important;
   }
 }
 

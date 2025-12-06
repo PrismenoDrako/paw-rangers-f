@@ -20,4 +20,197 @@ body {
   font-family: 'Roboto', sans-serif;
 }
 
+// ==================== PRIMENG GLOBAL OVERRIDES ====================
+// Override PrimeNG default green theme with blue
+:root {
+  --p-primary-color: #294374;
+  --p-primary-color-text: #ffffff;
+  --p-primary-50: rgba(41, 67, 116, 0.04);
+  --p-primary-100: rgba(41, 67, 116, 0.08);
+  --p-primary-200: rgba(41, 67, 116, 0.16);
+  --p-primary-300: rgba(41, 67, 116, 0.24);
+  --p-primary-400: rgba(41, 67, 116, 0.32);
+  --p-primary-500: #294374;
+  --p-primary-600: #1e3050;
+  --p-primary-700: rgba(41, 67, 116, 0.72);
+  --p-primary-800: rgba(41, 67, 116, 0.84);
+  --p-primary-900: rgba(41, 67, 116, 0.92);
+  --p-primary-950: rgba(41, 67, 116, 0.96);
+}
+
+// FORCE RADIO BUTTONS TO BLUE - GLOBAL OVERRIDE
+.p-radiobutton .p-radiobutton-box.p-highlight {
+  background: #294374 !important;
+  border-color: #294374 !important;
+}
+
+.p-radiobutton .p-radiobutton-box.p-highlight .p-radiobutton-icon {
+  background: white !important;
+}
+
+// FORCE STEPPER LINES AND TEXT TO BLUE - GLOBAL OVERRIDE
+.p-stepper .p-stepper-list .p-stepper-item .p-stepper-separator,
+.p-stepper-separator {
+  background: #294374 !important;
+}
+
+.p-stepper .p-stepper-list .p-stepper-item .p-stepper-separator.p-stepper-separator-active {
+  background: #294374 !important;
+}
+
+// FORCE STEPPER ACTIVE TEXT TO BLUE
+.p-stepper .p-stepper-list .p-stepper-item .p-stepper-title.p-stepper-title-active,
+.p-stepper .p-stepper-list .p-stepper-item.p-stepper-item-active .p-stepper-title,
+.p-stepper-title-active {
+  color: #294374 !important;
+}
+
+.p-stepper .p-stepper-panels .p-stepper-content::before {
+  background-color: #294374 !important;
+}
+
+.p-stepper-panels .p-stepper-content {
+  border-left: 2px solid #294374 !important;
+}
+
+// FORCE ALL GREEN TO BLUE - NUCLEAR OPTION
+.p-radiobutton-checked .p-radiobutton-box,
+.p-radiobutton .p-radiobutton-box.p-highlight,
+.p-radiobutton .p-radiobutton-box[data-p-highlight="true"] {
+  background: #294374 !important;
+  border-color: #294374 !important;
+}
+
+.p-stepper .p-stepper-panels .p-stepper-content,
+.p-stepper-content {
+  border-left-color: #294374 !important;
+}
+
+.p-stepper .p-stepper-panels .p-stepper-content::before,
+.p-stepper-content::before {
+  background: #294374 !important;
+}
+
+// Force all teal/green colors to blue INCLUDING STEPPER LINES
+[style*="color: rgb(20, 184, 166)"],
+[style*="color: #14b8a6"],
+[style*="background: rgb(20, 184, 166)"],
+[style*="background: #14b8a6"],
+[style*="background-color: rgb(20, 184, 166)"],
+[style*="background-color: #14b8a6"],
+[style*="border-color: rgb(20, 184, 166)"],
+[style*="border-color: #14b8a6"],
+[style*="background-color: rgb(6, 182, 212)"],
+[style*="background: rgb(6, 182, 212)"],
+[style*="background-color: #06b6d4"],
+[style*="background: #06b6d4"],
+[style*="color: rgb(6, 182, 212)"],
+[style*="color: #06b6d4"],
+[style*="color: rgb(20, 184, 166)"],
+[style*="color: #14b8a6"] {
+  color: #294374 !important;
+  background: #294374 !important;
+  background-color: #294374 !important;
+  border-color: #294374 !important;
+}
+
+/* FOUND PETS - FORCE ALL GREEN TO BLUE */
+app-report-found-forms {
+  .p-stepper-title,
+  .p-stepper .p-stepper-title,
+  .p-stepper-item .p-stepper-title,
+  .p-stepper-title-active,
+  .p-stepper-item-active .p-stepper-title {
+    color: #294374 !important;
+  }
+  
+  .p-button:not(.p-button-text):not(.p-button-outlined),
+  .p-button-success,
+  .p-button.p-button-success {
+    background-color: #294374 !important;
+    border-color: #294374 !important;
+    color: white !important;
+  }
+  
+  p-stepper span {
+    color: #294374 !important;
+  }
+}
+
+/* RESPONSIVE TOAST NOTIFICATIONS */
+.p-toast {
+  width: 90vw !important;
+  max-width: 500px !important;
+  margin: 1rem !important;
+  
+  @media (max-width: 480px) {
+    width: 95vw !important;
+    max-width: none !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    right: auto !important;
+    top: 20px !important;
+    margin: 0 !important;
+    
+    .p-toast-message {
+      padding: 12px !important;
+      border-radius: 8px !important;
+      
+      .p-toast-message-icon {
+        font-size: 18px !important;
+      }
+      
+      .p-toast-summary {
+        font-size: 14px !important;
+        font-weight: 600 !important;
+      }
+      
+      .p-toast-detail {
+        font-size: 12px !important;
+        margin-top: 4px !important;
+      }
+      
+      .p-toast-icon-close {
+        font-size: 16px !important;
+      }
+    }
+  }
+  
+  @media (min-width: 481px) and (max-width: 768px) {
+    width: 90vw !important;
+    max-width: 400px !important;
+    
+    .p-toast-message {
+      padding: 14px !important;
+      
+      .p-toast-summary {
+        font-size: 15px !important;
+      }
+      
+      .p-toast-detail {
+        font-size: 13px !important;
+      }
+    }
+  }
+  
+  @media (min-width: 769px) {
+    width: auto !important;
+    max-width: 500px !important;
+    right: 1rem !important;
+    left: auto !important;
+    transform: none !important;
+  }
+}
+
+/* POSITION OVERRIDES FOR TOP-CENTER POSITION */
+.p-toast[ng-reflect-position="top-center"] {
+  @media (min-width: 769px) {
+    left: auto !important;
+    right: 1rem !important;
+    transform: none !important;
+  }
+}
+
+
+
 

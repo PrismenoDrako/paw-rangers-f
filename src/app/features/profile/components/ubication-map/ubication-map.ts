@@ -40,52 +40,80 @@ export class UbicationMapComponent implements AfterViewInit, OnDestroy {
 
   private createMap(): void {
     try {
-      // Crear mapa con opciones optimizadas
-      this.map = L.map(this.mapElement.nativeElement, {
-        zoom: 15,
-        center: [this.currentLat, this.currentLng],
-        preferCanvas: true,
-        zoomControl: true,
-        attributionControl: true
-      });
+      // Función para crear el mapa con coordenadas específicas
+      const createMapWithCoords = (lat: number, lng: number) => {
+        // Crear mapa con opciones optimizadas
+        this.map = L.map(this.mapElement.nativeElement, {
+          zoom: 15,
+          center: [lat, lng],
+          preferCanvas: true,
+          zoomControl: true,
+          attributionControl: true
+        });
 
-      // Agregar capa de tiles (OpenStreetMap) con opciones optimizadas
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© OpenStreetMap contributors',
-        maxZoom: 19,
-        minZoom: 1,
-        crossOrigin: 'anonymous',
-        detectRetina: true
-      }).addTo(this.map);
+        // Agregar capa de tiles (OpenStreetMap) con opciones optimizadas
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: '© OpenStreetMap contributors',
+          maxZoom: 19,
+          minZoom: 1,
+          crossOrigin: 'anonymous',
+          detectRetina: true
+        }).addTo(this.map);
 
-      // Crear marcador arrastrable
-      this.marker = L.marker([this.currentLat, this.currentLng], {
-        draggable: true
-      }).addTo(this.map);
+        // Crear marcador arrastrable
+        this.marker = L.marker([lat, lng], {
+          draggable: true
+        }).addTo(this.map);
 
-      // Eventos del marcador
-      this.marker.on('dragend', () => {
-        this.onMarkerDragEnd();
-      });
+        // Eventos del marcador
+        this.marker.on('dragend', () => {
+          this.onMarkerDragEnd();
+        });
 
-      // Click en el mapa para crear marcador
-      this.map.on('click', (e: L.LeafletMouseEvent) => {
-        this.onMapClick(e);
-      });
+        // Click en el mapa para crear marcador
+        this.map.on('click', (e: L.LeafletMouseEvent) => {
+          this.onMapClick(e);
+        });
 
-      // Emitir ubicación inicial inmediatamente (sin esperar dirección)
-      this.emitLocation(this.currentLat, this.currentLng, 'Ubicación seleccionada');
-      
-      // Obtener dirección inicial en segundo plano (sin bloquear)
-      this.getAddressFromCoordinates(this.currentLat, this.currentLng);
-      this.mapInitialized = true;
+        // Actualizar coordenadas actuales
+        this.currentLat = lat;
+        this.currentLng = lng;
 
-      // Forzar recalcular el tamaño del mapa después de renderizar
-      setTimeout(() => {
-        if (this.map) {
-          this.map.invalidateSize();
-        }
-      }, 100);
+        // Emitir ubicación inicial inmediatamente (sin esperar dirección)
+        this.emitLocation(this.currentLat, this.currentLng, 'Ubicación seleccionada');
+        
+        // Obtener dirección inicial en segundo plano (sin bloquear)
+        this.getAddressFromCoordinates(this.currentLat, this.currentLng);
+        this.mapInitialized = true;
+
+        // Forzar recalcular el tamaño del mapa después de renderizar
+        setTimeout(() => {
+          if (this.map) {
+            this.map.invalidateSize();
+          }
+        }, 100);
+      };
+
+      // Intentar obtener la ubicación actual del usuario
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const userLat = position.coords.latitude;
+            const userLng = position.coords.longitude;
+            console.log('📍 Ubicación del usuario detectada:', userLat, userLng);
+            createMapWithCoords(userLat, userLng);
+          },
+          (error) => {
+            console.warn('⚠️ Error obteniendo ubicación:', error);
+            // Si falla, usar coordenadas por defecto
+            createMapWithCoords(this.defaultLat, this.defaultLng);
+          }
+        );
+      } else {
+        console.warn('⚠️ Geolocalización no disponible');
+        // Si no hay geolocalización, usar coordenadas por defecto
+        createMapWithCoords(this.defaultLat, this.defaultLng);
+      }
     } catch (error) {
       console.error('Error al inicializar el mapa:', error);
     }

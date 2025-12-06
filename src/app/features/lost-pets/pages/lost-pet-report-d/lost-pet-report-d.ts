@@ -16,6 +16,12 @@ import { DialogModule } from 'primeng/dialog';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 
+// Services
+import { SimilarityService, SimilarPet } from '../../../../core/services/similarity.service';
+
+// Components
+import { SimilarPetsModalComponent } from '../../../../shared/components/similar-pets-modal/similar-pets-modal';
+
 // Leaflet
 import * as L from 'leaflet';
 
@@ -46,7 +52,8 @@ interface SpeciesOption {
     RadioButtonModule,
     DatePickerModule,
     DialogModule,
-    ToastModule
+    ToastModule,
+    SimilarPetsModalComponent
   ],
   providers: [MessageService],
   templateUrl: './lost-pet-report-d.html',
@@ -71,10 +78,15 @@ export class LostPetReportD implements OnInit, AfterViewInit, OnDestroy {
   photoPreview: string | null = null;
   photoFile: File | null = null;
   selectedPet: any = null;
+  selectedPetId: string | null = null;
   isReportingOther = false;
   showSavePetModal = false;
-  petSelected = false;
   currentStep = 1;
+
+  // Modal de mascotas similares
+  showSimilarPetsModal = false;
+  similarPets: SimilarPet[] = [];
+  isFoundReport = false;
 
   // Datos de mascotas del usuario
   userPets = [
@@ -84,6 +96,7 @@ export class LostPetReportD implements OnInit, AfterViewInit, OnDestroy {
       species: 'Perro',
       breed: 'Labrador',
       age: '3 años',
+      gender: 'Macho',
       image: 'https://images.unsplash.com/photo-1552053831-71594a27632d?w=400&h=400&fit=crop'
     },
     {
@@ -92,6 +105,7 @@ export class LostPetReportD implements OnInit, AfterViewInit, OnDestroy {
       species: 'Gato',
       breed: 'Siamés',
       age: '2 años',
+      gender: 'Hembra',
       image: 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=400&h=400&fit=crop'
     },
     {
@@ -100,6 +114,7 @@ export class LostPetReportD implements OnInit, AfterViewInit, OnDestroy {
       species: 'Perro',
       breed: 'Bulldog',
       age: '4 años',
+      gender: 'Macho',
       image: 'https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=400&h=400&fit=crop'
     }
   ];
@@ -111,12 +126,18 @@ export class LostPetReportD implements OnInit, AfterViewInit, OnDestroy {
     { label: 'Otro', value: 'Otro' }
   ];
 
+  genderOptions = [
+    { label: 'Macho', value: 'Macho' },
+    { label: 'Hembra', value: 'Hembra' }
+  ];
+
   // Formularios
   petInfoForm = new FormGroup({
     petName: new FormControl('', Validators.required),
     species: new FormControl('', Validators.required),
     breed: new FormControl(''),
     age: new FormControl(''),
+    gender: new FormControl('', Validators.required),
     description: new FormControl('', Validators.required)
   });
 
@@ -137,7 +158,8 @@ export class LostPetReportD implements OnInit, AfterViewInit, OnDestroy {
   constructor(
     private location: Location,
     private router: Router,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private similarityService: SimilarityService
   ) {}
 
   ngOnInit(): void {
@@ -165,27 +187,47 @@ export class LostPetReportD implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
+  togglePet(petId: number): void {
+    const petIdStr = String(petId);
+    
+    if (this.selectedPetId === petIdStr) {
+      // Deseleccionar
+      this.selectedPetId = null;
+      this.selectedPet = null;
+      this.isReportingOther = false;
+      this.petInfoForm.reset();
+      this.photoPreview = null;
+      this.photoFile = null;
+    } else {
+      // Seleccionar
+      const pet = this.userPets.find(p => p.id === petId);
+      if (pet) {
+        this.selectedPetId = petIdStr;
+        this.selectedPet = pet;
+        this.isReportingOther = false;
+        
+        this.petInfoForm.patchValue({
+          petName: pet.name,
+          species: pet.species,
+          breed: pet.breed || '',
+          age: pet.age || '',
+          gender: pet.gender || '',
+          description: ''
+        });
+      }
+    }
+  }
+
   // Seleccionar mascota existente
   selectUserPet(pet: any): void {
-    this.selectedPet = pet;
-    this.isReportingOther = false;
-    this.petSelected = true;
-    
-    // Rellenar campos automáticamente
-    this.petInfoForm.patchValue({
-      petName: pet.name,
-      species: pet.species,
-      breed: pet.breed || '',
-      age: pet.age || '',
-      description: '' // Descripción siempre vacía
-    });
+    this.togglePet(pet.id);
   }
 
   // Reportar otra mascota
   reportOtherPet(): void {
     this.selectedPet = null;
+    this.selectedPetId = null;
     this.isReportingOther = true;
-    this.petSelected = true;
     
     // Limpiar todos los campos
     this.petInfoForm.reset();
@@ -242,26 +284,55 @@ export class LostPetReportD implements OnInit, AfterViewInit, OnDestroy {
 
     console.log('Inicializando mapa...');
     try {
-      this.map = L.map('map').setView([19.4326, -99.1332], 13);
+      // Coordenadas por defecto (México)
+      const defaultLat = 19.4326;
+      const defaultLng = -99.1332;
+      const defaultZoom = 13;
 
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© OpenStreetMap contributors',
-        maxZoom: 19
-      }).addTo(this.map);
+      // Función para inicializar el mapa con coordenadas
+      const initializeMapWithCoords = (lat: number, lng: number, zoom: number) => {
+        this.map = L.map('map').setView([lat, lng], zoom);
 
-      this.map.on('click', (e: L.LeafletMouseEvent) => {
-        this.onMapClick(e);
-      });
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: '© OpenStreetMap contributors',
+          maxZoom: 19
+        }).addTo(this.map);
 
-      // Forzar que el mapa se redibuje correctamente
-      setTimeout(() => {
-        if (this.map) {
-          this.map.invalidateSize();
-        }
-      }, 100);
+        this.map.on('click', (e: L.LeafletMouseEvent) => {
+          this.onMapClick(e);
+        });
 
-      this.mapInitialized = true;
-      console.log('Mapa inicializado correctamente');
+        // Forzar que el mapa se redibuje correctamente
+        setTimeout(() => {
+          if (this.map) {
+            this.map.invalidateSize();
+          }
+        }, 100);
+
+        this.mapInitialized = true;
+        console.log('Mapa inicializado correctamente');
+      };
+
+      // Intentar obtener la ubicación actual del usuario
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const userLat = position.coords.latitude;
+            const userLng = position.coords.longitude;
+            console.log('Ubicación del usuario:', userLat, userLng);
+            initializeMapWithCoords(userLat, userLng, defaultZoom);
+          },
+          (error) => {
+            console.warn('Error obteniendo ubicación:', error);
+            // Si falla, usar coordenadas por defecto
+            initializeMapWithCoords(defaultLat, defaultLng, defaultZoom);
+          }
+        );
+      } else {
+        console.warn('Geolocalización no disponible');
+        // Si no hay geolocalización, usar coordenadas por defecto
+        initializeMapWithCoords(defaultLat, defaultLng, defaultZoom);
+      }
     } catch (error) {
       console.error('Error inicializando mapa:', error);
     }
@@ -366,9 +437,30 @@ export class LostPetReportD implements OnInit, AfterViewInit, OnDestroy {
       });
     }
 
-    setTimeout(() => {
-      this.router.navigate(['/animales-perdidos']);
-    }, 2000);
+    // Buscar mascotas encontradas similares
+    const petData = {
+      species: reportData.pet.species || '',
+      breed: reportData.pet.breed || '',
+      gender: reportData.pet.gender || '',
+      age: typeof reportData.pet.age === 'number'
+        ? reportData.pet.age
+        : reportData.pet.age
+          ? Number(reportData.pet.age) || undefined
+          : undefined,
+      description: reportData.pet.description || ''
+    };
+    this.similarPets = this.similarityService.findSimilarFoundPets(petData);
+    this.isFoundReport = false; // Indica que estamos reportando una mascota PERDIDA
+
+    // Mostrar modal si hay mascotas similares
+    if (this.similarPets.length > 0) {
+      this.showSimilarPetsModal = true;
+    } else {
+      // Si no hay mascotas similares, navegar después de 2 segundos
+      setTimeout(() => {
+        this.router.navigate(['/animales-perdidos']);
+      }, 2000);
+    }
   }
 
   // Obtener dirección desde coordenadas usando Nominatim (OpenStreetMap)
@@ -388,6 +480,14 @@ export class LostPetReportD implements OnInit, AfterViewInit, OnDestroy {
         console.error('Error obteniendo dirección:', error);
         // Si falla, dejar que el usuario la ingrese manualmente
       });
+  }
+
+  onSimilarModalClose(): void {
+    this.showSimilarPetsModal = false;
+    // Navegar después de cerrar el modal
+    setTimeout(() => {
+      this.router.navigate(['/animales-perdidos']);
+    }, 500);
   }
 
   goBack(): void {

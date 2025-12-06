@@ -46,6 +46,8 @@ export class FoundPetsList implements OnInit {
         description: 'Vecinos reportan haber encontrado a Rocky en la clinica veterinaria del barrio.',
         location: 'Clinica veterinaria del barrio',
         foundDate: new Date(Date.now() - 19 * 24 * 60 * 60 * 1000), // Hace 19 dias
+        lat: -5.1945,
+        lng: -80.6325,
         image: 'https://i.pinimg.com/736x/74/a4/92/74a492bb7b8e5293a3be5e145fdfaf63.jpg',
         hasCollar: true,
         contactInfo: {
@@ -62,6 +64,8 @@ export class FoundPetsList implements OnInit {
         description: 'Encontrado vagando cerca del parque. Muy amigable, parece bien cuidado.',
         location: 'Parque Central, Ciudad',
         foundDate: new Date(Date.now() - 2 * 60 * 60 * 1000), // 2 horas atras
+        lat: -5.2006,
+        lng: -80.6265,
         image: 'https://images.unsplash.com/photo-1552053831-71594a27632d?w=400&h=400&fit=crop',
         hasCollar: true,
         contactInfo: {
@@ -78,6 +82,8 @@ export class FoundPetsList implements OnInit {
         description: 'Gato siames encontrado en la calle. Se ve asustado pero no herido.',
         location: 'Avenida Principal',
         foundDate: new Date(Date.now() - 5 * 60 * 60 * 1000), // 5 horas atras
+        lat: -5.2022,
+        lng: -80.6299,
         image: 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=400&h=400&fit=crop',
         hasCollar: false,
         contactInfo: {
@@ -93,6 +99,8 @@ export class FoundPetsList implements OnInit {
         description: 'Perrito pequeno encontrado cerca de la escuela. Muy amigable.',
         location: 'Zona Este, Ciudad',
         foundDate: new Date(Date.now() - 8 * 60 * 60 * 1000), // 8 horas atras
+        lat: -5.196,
+        lng: -80.6185,
         image: 'https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=400&h=400&fit=crop',
         hasCollar: true,
         contactInfo: {

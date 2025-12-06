@@ -38,6 +38,9 @@
               "node_modules/primeicons/primeicons.css",
               "node_modules/leaflet/dist/leaflet.css",
               "src/styles.scss"
+            ],
+            "allowedCommonJsDependencies": [
+              "leaflet"
             ]
           },
           "configurations": {
@@ -45,12 +48,12 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kB",
-                  "maximumError": "1MB"
+                  "maximumWarning": "1.2MB",
+                  "maximumError": "1.3MB"
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "12kB",
+                  "maximumWarning": "16kB",
                   "maximumError": "20kB"
                 }
               ],

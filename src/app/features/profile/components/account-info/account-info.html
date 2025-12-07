@@ -5,38 +5,50 @@
     </ng-template>
     
     <ng-template pTemplate="content">
-        <div class="flex flex-column align-items-center text-center">
-            
-            <!-- Mostrar imagen personalizada si existe, sino mostrar icono por defecto -->
-            <div class="profile-avatar-container">
-                <img *ngIf="profileImageUrl" 
-                     [src]="profileImageUrl" 
-                     alt="Profile" 
-                     class="profile-image-display">
-                <div *ngIf="!profileImageUrl" class="profile-avatar-default">
-                    <i class="pi pi-user"></i>
+        <div class="profile-layout">
+            <!-- Avatar a la izquierda -->
+            <div class="avatar-column">
+                <div class="profile-avatar-container">
+                    <img *ngIf="profileImageUrl"
+                         [src]="profileImageUrl"
+                         alt="Profile"
+                         class="profile-image-display">
+                    <div *ngIf="!profileImageUrl" class="profile-avatar-default">
+                        <i class="pi pi-user"></i>
+                    </div>
                 </div>
             </div>
-            
-            <div class="user-info">
-                <p class="username text-lg font-bold m-0">
-                    @{{ user.username }}
-                </p>
-                <p class="name text-sm text-color-secondary m-0 mt-2">
-                    {{ user.nombre }} {{ user.apellidoPaterno }} {{ user.apellidoMaterno }}
-                </p>
-                <p class="email text-sm text-color-secondary m-0 mt-1">
-                    {{ user.email }}
-                </p>
-            </div>
-            
-            <p-button 
-                label="Editar Perfil" 
-                icon="pi pi-pencil" 
-                styleClass="p-button-outlined p-button-sm mt-4" 
-                (onClick)="onEditProfile()"> 
-            </p-button>
 
+            <!-- Información al centro/derecha -->
+            <div class="info-column">
+                <div class="info-grid">
+                    <div class="info-item">
+                        <span class="label">Nombre de usuario</span>
+                        <span class="value">@{{ user.username }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">Nombre completo</span>
+                        <span class="value">{{ user.nombre }} {{ user.apellidoPaterno }} {{ user.apellidoMaterno }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">Correo</span>
+                        <span class="value">{{ user.email }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">Celular</span>
+                        <span class="value">{{ user.phone }}</span>
+                    </div>
+                </div>
+
+                <div class="actions">
+                    <p-button
+                        label="Editar Perfil"
+                        icon="pi pi-pencil"
+                        styleClass="p-button-outlined"
+                        (onClick)="onEditProfile()">
+                    </p-button>
+                </div>
+            </div>
         </div>
     </ng-template>
 </p-card>

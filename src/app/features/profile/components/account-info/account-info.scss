@@ -12,60 +12,46 @@ h2 {
     background-color: var(--surface-card, white);
     border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    //border: 1px solid $primary-blue !important;
-
     margin: 0;
     width: 100%;
 
     :host ::ng-deep .p-card-header {
         padding-bottom: 0.5rem;
-
     }
 
     :host ::ng-deep .p-card-body {
         padding-top: 0 !important;
-        padding-bottom: 1rem !important;
+        padding-bottom: 1.5rem !important;
     }
 
-    .profile-title {
-        color: $primary-blue;
-        font-size: 1.5rem;
-        font-weight: 700;
-        text-align: center;
-
-        width: 100%;
-        margin-top: 0;
-        margin-bottom: 0;
+    .profile-layout {
+        display: flex;
+        align-items: center;
+        gap: 3rem;
+        padding: 0.75rem 1.25rem;
+        flex-wrap: wrap;
+        max-width: 1180px;
+        margin: 0 auto;
     }
 
-
-    .user-info {
-        max-width: 90%;
-
-        .name {
-            font-weight: 700;
-        }
-
-        p {
-            line-height: 1.3;
-        }
+    .avatar-column {
+        flex: 0 0 140px;
+        display: flex;
+        justify-content: center;
     }
 
     .profile-avatar-container {
-        margin-bottom: 1.5rem;
+        width: 140px;
+        height: 140px;
         display: flex;
         justify-content: center;
         align-items: center;
-        width: 120px;
-        height: 120px;
-        margin-left: auto;
-        margin-right: auto;
 
         .profile-image-display {
             width: 100%;
             height: 100%;
             border-radius: 50%;
-            border: 2px solid $primary-blue;
+            border: 3px solid $primary-blue;
             object-fit: cover;
             display: block;
         }
@@ -74,8 +60,8 @@ h2 {
             width: 100%;
             height: 100%;
             border-radius: 50%;
-            border: 2px solid $primary-blue;
-            background-color: #EDF0F7;
+            border: 3px solid $primary-blue;
+            background-color: #edf0f7;
             color: $primary-blue;
             display: flex;
             align-items: center;
@@ -87,15 +73,78 @@ h2 {
             }
         }
     }
+
+    .info-column {
+        flex: 1;
+        min-width: 260px;
+        display: flex;
+        flex-direction: column;
+        gap: 1.1rem;
+        padding-left: 0.75rem;
+    }
+
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(240px, 1fr));
+        gap: 1.1rem 1.8rem;
+        align-items: center;
+    }
+
+    .info-item {
+        display: flex;
+        flex-direction: column;
+        gap: 0.35rem;
+
+        .label {
+            font-size: 0.9rem;
+            color: #9ca3af;
+            letter-spacing: 0.01em;
+        }
+
+        .value {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: $primary-blue;
+        }
+    }
+
+    .actions {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
 }
 
-//Estilo del boton de editar perfil
 :host ::ng-deep .account-summary-card .p-button-outlined {
     background-color: $primary-blue !important;
     color: white !important;
     border-color: $primary-blue !important;
+    padding: 0.65rem 1.5rem;
+    font-weight: 700;
     &:hover {
         background-color: darken($primary-blue, 5%) !important;
         border-color: darken($primary-blue, 5%) !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .account-summary-card {
+        .profile-layout {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 1.5rem;
+        }
+
+        .avatar-column {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .info-column {
+            width: 100%;
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+        }
     }
 }

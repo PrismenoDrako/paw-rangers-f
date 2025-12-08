@@ -10,6 +10,7 @@ export class ApiService {
     private baseUrl = 'http://localhost:3000';
 
     constructor(private http: HttpClient) { }
+
     // GET
     get<T>(endpoint: string, params?: any, headers?: HttpHeaders): Observable<T> {
         let httpParams = new HttpParams();
@@ -20,17 +21,27 @@ export class ApiService {
                 }
             });
         }
-        return this.http.get<T>(`${this.baseUrl}/${endpoint}`, { params: httpParams, headers });
+        return this.http.get<T>(`${this.baseUrl}/${endpoint}`, {
+            params: httpParams,
+            headers,
+            withCredentials: true   // 👈 MUY IMPORTANTE
+        });
     }
 
     // POST
     post<T>(endpoint: string, body: any, headers?: HttpHeaders): Observable<T> {
-        return this.http.post<T>(`${this.baseUrl}/${endpoint}`, body, { headers });
+        return this.http.post<T>(`${this.baseUrl}/${endpoint}`, body, {
+            headers,
+            withCredentials: true     // 👈 Necesario para login y todo lo demás
+        });
     }
 
     // PUT
     put<T>(endpoint: string, body: any, headers?: HttpHeaders): Observable<T> {
-        return this.http.put<T>(`${this.baseUrl}/${endpoint}`, body, { headers });
+        return this.http.put<T>(`${this.baseUrl}/${endpoint}`, body, {
+            headers,
+            withCredentials: true
+        });
     }
 
     // DELETE
@@ -43,7 +54,11 @@ export class ApiService {
                 }
             });
         }
-        return this.http.delete<T>(`${this.baseUrl}/${endpoint}`, { params: httpParams, headers });
+        return this.http.delete<T>(`${this.baseUrl}/${endpoint}`, {
+            params: httpParams,
+            headers,
+            withCredentials: true
+        });
     }
 
 }

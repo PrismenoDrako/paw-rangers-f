@@ -1,0 +1,371 @@
+﻿import { CommonModule } from '@angular/common';
+import { Component, OnDestroy } from '@angular/core';
+import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
+
+import { NotificationFooterComponent } from '../components/notification-footer/notification-footer';
+import { NotificationHeaderComponent } from '../components/notification-header/notification-header';
+import { NotificationItemComponent } from '../components/notification-item/notification-item';
+import { NotificationPreferences, NotificationPreferencesService } from '../services/notification-preferences.service';
+import { NotificationGroup, NotificationItem, NotificationSeed } from '../models/notification.model';
+
+@Component({
+  selector: 'app-notifications',
+  standalone: true,
+  imports: [CommonModule, NotificationHeaderComponent, NotificationItemComponent, NotificationFooterComponent],
+  templateUrl: './notifications.html',
+  styleUrls: ['./notifications.scss']
+})
+export class NotificationsComponent implements OnDestroy {
+  private readonly footerThreshold = 4;  private readonly previewLimit = 3;
+
+  showUnreadOnly = false;
+  showAllPets = false;
+  showAllForum = false;
+
+  petNotifications = this.createPetNotifications();
+  forumNotifications = this.createForumNotifications();
+
+  preferences: NotificationPreferences = { mascotas: true, foro: true };
+  private subscription: Subscription;
+
+  constructor(
+    private preferencesService: NotificationPreferencesService,
+    private router: Router
+  ) {
+    this.preferences = this.preferencesService.currentPreferences;
+    this.subscription = this.preferencesService.preferences$.subscribe((prefs) => {
+      this.preferences = prefs;
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
+  }
+
+  get filteredPetNotifications(): NotificationItem[] {
+    return this.filterByRead(this.petNotifications);
+  }
+
+  get filteredForumNotifications(): NotificationItem[] {
+    return this.filterByRead(this.forumNotifications);
+  }
+
+  get petVisibleGroups(): NotificationGroup[] {
+    return this.groupByDate(this.visibleList(this.filteredPetNotifications, this.showAllPets));
+  }
+
+  get forumVisibleGroups(): NotificationGroup[] {
+    return this.groupByDate(this.visibleList(this.filteredForumNotifications, this.showAllForum));
+  }
+
+  get shouldShowMorePets(): boolean {
+    return this.filteredPetNotifications.length > this.previewLimit;
+  }
+
+  get shouldShowMoreForum(): boolean {
+    return this.filteredForumNotifications.length > this.previewLimit;
+  }
+
+  private visibleList(list: NotificationItem[], showAll: boolean): NotificationItem[] {
+    return showAll ? list : list.slice(0, this.previewLimit);
+  }
+
+  private filterByRead(list: NotificationItem[]): NotificationItem[] {
+    const filtered = this.showUnreadOnly ? list.filter((item) => !item.read) : [...list];
+    return filtered.sort((a, b) => b.createdAt - a.createdAt);
+  }
+
+  private countUnread(list: NotificationItem[]): number {
+    return list.reduce((total, item) => total + (item.read ? 0 : 1), 0);
+  }
+
+  get totalNotifications(): number {
+    return this.countUnread(this.petNotifications) + this.countUnread(this.forumNotifications);
+  }
+
+  get petUnreadCount(): number {
+    return this.countUnread(this.petNotifications);
+  }
+
+  get forumUnreadCount(): number {
+    return this.countUnread(this.forumNotifications);
+  }
+
+  get renderedNotificationsCount(): number {
+    let total = 0;
+    if (this.preferences.mascotas) {
+      total += this.filteredPetNotifications.length;
+    }
+    if (this.preferences.foro) {
+      total += this.filteredForumNotifications.length;
+    }
+    return total;
+  }
+
+  get showPets(): boolean {
+    return this.preferences.mascotas && this.filteredPetNotifications.length > 0;
+  }
+
+  get showForum(): boolean {
+    return this.preferences.foro && this.filteredForumNotifications.length > 0;
+  }
+
+  get allNotificationsDisabled(): boolean {
+    return !this.preferences.mascotas && !this.preferences.foro;
+  }
+
+  get showFooterCTA(): boolean {
+    return !this.allNotificationsDisabled && this.renderedNotificationsCount <= this.footerThreshold;
+  }
+
+  get showSettingsIcon(): boolean {
+    return !this.allNotificationsDisabled && !this.showFooterCTA;
+  }
+
+  toggleUnreadFilter(): void {
+    this.showUnreadOnly = !this.showUnreadOnly;
+    this.showAllPets = false;
+    this.showAllForum = false;
+  }
+
+  toggleShowAll(section: 'pet' | 'forum'): void {
+    if (section === 'pet') {
+      this.showAllPets = !this.showAllPets;
+    } else {
+      this.showAllForum = !this.showAllForum;
+    }
+  }
+
+  markAsRead(notification: NotificationItem): void {
+    if (notification.read) {
+      return;
+    }
+
+    notification.read = true;
+    notification.timestamp = 'Hace instantes';
+  }
+
+  openSettings(): void {
+    this.router.navigate(['/app/notification-settings']);
+  }
+
+  openNotification(notification: NotificationItem): void {
+    this.markAsRead(notification);
+    // No redirigir interacciones (foro) por ahora
+    if (notification.type === 'foro') {
+      return;
+    }
+
+    if (notification.targetUrl) {
+      this.router.navigateByUrl(notification.targetUrl);
+    }
+  }
+  private createPetNotifications(): NotificationItem[] {
+    const seeds: NotificationSeed[] = [
+      {
+        id: 'pet-1',
+        message: 'Mascota Perdida Cerca',
+        context: 'Luna, una gata gris, fue vista por última vez cerca del parque central.',
+        image: 'https://cdn0.uncomo.com/es/posts/4/6/4/mau_egipcio_53464_1_600.jpg',
+        date: '2025-11-13T10:24:00',
+        type: 'mascota',
+        category: 'alert',
+        read: true,
+        targetUrl: '/app/alertas/lost-1'
+      },
+      {
+        id: 'pet-2',
+        message: 'Mascota Encontrada',
+        context: 'Vecinos reportan haber encontrado a Rocky en la clínica veterinaria del barrio.',
+        image: 'https://i.pinimg.com/736x/74/a4/92/74a492bb7b8e5293a3be5e145fdfaf63.jpg',
+        date: '2025-11-13T09:05:00',
+        type: 'mascota',
+        category: 'found',
+        read: true,
+        targetUrl: '/app/alertas/found-1'
+      },
+      {
+        id: 'pet-3',
+        message: 'Nueva solicitud de adopción',
+        context: 'Laura preguntó por la perrita rescatada el fin de semana.',
+        image: 'adoption.png',
+        date: '2025-11-12T10:12:00',
+        type: 'mascota',
+        category: 'adoption',
+        read: false,
+        targetUrl: '/app/animales-perdidos'
+      },
+      {
+        id: 'pet-4',
+        message: 'Seguimiento de tratamiento',
+        context: 'El refugio confirmó la segunda dosis para Bruno.',
+        image: 'treatment.png',
+        date: '2025-11-11T16:40:00',
+        type: 'mascota',
+        category: 'treatment',
+        read: true,
+        targetUrl: '/app/animales-perdidos'
+      },
+      {
+        id: 'pet-5',
+        message: 'Foto recibida',
+        context: 'Familia adoptante envió actualización de Coco en su nuevo hogar.',
+        image: 'photo-update.png',
+        date: '2025-11-09T14:15:00',
+        type: 'mascota',
+        category: 'photo_update',
+        read: false,
+        targetUrl: '/app/animales-perdidos'
+      },
+      {
+        id: 'pet-6',
+        message: 'Nueva alerta comunitaria',
+        context: 'Varias personas reportaron haber visto a Milo cerca del río.',
+        image: 'community-alert.png',
+        date: '2025-11-06T18:30:00',
+        type: 'mascota',
+        category: 'community_alert',
+        read: true,
+        targetUrl: '/app/alertas/com-1'
+      }
+    ];
+
+    return seeds.map((seed) => this.buildNotification(seed));
+  }
+
+  private createForumNotifications(): NotificationItem[] {
+    const seeds: NotificationSeed[] = [
+      {
+        id: 'forum-1',
+        message: 'Nuevo like',
+        context: 'Tu publicación "Tips para rescatar gatitos" recibió un nuevo me gusta.',
+        image: 'like.png',
+        date: '2025-11-13T10:27:00',
+        type: 'foro',
+        category: 'like',
+        read: false
+      },
+      {
+        id: 'forum-2',
+        message: 'Nueva Respuesta',
+        context: 'María comentó tu guía para crear campañas de búsqueda efectivas.',
+        image: 'reply.png',
+        date: '2025-11-13T05:10:00',
+        type: 'foro',
+        category: 'reply',
+        read: true
+      },
+      {
+        id: 'forum-3',
+        message: 'Nueva mención',
+        context: 'Carlos te mencionó en el hilo "Mejores veterinarios".',
+        image: 'reply.png',
+        date: '2025-11-12T11:20:00',
+        type: 'foro',
+        category: 'mention',
+        read: false
+      },
+      {
+        id: 'forum-4',
+        message: 'Resumen semanal',
+        context: 'Tu publicación "Checklist de rescate" sumó 12 nuevos likes.',
+        image: 'like.png',
+        date: '2025-11-11T08:00:00',
+        type: 'foro',
+        category: 'summary',
+        read: true
+      },
+      {
+        id: 'forum-5',
+        message: 'Nuevo mensaje directo',
+        context: 'Andrea quiere saber cómo organizar brigadas en su barrio.',
+        image: 'reply.png',
+        date: '2025-11-09T19:45:00',
+        type: 'foro',
+        category: 'message',
+        read: false
+      },
+      {
+        id: 'forum-6',
+        message: 'Encuesta disponible',
+        context: 'Vota por el próximo tema del foro comunitario.',
+        image: 'like.png',
+        date: '2025-11-05T13:30:00',
+        type: 'foro',
+        category: 'poll',
+        read: true
+      }
+    ];
+
+    return seeds.map((seed) => this.buildNotification(seed));
+  }
+
+  private buildNotification(seed: NotificationSeed): NotificationItem {
+    const createdAt = new Date(seed.date).getTime();
+    return {
+      ...seed,
+      createdAt,
+      timestamp: this.getRelativeTime(createdAt)
+    };
+  }
+
+  private groupByDate(list: NotificationItem[]): NotificationGroup[] {
+    const groups = new Map<string, NotificationItem[]>();
+
+    list.forEach((item) => {
+      const label = this.getDateLabel(item.createdAt);
+      if (!groups.has(label)) {
+        groups.set(label, []);
+      }
+      groups.get(label)!.push(item);
+    });
+
+    return Array.from(groups.entries()).map(([label, items]) => ({
+      label,
+      items: items.sort((a, b) => b.createdAt - a.createdAt)
+    }));
+  }
+
+  private getDateLabel(timestamp: number): string {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const yesterday = new Date(today);
+    yesterday.setDate(today.getDate() - 1);
+
+    const date = new Date(timestamp);
+
+    if (date >= today) {
+      return 'Hoy';
+    }
+    if (date >= yesterday) {
+      return 'Ayer';
+    }
+
+    return date.toLocaleDateString('es-ES', {
+      day: 'numeric',
+      month: 'long'
+    });
+  }
+
+  private getRelativeTime(timestamp: number): string {
+    const diffMs = Date.now() - timestamp;
+    const diffMinutes = Math.round(diffMs / 60000);
+
+    if (diffMinutes < 1) {
+      return 'Hace instantes';
+    }
+    if (diffMinutes < 60) {
+      return `Hace ${diffMinutes} minuto${diffMinutes === 1 ? '' : 's'}`;
+    }
+
+    const diffHours = Math.round(diffMinutes / 60);
+    if (diffHours < 24) {
+      return `Hace ${diffHours} hora${diffHours === 1 ? '' : 's'}`;
+    }
+
+    const diffDays = Math.round(diffHours / 24);
+    return `Hace ${diffDays} día${diffDays === 1 ? '' : 's'}`;
+  }
+}

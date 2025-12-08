@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { LostPet } from '../lost-pet-card/lost-pet-card';
+import { LostPet } from '../../models/lost-pet.model';
 
 @Component({
   selector: 'app-lost-contact-modal',

@@ -1,24 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
-export interface LostPet {
-  id: number;
-  name: string;
-  type: string;
-  breed: string;
-  description: string;
-  location: string;
-  lostDate: Date;
-  image: string;
-  lat?: number;
-  lng?: number;
-  reward?: number;
-  contactInfo: {
-    name: string;
-    phone: string;
-    email?: string;
-  };
-}
+import { LostPet } from '../../models/lost-pet.model';
 
 @Component({
   selector: 'app-lost-pet-card',

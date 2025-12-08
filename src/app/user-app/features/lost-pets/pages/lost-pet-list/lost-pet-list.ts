@@ -4,8 +4,9 @@ import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 
 // Importar componentes personalizados
-import { LostPetCard, LostPet } from '../../components/lost-pet-card/lost-pet-card';
+import { LostPetCard } from '../../components/lost-pet-card/lost-pet-card';
 import { LostContactModal } from '../../components/contact-modal/contact-modal';
+import { LostPet } from '../../models/lost-pet.model';
 
 @Component({
   selector: 'app-lost-pet-list',

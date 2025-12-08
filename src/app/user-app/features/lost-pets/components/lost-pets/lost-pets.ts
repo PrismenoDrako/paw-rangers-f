@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { LostPetCard, LostPet } from '../lost-pet-card/lost-pet-card';
+import { LostPetCard } from '../lost-pet-card/lost-pet-card';
+import { LostPet } from '../../models/lost-pet.model';
 
 @Component({
   selector: 'app-lost-pets',

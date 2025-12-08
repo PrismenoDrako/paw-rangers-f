@@ -31,7 +31,7 @@
           </a>
           <button class="btn ghost" type="button" (click)="openInMap()">Ver en mapa</button>
           <button class="btn ghost" type="button" (click)="goToReport()">Ver reporte completo</button>
-          <div class="status-menu" *ngIf="alert?.ownedByCurrentUser">
+          <div class="status-menu" *ngIf="alert && alert.ownedByCurrentUser">
             <button type="button" class="btn ghost" (click)="toggleStatusMenu()">Marcar reporte</button>
             <div class="status-dropdown" *ngIf="showStatusMenu">
               <button type="button" (click)="markResolved()">Marcar como resuelta</button>

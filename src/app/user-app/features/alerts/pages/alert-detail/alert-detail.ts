@@ -5,8 +5,8 @@ import { AlertsService } from '../../services/alerts.service';
 import { Alert } from '../../models/alert.model';
 import { AlertMapComponent } from '../../components/alert-map/alert-map';
 import { AlertTimelineComponent } from '../../components/alert-timeline/alert-timeline';
-import { LostContactModal } from '../../../lost-pets/components/contact-modal/contact-modal';
-import { LostPet } from '../../../lost-pets/components/lost-pet-card/lost-pet-card';
+import { LostContactModal } from '../../../lost-pets/components/contact-modal';
+import { LostPet } from '../../../lost-pets/models/lost-pet.model';
 
 @Component({
   selector: 'app-alert-detail',
@@ -59,7 +59,7 @@ export class AlertDetailComponent {
       return;
     }
 
-    const base = this.alert.reportType === 'lost' ? '/animales-perdidos' : '/animales-encontrados';
+    const base = this.alert.reportType === 'lost' ? '/app/animales-perdidos' : '/app/animales-encontrados';
     this.router.navigate([base], { queryParams: { ref: this.alert.reportId } });
   }
 

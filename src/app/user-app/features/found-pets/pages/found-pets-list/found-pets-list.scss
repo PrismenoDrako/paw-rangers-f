@@ -196,12 +196,12 @@
 
 // CTA Section - Completamente Responsivo
 .cta-section {
-  background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+  background: linear-gradient(135deg, #294374 0%, #1e3050 100%);
   border-radius: 12px;
   padding: 24px 20px;
   text-align: center;
   margin: 24px 0 20px 0;
-  border: 1px solid rgba(59, 130, 246, 0.1);
+  border: 1px solid rgba(41, 67, 116, 0.1);
   
   @media (max-width: 374px) {
     padding: 18px 16px;
@@ -239,7 +239,7 @@
 }
 
 .cta-title {
-  color: #1f2937;
+  color: white;
   font-size: 18px;
   font-weight: 700;
   margin: 0 0 8px 0;
@@ -267,7 +267,7 @@
 }
 
 .cta-description {
-  color: #6b7280;
+  color: rgba(255, 255, 255, 0.9);
   font-size: 14px;
   margin: 0 0 16px 0;
   line-height: 1.4;
@@ -291,9 +291,9 @@
 }
 
 .cta-btn {
-  background: linear-gradient(135deg, #3b82f6, #2563eb);
-  color: white;
-  border: none;
+  background: white;
+  color: #294374;
+  border: 2px solid white;
   border-radius: 10px;
   padding: 12px 20px;
   font-size: 14px;
@@ -304,7 +304,7 @@
   justify-content: center;
   gap: 6px;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   min-height: 44px;
   
   @media (max-width: 374px) {
@@ -346,9 +346,10 @@
   }
   
   &:hover {
-    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    background: #f0f0f0;
+    border-color: #f0f0f0;
     transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
   }
   
   // Optimización para dispositivos táctiles
@@ -361,6 +362,18 @@
       transform: scale(0.98);
     }
   }
+}
+
+.cta-btn-primary {
+  background-color: white;
+  color: #294374;
+  border: 2px solid white;
+  font-weight: 600;
+}
+
+.cta-btn-primary:hover {
+  background-color: #f0f0f0;
+  border-color: #f0f0f0;
 }
 
 

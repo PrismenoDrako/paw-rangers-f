@@ -1,9 +1,9 @@
 import { Routes } from "@angular/router";
-import { Home } from "./pages/home/home";
+import { LandingPageComponent } from "./landing-page/landing-page.component";
 
 export const PublicRoutes: Routes = [
     {
         path: '',
-        component: Home
+        component: LandingPageComponent
     }
 ];

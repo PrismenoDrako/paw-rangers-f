@@ -1,0 +1,84 @@
+$blue: #294374;
+$bg: #f5f7fb;
+$text: #1f2d3d;
+
+.admin-shell {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  min-height: 100vh;
+  background: $bg;
+  color: $text;
+}
+
+.admin-sidebar {
+  background: $blue;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  padding: 24px;
+  gap: 16px;
+
+  .brand {
+    font-weight: 700;
+    letter-spacing: 0.5px;
+  }
+
+  nav {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    a {
+      color: #dfe7fb;
+      text-decoration: none;
+      padding: 10px 12px;
+      border-radius: 10px;
+      transition: background 0.2s, color 0.2s;
+      cursor: pointer;
+
+      &.active {
+        background: rgba(255, 255, 255, 0.12);
+        color: #fff;
+        font-weight: 600;
+      }
+
+      &:hover:not(.active) {
+        background: rgba(255, 255, 255, 0.08);
+      }
+
+      &[disabled] {
+        opacity: 0.4;
+        cursor: not-allowed;
+      }
+    }
+  }
+}
+
+.admin-main {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.admin-topbar {
+  height: 64px;
+  padding: 0 24px;
+  background: #fff;
+  border-bottom: 1px solid #e5e9f2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  .title {
+    font-weight: 700;
+    color: $blue;
+  }
+
+  .session {
+    color: #6b7a90;
+  }
+}
+
+.admin-content {
+  padding: 24px;
+}

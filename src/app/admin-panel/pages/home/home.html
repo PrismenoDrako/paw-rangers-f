@@ -1,1 +1,144 @@
-<p>home Admin works!</p>
+<div class="dash">
+  <div class="dash-header">
+    <div>
+      <h1>Dashboard</h1>
+      <p>Métricas clave del ecosistema Paw Rangers</p>
+    </div>
+  </div>
+
+  <!-- Sección de USUARIOS -->
+  <section class="section">
+    <h2 class="section-title">Usuarios</h2>
+    
+    <!-- Métricas de usuarios -->
+    <div class="metrics">
+      <p-card *ngFor="let m of userMetrics" class="metric-card">
+        <i class="pi {{ m.icon }} metric-icon"></i>
+        <div class="metric-label">{{ m.label }}</div>
+        <div class="metric-value">{{ m.value }}</div>
+        <div class="metric-sub">{{ m.subtitle }}</div>
+      </p-card>
+    </div>
+
+    <!-- KPI de usuarios (gráfico lineal) -->
+    <div class="panel">
+      <div class="panel-header">
+        <h3>KPI de Usuarios</h3>
+        <p>Crecimiento de usuarios registrados</p>
+      </div>
+      <div class="panel-body chart-holder">
+        <p-chart type="line" [data]="userKpiChartData" [options]="userKpiChartOptions"></p-chart>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sección de ALERTAS GENERALES -->
+  <section class="section">
+    <h2 class="section-title">Alertas - Resumen General</h2>
+    
+    <!-- Métricas de alertas activas/resueltas -->
+    <div class="metrics">
+      <p-card *ngFor="let m of alertMetrics" class="metric-card">
+        <i class="pi {{ m.icon }} metric-icon"></i>
+        <div class="metric-label">{{ m.label }}</div>
+        <div class="metric-value">{{ m.value }}</div>
+        <div class="metric-sub">{{ m.subtitle }}</div>
+      </p-card>
+    </div>
+
+    <!-- Gráfico comparativo alertas activas vs resueltas -->
+    <div class="panel">
+      <div class="panel-header">
+        <h3>Alertas activas vs resueltas</h3>
+        <p>Comparativa mensual</p>
+      </div>
+      <div class="panel-body chart-holder">
+        <p-chart type="line" [data]="alertsCompareChartData" [options]="alertsCompareChartOptions"></p-chart>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sección de ALERTAS POR TIPO -->
+  <section class="section">
+    <h2 class="section-title">Alertas - Detalle por Tipo</h2>
+    
+    <!-- Métricas de alertas por tipo -->
+    <div class="metrics">
+      <p-card *ngFor="let m of alertTypeMetrics" class="metric-card">
+        <i class="pi {{ m.icon }} metric-icon"></i>
+        <div class="metric-label">{{ m.label }}</div>
+        <div class="metric-value">{{ m.value }}</div>
+        <div class="metric-sub">{{ m.subtitle }}</div>
+      </p-card>
+    </div>
+
+    <!-- Gráficos de dona (mitad/mitad) -->
+    <div class="split-charts">
+      <div class="panel half">
+        <div class="panel-header">
+          <h3>Alertas de Hallazgo</h3>
+          <p>Distribución por estado</p>
+        </div>
+        <div class="panel-body chart-holder-pie">
+          <p-chart type="doughnut" [data]="hallazgoChartData" [options]="pieChartOptions"></p-chart>
+        </div>
+      </div>
+
+      <div class="panel half">
+        <div class="panel-header">
+          <h3>Alertas de Desaparición</h3>
+          <p>Distribución por estado</p>
+        </div>
+        <div class="panel-body chart-holder-pie">
+          <p-chart type="doughnut" [data]="desaparicionChartData" [options]="pieChartOptions"></p-chart>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sección de GESTIÓN DE USUARIOS (TABLA) -->
+  <section class="section">
+    <h2 class="section-title">Gestión de Usuarios</h2>
+    
+    <div class="panel">
+      <div class="panel-body">
+        <p-table [value]="users" [paginator]="true" [rows]="10" [tableStyle]="{ 'min-width': '60rem' }">
+          <ng-template #header>
+            <tr>
+              <th>Usuario</th>
+              <th>Rol</th>
+              <th>Reportes</th>
+              <th>Estado</th>
+              <th>Acciones</th>
+            </tr>
+          </ng-template>
+          <ng-template #body let-user>
+            <tr>
+              <td>
+                <div class="user-cell">
+                  <div class="user-name">{{ user.name }}</div>
+                  <div class="user-email">{{ user.email }}</div>
+                </div>
+              </td>
+              <td>
+                <p-tag [value]="user.role" [severity]="roleSeverity(user.role)"></p-tag>
+              </td>
+              <td>
+                <span class="reports-count">{{ user.reports }}</span>
+              </td>
+              <td>
+                <p-tag [value]="user.status" [severity]="statusSeverity(user.status)"></p-tag>
+              </td>
+              <td>
+                <div class="actions">
+                  <button pButton icon="pi pi-eye" class="p-button-text p-button-sm" (click)="viewUser(user.id)" title="Ver detalles"></button>
+                  <button pButton [icon]="user.status === 'Activo' ? 'pi pi-ban' : 'pi pi-check'" class="p-button-text p-button-sm" (click)="toggleUserStatus(user)" [title]="user.status === 'Activo' ? 'Suspender' : 'Activar'"></button>
+                </div>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+    </div>
+  </section>
+</div>

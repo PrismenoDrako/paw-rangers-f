@@ -1,0 +1,79 @@
+<div class="page">
+  <div class="page-header">
+    <div>
+      <h1>Moderación de alertas</h1>
+      <p>Control de contenido y cierres</p>
+    </div>
+    <div class="header-actions">
+      <button pButton label="Exportar" icon="pi pi-download" class="p-button-text p-button-sm"></button>
+    </div>
+  </div>
+
+  <div class="filters">
+    <span class="p-input-icon-left">
+      <i class="pi pi-search"></i>
+      <input pInputText type="text" placeholder="Buscar por título, ID o zona" [(ngModel)]="searchTerm" />
+    </span>
+
+    <p-select
+      [options]="typeOptions"
+      [(ngModel)]="selectedType"
+      placeholder="Tipo"
+      optionLabel="label"
+      optionValue="value"
+      [style]="{ width: '150px' }"
+    ></p-select>
+    <p-select
+      [options]="statusOptions"
+      [(ngModel)]="selectedStatus"
+      placeholder="Estado"
+      optionLabel="label"
+      optionValue="value"
+      [style]="{ width: '170px' }"
+    ></p-select>
+  </div>
+
+  <p-table
+    [value]="filteredAlerts"
+    [rows]="6"
+    [paginator]="true"
+    [rowsPerPageOptions]="[6, 10, 20]"
+    [responsiveLayout]="'stack'"
+    [breakpoint]="'960px'"
+  >
+    <ng-template pTemplate="header">
+      <tr>
+        <th>ID</th>
+        <th>Alerta</th>
+        <th>Tipo</th>
+        <th>Estado</th>
+        <th>Zona</th>
+        <th>Reportó</th>
+        <th>Creada</th>
+        <th class="actions-col">Acciones</th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-alert>
+      <tr>
+        <td class="muted">{{ alert.id }}</td>
+        <td>
+          <div class="alert-line">
+            <div class="title">{{ alert.title }}</div>
+          </div>
+        </td>
+        <td><span class="chip">{{ alert.type }}</span></td>
+        <td><p-tag [value]="alert.status" [severity]="statusSeverity(alert.status)"></p-tag></td>
+        <td class="muted">{{ alert.zone }}</td>
+        <td>{{ alert.reporter }}</td>
+        <td class="muted">{{ alert.createdAt }}</td>
+        <td class="actions">
+          <button pButton icon="pi pi-eye" class="p-button-text p-button-sm" aria-label="Ver"></button>
+          <button pButton icon="pi pi-check" label="Aprobar" class="p-button-text p-button-sm" (click)="approve(alert)"></button>
+          <button pButton icon="pi pi-times" label="Rechazar" class="p-button-text p-button-sm" (click)="reject(alert)"></button>
+          <button pButton icon="pi pi-check-circle" label="Resolver" class="p-button-text p-button-sm" (click)="resolve(alert)"></button>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>

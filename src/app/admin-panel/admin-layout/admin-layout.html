@@ -1,1 +1,19 @@
-<p>admin-layout works!</p>
+<div class="admin-shell">
+  <aside class="admin-sidebar">
+    <div class="brand">Paw Rangers · Admin</div>
+    <nav>
+      <a routerLink="/admin" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Dashboard</a>
+    </nav>
+  </aside>
+
+  <div class="admin-main">
+    <header class="admin-topbar">
+      <div class="title">Panel de administración</div>
+      <div class="session">Administrador</div>
+    </header>
+
+    <section class="admin-content">
+      <router-outlet></router-outlet>
+    </section>
+  </div>
+</div>

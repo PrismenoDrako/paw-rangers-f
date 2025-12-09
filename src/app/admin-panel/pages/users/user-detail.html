@@ -1,0 +1,68 @@
+<div class="page">
+  <div class="page-header">
+    <div>
+      <h1>Detalle de usuario</h1>
+      <p>{{ user.id }} · {{ user.email }}</p>
+    </div>
+    <div class="actions">
+      <button
+        pButton
+        [label]="user.status === 'Activo' ? 'Suspender usuario' : 'Reactivar usuario'"
+        [icon]="user.status === 'Activo' ? 'pi pi-ban' : 'pi pi-check'"
+        class="p-button-sm"
+        (click)="toggleStatus()"
+      ></button>
+      <button pButton label="Resetear contraseña" icon="pi pi-refresh" class="p-button-text p-button-sm" (click)="resetPassword()"></button>
+    </div>
+  </div>
+
+  <div class="grid">
+    <p-card class="card info">
+      <div class="line">
+        <span class="label">Nombre</span>
+        <span class="value">{{ user.name }}</span>
+      </div>
+      <div class="line">
+        <span class="label">Rol</span>
+        <span class="value">{{ user.role }}</span>
+      </div>
+      <div class="line">
+        <span class="label">Estado</span>
+        <p-tag [value]="user.status" [severity]="statusSeverity(user.status)"></p-tag>
+      </div>
+      <div class="line">
+        <span class="label">Reportes creados</span>
+        <span class="value strong">{{ user.reportesCreados }}</span>
+      </div>
+      <div class="line">
+        <span class="label">Alta en plataforma</span>
+        <span class="value">{{ user.createdAt }}</span>
+      </div>
+      <div class="line">
+        <span class="label">Última actividad</span>
+        <span class="value">{{ user.ultimaActividad }}</span>
+      </div>
+      <div class="line">
+        <span class="label">Notas</span>
+        <span class="value">{{ user.notas }}</span>
+      </div>
+    </p-card>
+
+    <p-card class="card activity">
+      <div class="activity-header">
+        <div>
+          <h3>Actividad reciente</h3>
+          <p>Últimas acciones en el sistema</p>
+        </div>
+        <button pButton label="Ver historial completo" icon="pi pi-clock" class="p-button-text p-button-sm"></button>
+      </div>
+      <div class="activity-list">
+        <div class="item" *ngFor="let item of recentActivity">
+          <div class="type">{{ item.type }}</div>
+          <div class="label">{{ item.label }}</div>
+          <div class="time">{{ item.time }}</div>
+        </div>
+      </div>
+    </p-card>
+  </div>
+</div>

@@ -1,0 +1,58 @@
+<div class="page">
+  <div class="page-header">
+    <div>
+      <h1>Detalle de alerta</h1>
+      <p>{{ alert.id }} · {{ alert.zone }}</p>
+    </div>
+    <div class="actions">
+      <button pButton label="Aprobar" icon="pi pi-check" class="p-button-sm" (click)="approve()"></button>
+      <button pButton label="Rechazar" icon="pi pi-times" class="p-button-text p-button-sm" (click)="reject()"></button>
+      <button pButton label="Marcar resuelta" icon="pi pi-check-circle" class="p-button-text p-button-sm" (click)="resolve()"></button>
+    </div>
+  </div>
+
+  <div class="grid">
+    <p-card class="card info">
+      <div class="line">
+        <span class="label">Título</span>
+        <span class="value">{{ alert.title }}</span>
+      </div>
+      <div class="line">
+        <span class="label">Tipo</span>
+        <span class="value">{{ alert.type }}</span>
+      </div>
+      <div class="line">
+        <span class="label">Estado</span>
+        <p-tag [value]="alert.status" [severity]="statusSeverity(alert.status)"></p-tag>
+      </div>
+      <div class="line">
+        <span class="label">Reportó</span>
+        <span class="value">{{ alert.reporter }}</span>
+      </div>
+      <div class="line">
+        <span class="label">Creada</span>
+        <span class="value">{{ alert.createdAt }}</span>
+      </div>
+      <div class="line">
+        <span class="label">Descripción</span>
+        <span class="value">{{ alert.description }}</span>
+      </div>
+    </p-card>
+
+    <p-card class="card history">
+      <div class="history-header">
+        <div>
+          <h3>Bitácora</h3>
+          <p>Pasos de revisión y acciones</p>
+        </div>
+        <button pButton label="Añadir nota interna" icon="pi pi-pencil" class="p-button-text p-button-sm"></button>
+      </div>
+      <div class="history-list">
+        <div class="item" *ngFor="let step of history">
+          <div class="label">{{ step.label }}</div>
+          <div class="meta">{{ step.when }} · {{ step.actor }}</div>
+        </div>
+      </div>
+    </p-card>
+  </div>
+</div>

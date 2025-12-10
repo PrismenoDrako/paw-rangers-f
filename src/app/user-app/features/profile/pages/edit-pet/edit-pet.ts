@@ -6,6 +6,7 @@ import { MessageService } from 'primeng/api';
 import { PetFormComponent, Pet } from '../../components/pet-form/pet-form';
 import { MyPetsComponent } from '../../components/my-pets/my-pets';
 import { Subscription } from 'rxjs';
+import { AuthService } from '../../../../../core/services/auth.service';
 
 @Component({
   selector: 'app-edit-pet',
@@ -18,12 +19,17 @@ import { Subscription } from 'rxjs';
 export class EditPet implements OnInit, OnDestroy {
   petData: Pet | null = null;
   private routeSubscription: Subscription | null = null;
+  private storageKey = 'paw-pets:guest';
 
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private messageService: MessageService
-  ) { }
+    private messageService: MessageService,
+    private auth: AuthService
+  ) { 
+    const email = this.auth.user()?.email || 'guest';
+    this.storageKey = `paw-pets:${email}`;
+  }
 
   ngOnInit(): void {
     this.loadPetData();
@@ -36,6 +42,13 @@ export class EditPet implements OnInit, OnDestroy {
   }
 
   private loadPetData(): void {
+    const saved = localStorage.getItem(this.storageKey);
+    try {
+      MyPetsComponent.sharedPets = saved ? JSON.parse(saved) : [];
+    } catch {
+      MyPetsComponent.sharedPets = [];
+    }
+
     const petId = this.route.snapshot.paramMap.get('id');
     if (petId) {
       const id = parseInt(petId);
@@ -86,6 +99,7 @@ export class EditPet implements OnInit, OnDestroy {
         
         // Actualizar en el array
         MyPetsComponent.sharedPets[index] = updatedPet;
+        MyPetsComponent.saveToStorage(this.storageKey);
         console.log('Pet updated in array:', updatedPet);
         console.log('Current pets array:', MyPetsComponent.sharedPets);
         
@@ -112,6 +126,7 @@ export class EditPet implements OnInit, OnDestroy {
   onFormDelete(petId: number): void {
     console.log('Mascota eliminada:', petId);
     MyPetsComponent.sharedPets = MyPetsComponent.sharedPets.filter(p => p.id !== petId);
+    MyPetsComponent.saveToStorage(this.storageKey);
     this.router.navigate(['/app/perfil']);
   }
 }

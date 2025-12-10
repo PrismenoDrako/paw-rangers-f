@@ -36,7 +36,15 @@
                     </div>
                     <div class="info-item">
                         <span class="label">Celular</span>
-                        <span class="value">{{ user.phone }}</span>
+                        <span class="value">{{ user.phone || 'Pendiente' }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">Documento</span>
+                        <span class="value">{{ user.documento || 'Pendiente' }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">Dirección</span>
+                        <span class="value">{{ user.direccion || 'Pendiente' }}</span>
                     </div>
                 </div>
 

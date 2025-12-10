@@ -17,6 +17,19 @@
 
 }
 
+.notification-card--foro {
+  padding: 14px 16px;
+  gap: 14px;
+}
+
+.notification-card--foro h4 {
+  font-size: 1rem;
+}
+
+.notification-card--foro .notification-body__meta {
+  gap: 8px;
+}
+
 .notification-avatar {
   width: 70px;
   height: 70px;
@@ -100,6 +113,30 @@
   background-color: rgba(51, 68, 115, 0.08);
   border-color: rgba(51, 68, 115, 0.2);
   color: #334473;
+}
+
+.notification-avatar--evento {
+  background-color: #e7f0ff;
+  border-color: #c6dbff;
+  color: #2c6ce3;
+}
+
+.notification-avatar--servicio {
+  background-color: #ffe9df;
+  border-color: #ffc8b0;
+  color: #c6512d;
+}
+
+.notification-avatar--producto {
+  background-color: #eaf7ff;
+  border-color: #c5e6ff;
+  color: #0f6abf;
+}
+
+.notification-avatar--social {
+  background-color: #e8fff4;
+  border-color: #c0f1d8;
+  color: #238f61;
 }
 
 .avatar-icon {

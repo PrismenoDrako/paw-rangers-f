@@ -16,6 +16,7 @@ export class UbicationMapComponent implements AfterViewInit, OnDestroy {
 
   map: L.Map | null = null;
   marker: L.Marker | null = null;
+  markerIcon: L.Icon | null = null;
   mapInitialized = false;
   private addressCache: { [key: string]: string } = {};
 
@@ -40,6 +41,15 @@ export class UbicationMapComponent implements AfterViewInit, OnDestroy {
 
   private createMap(): void {
     try {
+      // Icono personalizado tipo pin (HTML + clase para que se vea siempre)
+      this.markerIcon = L.icon({
+        iconUrl: 'assets/img/ubication.png',
+        iconRetinaUrl: 'assets/img/ubication.png',
+        iconSize: [48, 64],
+        iconAnchor: [24, 64], // punta al centro inferior
+        className: 'pr-marker-img'
+      });
+
       // Función para crear el mapa con coordenadas específicas
       const createMapWithCoords = (lat: number, lng: number) => {
         // Crear mapa con opciones optimizadas
@@ -62,7 +72,8 @@ export class UbicationMapComponent implements AfterViewInit, OnDestroy {
 
         // Crear marcador arrastrable
         this.marker = L.marker([lat, lng], {
-          draggable: true
+          draggable: true,
+          icon: this.markerIcon ?? undefined
         }).addTo(this.map);
 
         // Eventos del marcador
@@ -161,7 +172,7 @@ export class UbicationMapComponent implements AfterViewInit, OnDestroy {
 
     // Usar API de Nominatim con timeout corto
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 3000); // Timeout de 3 segundos
+    const timeoutId = setTimeout(() => controller.abort(), 4000); // Timeout de 4 segundos
     
     const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=18&addressdetails=1`;
 
@@ -174,7 +185,15 @@ export class UbicationMapComponent implements AfterViewInit, OnDestroy {
       .then(response => response.json())
       .then(data => {
         clearTimeout(timeoutId);
-        const address = data.address?.road || data.address?.hamlet || data.address?.village || data.address?.city || data.display_name || 'Ubicación seleccionada';
+        const addr = data.address ?? {};
+        const parts = [
+          [addr.road, addr.house_number].filter(Boolean).join(' ').trim(),
+          addr.neighbourhood || addr.suburb || addr.hamlet,
+          addr.city || addr.town || addr.village,
+          addr.state,
+          addr.country
+        ].filter(Boolean);
+        const address = (parts.join(', ').trim()) || data.display_name || 'Ubicación seleccionada';
         // Guardar en caché
         this.addressCache[cacheKey] = address;
         this.emitLocation(latitude, longitude, address);
@@ -183,7 +202,7 @@ export class UbicationMapComponent implements AfterViewInit, OnDestroy {
         clearTimeout(timeoutId);
         console.error('Error al obtener dirección:', error);
         // En caso de error, usar un nombre genérico
-        const fallbackAddress = `${latitude.toFixed(4)}, ${longitude.toFixed(4)}`;
+        const fallbackAddress = `${latitude.toFixed(5)}, ${longitude.toFixed(5)}`;
         this.addressCache[cacheKey] = fallbackAddress;
         this.emitLocation(latitude, longitude, fallbackAddress);
       });

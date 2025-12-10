@@ -8,6 +8,7 @@ import { CardModule } from 'primeng/card';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
+import { AuthService } from '../../../../../core/services/auth.service';
 
 export interface Ubication {
   id: string;
@@ -41,6 +42,7 @@ export class UbicationFormComponent implements OnInit {
   isSaving = false;
   isEditMode = false;
   editingId: string | null = null;
+  private storageKey = 'ubications:guest';
 
   locationTypeOptions = [
     { label: 'Casa', value: 'Casa', icon: 'pi pi-home' },
@@ -51,8 +53,12 @@ export class UbicationFormComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private messageService: MessageService
-  ) {}
+    private messageService: MessageService,
+    private auth: AuthService
+  ) {
+    const email = this.auth.user()?.email || 'guest';
+    this.storageKey = `ubications:${email}`;
+  }
 
   ngOnInit(): void {
     this.initializeForm();
@@ -102,7 +108,7 @@ export class UbicationFormComponent implements OnInit {
       const finalAddress = fullAddress?.trim() || this.locationData.address || '';
       
       try {
-        const saved = localStorage.getItem('ubications');
+        const saved = localStorage.getItem(this.storageKey);
         const ubications = saved ? JSON.parse(saved) : [];
         
         if (this.isEditMode && this.editingId) {
@@ -134,7 +140,7 @@ export class UbicationFormComponent implements OnInit {
           }
         }
         
-        localStorage.setItem('ubications', JSON.stringify(ubications));
+        localStorage.setItem(this.storageKey, JSON.stringify(ubications));
         this.isSaving = false;
         
         this.messageService.add({

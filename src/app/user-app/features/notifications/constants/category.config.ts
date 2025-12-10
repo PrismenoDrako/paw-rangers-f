@@ -90,6 +90,32 @@ export const CATEGORY_CONFIG: Record<string, CategoryConfig> = {
     pillClass: 'meta-pill--neutral',
     icon: 'clock'
   },
+  evento: {
+    key: 'evento',
+    label: 'Evento',
+    pillClass: 'meta-pill--alert',
+    icon: 'alert'
+  },
+  producto: {
+    key: 'producto',
+    label: 'Producto',
+    pillClass: 'meta-pill--neutral',
+    icon: 'clock',
+    iconImage: 'summary.png'
+  },
+  servicio: {
+    key: 'servicio',
+    label: 'Servicio',
+    pillClass: 'meta-pill--alert',
+    icon: 'alert'
+  },
+  social: {
+    key: 'social',
+    label: 'Ayuda social',
+    pillClass: 'meta-pill--neutral',
+    icon: 'like',
+    iconImage: 'community-alert-pill.png'
+  },
   photo_update: {
     key: 'photo_update',
     label: 'Foto recibida',

@@ -3,6 +3,7 @@ export interface NotificationItem {
   message: string;
   context: string;
   image?: string;
+  ownerEmail?: string;
   timestamp: string;
   createdAt: number;
   type: 'mascota' | 'foro';
@@ -31,6 +32,7 @@ export interface NotificationSeed {
   context: string;
   date: string;
   image?: string;
+  ownerEmail?: string;
   type: 'mascota' | 'foro';
   category:
     | 'alert'

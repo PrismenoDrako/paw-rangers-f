@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { profileCompleteGuard } from '../../../core/guards/profile-complete.guard';
 
 export const lostPetsRoutes: Routes = [
     {
@@ -10,6 +11,7 @@ export const lostPetsRoutes: Routes = [
         path: 'animales-perdidos/report',
         loadComponent: () => import('./pages/lost-pet-report-d/lost-pet-report-d')
             .then(m => m.LostPetReportD),
+        canMatch: [profileCompleteGuard],
         title: 'Reportar Mascota Perdida - Paw Rangers'
     },
     {

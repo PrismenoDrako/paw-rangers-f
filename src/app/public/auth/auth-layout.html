@@ -1,0 +1,22 @@
+<div class="auth-page">
+  <a class="back-link" routerLink="/" aria-label="Volver al inicio">
+    <i class="pi pi-arrow-left"></i>
+  </a>
+  <div class="auth-card">
+    <div class="card-left">
+      <div class="halo"></div>
+      <img [src]="illustrationSrc" alt="Ilustracion Paw Rangers" class="hero-illustration" />
+    </div>
+
+    <div class="card-right">
+      <div class="form-card">
+        <div class="form-header">
+          <img src="assets/img/logo-fulltrans.png" alt="Paw Rangers" class="form-logo" />
+          <h1 *ngIf="title">{{ title }}</h1>
+          <p class="subtitle" *ngIf="subtitle">{{ subtitle }}</p>
+        </div>
+        <ng-content></ng-content>
+      </div>
+    </div>
+  </div>
+</div>

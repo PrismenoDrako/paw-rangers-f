@@ -3,7 +3,10 @@ export interface User {
   email: string;
   name: string;
   phone?: string;
+  documentId?: string;
+  address?: string;
   profileImage?: string;
+  roles?: string[];
   createdAt: Date;
   updatedAt: Date;
 }
@@ -26,6 +29,8 @@ export interface RegisterDto {
   password: string;
   name: string;
   phone?: string;
+  documentId?: string;
+  address?: string;
 }
 
 export interface AuthResponse {

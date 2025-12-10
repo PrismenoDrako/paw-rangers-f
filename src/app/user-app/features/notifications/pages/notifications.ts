@@ -8,6 +8,8 @@ import { NotificationHeaderComponent } from '../components/notification-header/n
 import { NotificationItemComponent } from '../components/notification-item/notification-item';
 import { NotificationPreferences, NotificationPreferencesService } from '../services/notification-preferences.service';
 import { NotificationGroup, NotificationItem, NotificationSeed } from '../models/notification.model';
+import { ComunicadosService } from '../services/comunicados.service';
+import { AuthService } from '../../../../core/services/auth.service';
 
 @Component({
   selector: 'app-notifications',
@@ -17,26 +19,47 @@ import { NotificationGroup, NotificationItem, NotificationSeed } from '../models
   styleUrls: ['./notifications.scss']
 })
 export class NotificationsComponent implements OnDestroy {
-  private readonly footerThreshold = 4;  private readonly previewLimit = 3;
+  private readonly footerThreshold = 4;
+  private readonly previewLimit = 3;
+  private readState = new Set<string>();
 
   showUnreadOnly = false;
   showAllPets = false;
   showAllForum = false;
 
-  petNotifications = this.createPetNotifications();
-  forumNotifications = this.createForumNotifications();
+  petNotifications: NotificationItem[] = [];
+  forumNotifications: NotificationItem[] = [];
+  selectedNotification: NotificationItem | null = null;
+  showDetail = false;
 
   preferences: NotificationPreferences = { mascotas: true, foro: true };
   private subscription: Subscription;
 
   constructor(
     private preferencesService: NotificationPreferencesService,
-    private router: Router
+    private router: Router,
+    private comunicadosService: ComunicadosService,
+    private auth: AuthService
   ) {
     this.preferences = this.preferencesService.currentPreferences;
     this.subscription = this.preferencesService.preferences$.subscribe((prefs) => {
       this.preferences = prefs;
     });
+
+    // Inicializar datasets luego de que las dependencias están listas
+    this.readState = this.loadReadState();
+    this.petNotifications = this.createPetNotifications();
+    this.forumNotifications = this.comunicadosService.list();
+    this.applyReadState(this.petNotifications);
+    this.applyReadState(this.forumNotifications);
+  }
+
+  get isAdmin(): boolean {
+    return this.auth.isAdmin();
+  }
+
+  goToComunicadosAdmin(): void {
+    this.router.navigate(['/admin/comunicados']);
   }
 
   ngOnDestroy(): void {
@@ -143,7 +166,13 @@ export class NotificationsComponent implements OnDestroy {
     }
 
     notification.read = true;
-    notification.timestamp = 'Hace instantes';
+    this.readState.add(notification.id);
+    this.saveReadState();
+    // Solo las alertas de mascotas se muestran como "Hace instantes" al abrir;
+    // los comunicados conservan su tiempo original para no alterar el histórico.
+    if (notification.type === 'mascota') {
+      notification.timestamp = 'Hace instantes';
+    }
   }
 
   openSettings(): void {
@@ -152,16 +181,26 @@ export class NotificationsComponent implements OnDestroy {
 
   openNotification(notification: NotificationItem): void {
     this.markAsRead(notification);
-    // No redirigir interacciones (foro) por ahora
     if (notification.type === 'foro') {
+      this.selectedNotification = notification;
+      this.showDetail = true;
       return;
     }
 
-    if (notification.targetUrl) {
-      this.router.navigateByUrl(notification.targetUrl);
+    if (!notification.targetUrl) {
+      return;
     }
+
+    const isExternal = /^https?:\/\//i.test(notification.targetUrl);
+    if (isExternal) {
+      window.open(notification.targetUrl, '_blank', 'noopener');
+      return;
+    }
+
+    this.router.navigateByUrl(notification.targetUrl);
   }
   private createPetNotifications(): NotificationItem[] {
+    const currentEmail = (this.auth.user()?.email || '').toLowerCase();
     const seeds: NotificationSeed[] = [
       {
         id: 'pet-1',
@@ -176,47 +215,15 @@ export class NotificationsComponent implements OnDestroy {
       },
       {
         id: 'pet-2',
-        message: 'Mascota Encontrada',
-        context: 'Vecinos reportan haber encontrado a Rocky en la clínica veterinaria del barrio.',
+        message: 'Tu mascota Rocky fue encontrada',
+        context: 'Reportan haber encontrado a Rocky en la clínica veterinaria del barrio.',
         image: 'https://i.pinimg.com/736x/74/a4/92/74a492bb7b8e5293a3be5e145fdfaf63.jpg',
         date: '2025-11-13T09:05:00',
         type: 'mascota',
         category: 'found',
         read: true,
-        targetUrl: '/app/alertas/found-1'
-      },
-      {
-        id: 'pet-3',
-        message: 'Nueva solicitud de adopción',
-        context: 'Laura preguntó por la perrita rescatada el fin de semana.',
-        image: 'adoption.png',
-        date: '2025-11-12T10:12:00',
-        type: 'mascota',
-        category: 'adoption',
-        read: false,
-        targetUrl: '/app/animales-perdidos'
-      },
-      {
-        id: 'pet-4',
-        message: 'Seguimiento de tratamiento',
-        context: 'El refugio confirmó la segunda dosis para Bruno.',
-        image: 'treatment.png',
-        date: '2025-11-11T16:40:00',
-        type: 'mascota',
-        category: 'treatment',
-        read: true,
-        targetUrl: '/app/animales-perdidos'
-      },
-      {
-        id: 'pet-5',
-        message: 'Foto recibida',
-        context: 'Familia adoptante envió actualización de Coco en su nuevo hogar.',
-        image: 'photo-update.png',
-        date: '2025-11-09T14:15:00',
-        type: 'mascota',
-        category: 'photo_update',
-        read: false,
-        targetUrl: '/app/animales-perdidos'
+        targetUrl: '/app/alertas/found-1',
+        ownerEmail: 'raulsema7@gmail.com'
       },
       {
         id: 'pet-6',
@@ -231,74 +238,13 @@ export class NotificationsComponent implements OnDestroy {
       }
     ];
 
-    return seeds.map((seed) => this.buildNotification(seed));
+    return seeds
+      .filter((seed) => !seed.ownerEmail || seed.ownerEmail.toLowerCase() === currentEmail)
+      .map((seed) => this.buildNotification(seed));
   }
 
   private createForumNotifications(): NotificationItem[] {
-    const seeds: NotificationSeed[] = [
-      {
-        id: 'forum-1',
-        message: 'Nuevo like',
-        context: 'Tu publicación "Tips para rescatar gatitos" recibió un nuevo me gusta.',
-        image: 'like.png',
-        date: '2025-11-13T10:27:00',
-        type: 'foro',
-        category: 'like',
-        read: false
-      },
-      {
-        id: 'forum-2',
-        message: 'Nueva Respuesta',
-        context: 'María comentó tu guía para crear campañas de búsqueda efectivas.',
-        image: 'reply.png',
-        date: '2025-11-13T05:10:00',
-        type: 'foro',
-        category: 'reply',
-        read: true
-      },
-      {
-        id: 'forum-3',
-        message: 'Nueva mención',
-        context: 'Carlos te mencionó en el hilo "Mejores veterinarios".',
-        image: 'reply.png',
-        date: '2025-11-12T11:20:00',
-        type: 'foro',
-        category: 'mention',
-        read: false
-      },
-      {
-        id: 'forum-4',
-        message: 'Resumen semanal',
-        context: 'Tu publicación "Checklist de rescate" sumó 12 nuevos likes.',
-        image: 'like.png',
-        date: '2025-11-11T08:00:00',
-        type: 'foro',
-        category: 'summary',
-        read: true
-      },
-      {
-        id: 'forum-5',
-        message: 'Nuevo mensaje directo',
-        context: 'Andrea quiere saber cómo organizar brigadas en su barrio.',
-        image: 'reply.png',
-        date: '2025-11-09T19:45:00',
-        type: 'foro',
-        category: 'message',
-        read: false
-      },
-      {
-        id: 'forum-6',
-        message: 'Encuesta disponible',
-        context: 'Vota por el próximo tema del foro comunitario.',
-        image: 'like.png',
-        date: '2025-11-05T13:30:00',
-        type: 'foro',
-        category: 'poll',
-        read: true
-      }
-    ];
-
-    return seeds.map((seed) => this.buildNotification(seed));
+    return this.comunicadosService.list();
   }
 
   private buildNotification(seed: NotificationSeed): NotificationItem {
@@ -367,5 +313,44 @@ export class NotificationsComponent implements OnDestroy {
 
     const diffDays = Math.round(diffHours / 24);
     return `Hace ${diffDays} día${diffDays === 1 ? '' : 's'}`;
+  }
+
+  private applyReadState(list: NotificationItem[]): void {
+    list.forEach((item) => {
+      if (this.readState.has(item.id)) {
+        item.read = true;
+      }
+    });
+  }
+
+  private storageKey(): string {
+    const email = (this.auth.user()?.email || 'guest').toLowerCase();
+    return `pawrangers.notifications.read:${email}`;
+  }
+
+  private loadReadState(): Set<string> {
+    try {
+      const raw = localStorage.getItem(this.storageKey());
+      if (!raw) {
+        return new Set<string>();
+      }
+      const parsed = JSON.parse(raw);
+      return Array.isArray(parsed) ? new Set<string>(parsed) : new Set<string>();
+    } catch {
+      return new Set<string>();
+    }
+  }
+
+  private saveReadState(): void {
+    try {
+      localStorage.setItem(this.storageKey(), JSON.stringify(Array.from(this.readState)));
+    } catch {
+      // ignore storage errors
+    }
+  }
+
+  closeDetail(): void {
+    this.showDetail = false;
+    this.selectedNotification = null;
   }
 }

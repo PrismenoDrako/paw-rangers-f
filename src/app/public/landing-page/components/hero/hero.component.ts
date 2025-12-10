@@ -16,6 +16,7 @@ import { ButtonModule } from 'primeng/button';
           <p class="hero-description">Una comunidad dedicada a reunir mascotas perdidas con sus familias</p>
           
           <div class="hero-buttons">
+            <button pButton type="button" label="Empezar" class="p-button-lg hero-btn-primary" (click)="login()"></button>
             <button pButton type="button" label="Registrarse gratis" class="p-button-lg hero-btn-secondary" (click)="register()"></button>
           </div>
         </div>
@@ -238,6 +239,10 @@ export class HeroComponent {
 
   viewAlerts(): void {
     this.router.navigate(['/app/home']);
+  }
+
+  login(): void {
+    this.router.navigate(['/auth']);
   }
 
   register(): void {

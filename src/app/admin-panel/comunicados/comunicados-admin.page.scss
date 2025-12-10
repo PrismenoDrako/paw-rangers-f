@@ -1,0 +1,35 @@
+.com-admin-page {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: clamp(16px, 4vw, 32px);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.back-link {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(51, 68, 115, 0.25);
+  background: #ffffff;
+  color: #334473;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 8px 14px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+
+  .icon {
+    font-size: 18px;
+    line-height: 1;
+  }
+
+  &:hover {
+    background-color: rgba(51, 68, 115, 0.06);
+    transform: translateY(-1px);
+    box-shadow: 0 12px 18px rgba(0, 0, 0, 0.1);
+  }
+}

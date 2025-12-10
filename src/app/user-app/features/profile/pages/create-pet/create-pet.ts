@@ -5,6 +5,7 @@ import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { PetFormComponent, Pet } from '../../components/pet-form/pet-form';
 import { MyPetsComponent } from '../../components/my-pets/my-pets';
+import { AuthService } from '../../../../../core/services/auth.service';
 
 @Component({
   selector: 'app-create-pet',
@@ -15,7 +16,12 @@ import { MyPetsComponent } from '../../components/my-pets/my-pets';
   providers: [MessageService]
 })
 export class CreatePet {
-  constructor(private router: Router, private messageService: MessageService) { }
+  private storageKey = 'paw-pets:guest';
+
+  constructor(private router: Router, private messageService: MessageService, private auth: AuthService) { 
+    const email = this.auth.user()?.email || 'guest';
+    this.storageKey = `paw-pets:${email}`;
+  }
 
   onFormSubmit(petData: Pet): void {
     console.log('Nueva mascota creada:', petData);
@@ -36,8 +42,15 @@ export class CreatePet {
   }
 
   private savePetData(petData: Pet): void {
+    const saved = localStorage.getItem(this.storageKey);
+    try {
+      MyPetsComponent.sharedPets = saved ? JSON.parse(saved) : [];
+    } catch {
+      MyPetsComponent.sharedPets = [];
+    }
+
     // Generar un nuevo ID para la mascota
-    const newId = Math.max(...MyPetsComponent.sharedPets.map(p => p.id || 0)) + 1;
+    const newId = (Math.max(0, ...MyPetsComponent.sharedPets.map(p => p.id || 0)) || 0) + 1;
     const newPet: Pet = {
       ...petData,
       id: newId,
@@ -46,6 +59,7 @@ export class CreatePet {
     
     // Agregar a la lista de mascotas compartida
     MyPetsComponent.sharedPets.push(newPet);
+    MyPetsComponent.saveToStorage(this.storageKey);
     
     this.messageService.add({
       severity: 'success',

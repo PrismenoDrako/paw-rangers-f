@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { AvatarModule } from 'primeng/avatar';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
+import { AuthService } from '../../../../../core/services/auth.service';
 
 
 @Component({
@@ -25,24 +26,40 @@ export class AccountInfoComponent implements OnInit {
 
     // Datos compartidos que pueden ser actualizados desde account-form
     static sharedUser: any = {
-        nombre: 'Daniel',
-        apellidoPaterno: 'Vega Bazán',
-        apellidoMaterno: 'Llontop',
-        username: 'danielvegabazan',
-        documento: '12345678',
-        email: 'danielino@gmail.com',
-        phone: '+51 927 165 937',
-        direccion: 'Urb Lourdes Mz A Dto 101',
-        currentPassword: 'Daniel123_',
+        nombre: '',
+        apellidoPaterno: '',
+        apellidoMaterno: '',
+        username: '',
+        documento: '',
+        email: '',
+        phone: '',
+        direccion: '',
+        currentPassword: '',
         profileImage: null
     };
 
     user: any = {};
     profileImageUrl: string = '';
 
-    constructor(private router: Router) { }
+    constructor(private router: Router, private auth: AuthService) { }
 
     ngOnInit(): void {
+        const authUser = this.auth.user();
+        const mappedUser = {
+            nombre: authUser?.name ?? '',
+            apellidoPaterno: '',
+            apellidoMaterno: '',
+            username: authUser?.email?.split('@')[0] ?? '',
+            documento: authUser?.documentId ?? '',
+            email: authUser?.email ?? '',
+            phone: authUser?.phone ?? '',
+            direccion: authUser?.address ?? '',
+            currentPassword: '',
+            profileImage: authUser?.profileImage ?? null
+        };
+
+        AccountInfoComponent.sharedUser = { ...AccountInfoComponent.sharedUser, ...mappedUser };
+
         // Obtener los datos del usuario compartidos
         this.user = AccountInfoComponent.sharedUser;
         // Obtener la imagen de perfil si existe

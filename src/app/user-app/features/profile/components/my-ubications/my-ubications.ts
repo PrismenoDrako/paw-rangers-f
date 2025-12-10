@@ -11,6 +11,7 @@ import { MessageService, ConfirmationService } from 'primeng/api';
 // Components
 import { UbicationListItemComponent } from '../ubication-list-item/ubication-list-item';
 import { Subject } from 'rxjs';
+import { AuthService } from '../../../../../core/services/auth.service';
 
 export interface Ubication {
   id: string;
@@ -43,11 +44,16 @@ export class MyUbicationsComponent implements OnInit, OnDestroy {
   locations: Ubication[] = [];
   isLoading = true;
   private destroy$ = new Subject<void>();
+  private storageKey = 'ubications:guest';
   
   constructor(
     private router: Router,
-    private messageService: MessageService
-  ) { }
+    private messageService: MessageService,
+    private auth: AuthService
+  ) { 
+    const email = this.auth.user()?.email || 'guest';
+    this.storageKey = `ubications:${email}`;
+  }
 
   ngOnInit(): void {
     this.loadUbications();
@@ -64,7 +70,7 @@ export class MyUbicationsComponent implements OnInit, OnDestroy {
     // Simular delay de API
     setTimeout(() => {
       // Cargar del localStorage
-      const saved = localStorage.getItem('ubications');
+      const saved = localStorage.getItem(this.storageKey);
       if (saved) {
         try {
           this.locations = JSON.parse(saved);

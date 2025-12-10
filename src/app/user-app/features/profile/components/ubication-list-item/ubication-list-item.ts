@@ -8,6 +8,7 @@ import { TooltipModule } from 'primeng/tooltip';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { AuthService } from '../../../../../core/services/auth.service';
 
 @Component({
   selector: 'app-ubication-list-item', 
@@ -30,12 +31,17 @@ export class UbicationListItemComponent {
   @Input() location: any;
   @Output() locationDeleted = new EventEmitter<string>();
   isDeleting = false;
+  private storageKey = 'ubications:guest';
   
   constructor(
     private router: Router,
     private confirmationService: ConfirmationService,
-    private messageService: MessageService
-  ) {}
+    private messageService: MessageService,
+    private auth: AuthService
+  ) {
+    const email = this.auth.user()?.email || 'guest';
+    this.storageKey = `ubications:${email}`;
+  }
   
   getIcon(): string {
     const name = this.location.name.toLowerCase();
@@ -62,11 +68,11 @@ export class UbicationListItemComponent {
         
         try {
           // Eliminar del localStorage
-          const saved = localStorage.getItem('ubications');
+          const saved = localStorage.getItem(this.storageKey);
           if (saved) {
             let ubications = JSON.parse(saved);
             ubications = ubications.filter((u: any) => u.id !== this.location.id);
-            localStorage.setItem('ubications', JSON.stringify(ubications));
+            localStorage.setItem(this.storageKey, JSON.stringify(ubications));
           }
 
           this.isDeleting = false;

@@ -7,9 +7,17 @@
     
     <ng-template pTemplate="content">
         <div class="grid">
-            <div *ngFor="let pet of pets" class="col-12 sm:col-6 lg:col-3 xl:col-2 mb-4">
-                <app-my-pets-cards [pet]="pet" (editPet)="onPetEdit($event)"></app-my-pets-cards> 
-            </div>
+            <ng-container *ngIf="pets.length; else emptyPets">
+                <div *ngFor="let pet of pets" class="col-12 sm:col-6 lg:col-3 xl:col-2 mb-4">
+                    <app-my-pets-cards [pet]="pet" (editPet)="onPetEdit($event)"></app-my-pets-cards> 
+                </div>
+            </ng-container>
+            
+            <ng-template #emptyPets>
+                <div class="col-12 mb-3">
+                    <p class="text-color-secondary">Aún no tienes mascotas guardadas. Añade la primera:</p>
+                </div>
+            </ng-template>
             
             <div class="col-12 sm:col-6 lg:col-3 xl:col-2 mb-4">
                 <app-add-pet-card (addClicked)="onAddPet()"></app-add-pet-card>

@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { UbicationMapComponent } from '../../components/ubication-map/ubication-map';
 import { UbicationFormComponent } from '../../components/ubication-form/ubication-form';
+import { AuthService } from '../../../../../core/services/auth.service';
 
 export interface Ubication {
   id: string;
@@ -27,11 +28,16 @@ export class EditUbicationPage implements OnInit {
   locationId: string | null = null;
   ubication: Ubication | null = null;
   isLoading = true;
+  private storageKey = 'ubications:guest';
 
   constructor(
     private route: ActivatedRoute,
-    private router: Router
-  ) {}
+    private router: Router,
+    private auth: AuthService
+  ) {
+    const email = this.auth.user()?.email || 'guest';
+    this.storageKey = `ubications:${email}`;
+  }
 
   ngOnInit(): void {
     this.locationId = this.route.snapshot.paramMap.get('id');
@@ -49,7 +55,7 @@ export class EditUbicationPage implements OnInit {
     
     // Simular delay
     setTimeout(() => {
-      const saved = localStorage.getItem('ubications');
+      const saved = localStorage.getItem(this.storageKey);
       if (saved) {
         try {
           const ubications = JSON.parse(saved);

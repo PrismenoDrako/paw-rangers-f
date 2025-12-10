@@ -10,6 +10,7 @@ import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, AbstractControl, ValidationErrors } from '@angular/forms';
 import { AccountInfoComponent } from '../../components/account-info/account-info';
+import { AuthService } from '../../../../../core/services/auth.service';
 
 
 @Component({
@@ -41,20 +42,36 @@ export class EditProfilePage implements OnInit {
         confirm: false
     };
 
-    constructor(private router: Router, private fb: FormBuilder, private messageService: MessageService) {}
+    constructor(
+        private router: Router,
+        private fb: FormBuilder,
+        private messageService: MessageService,
+        private auth: AuthService
+    ) {}
 
     ngOnInit(): void {
         // Cargar la imagen de perfil guardada si existe
         const user = AccountInfoComponent.sharedUser;
-        this.profileImageUrl = user.profileImage || '';
+        const authUser = this.auth.user();
+        this.profileImageUrl = authUser?.profileImage || user.profileImage || '';
         
         this.initializeProfileForm();
         this.initializePasswordForm();
     }
 
     private initializeProfileForm(): void {
-        // Obtener los datos compartidos desde account-info
-        const user = AccountInfoComponent.sharedUser;
+        // Obtener los datos del usuario, priorizando lo que viene de auth
+        const authUser = this.auth.user();
+        const user = {
+            ...AccountInfoComponent.sharedUser,
+            nombre: authUser?.name ?? AccountInfoComponent.sharedUser.nombre,
+            documento: authUser?.documentId ?? AccountInfoComponent.sharedUser.documento,
+            phone: authUser?.phone ?? AccountInfoComponent.sharedUser.phone,
+            direccion: authUser?.address ?? AccountInfoComponent.sharedUser.direccion,
+            email: authUser?.email ?? AccountInfoComponent.sharedUser.email,
+            username: authUser?.email?.split('@')[0] ?? AccountInfoComponent.sharedUser.username,
+        };
+
         this.profileForm = this.fb.group({
             nombre: [user.nombre, Validators.required],
             apellidoPaterno: [user.apellidoPaterno, Validators.required],
@@ -175,10 +192,10 @@ export class EditProfilePage implements OnInit {
     }
 
     handleSaveAll(): void {
-        // Permitir guardar solo el perfil si es válido
+        // Permitir guardar solo el perfil si es v?lido
         if (this.profileForm.valid) {
             const profileData = this.profileForm.value;
-            
+
             console.log('Guardando perfil:', profileData);
 
             // Actualizar los datos compartidos con los nuevos valores del perfil
@@ -188,18 +205,29 @@ export class EditProfilePage implements OnInit {
                 profileImage: this.profileImageUrl || null
             };
 
-            // Si el formulario de contraseña también es válido, guardar la nueva contraseña
+            // Persistir en AuthService (mock/localStorage) para que se refleje en perfil y guardias
+            this.auth.updateProfile({
+                name: profileData.nombre,
+                documentId: profileData.documento,
+                phone: profileData.phone,
+                address: profileData.direccion,
+                email: profileData.email,
+                profileImage: this.profileImageUrl || undefined,
+                password: this.passwordForm.valid && this.passwordForm.get('newPassword')?.value
+                    ? this.passwordForm.get('newPassword')?.value
+                    : undefined
+            });
+
+            // Si el formulario de contrase?a tambi?n es v?lido, guardar la nueva contrase?a
             if (this.passwordForm.valid) {
                 const newPassword = this.passwordForm.get('newPassword')?.value;
-                console.log('Guardando nueva contraseña');
-                
-                // Actualizar la contraseña en los datos compartidos
+                console.log('Guardando nueva contrase?a');
                 AccountInfoComponent.sharedUser.currentPassword = newPassword;
             }
 
             this.messageService.add({
                 severity: 'success',
-                summary: 'Éxito',
+                summary: '?xito',
                 detail: 'Perfil actualizado correctamente',
                 life: 1500
             });
@@ -207,7 +235,7 @@ export class EditProfilePage implements OnInit {
             setTimeout(() => this.router.navigate(['/app/perfil']), 1500);
         } else {
             this.profileForm.markAllAsTouched();
-            console.warn('Formulario de perfil inválido.');
+            console.warn('Formulario de perfil inv?lido.');
         }
     }
 

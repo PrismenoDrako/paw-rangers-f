@@ -9,6 +9,7 @@ import { ButtonModule } from 'primeng/button';
 import { FloatLabelModule } from 'primeng/floatlabel'; 
 import { AvatarModule } from 'primeng/avatar';
 import { AccountInfoComponent } from '../account-info/account-info';
+import { AuthService } from '../../../../../core/services/auth.service';
 
 
 @Component({
@@ -34,7 +35,7 @@ export class AccountFormComponent implements OnInit {
     //Evento que notifica al componente padre cuando se cancela la edición
     @Output() formCancelled = new EventEmitter<void>();
 
-    constructor(private fb: FormBuilder) {}
+    constructor(private fb: FormBuilder, private auth: AuthService) {}
 
     ngOnInit(): void {
         this.initializeForm();
@@ -62,6 +63,15 @@ export class AccountFormComponent implements OnInit {
                 ...AccountInfoComponent.sharedUser,
                 ...this.profileForm.value
             };
+            // Persistir en AuthService mock/local
+            const formValue = this.profileForm.value;
+            this.auth.updateProfile({
+                name: formValue.nombre,
+                documentId: formValue.documento,
+                phone: formValue.phone,
+                address: formValue.direccion,
+                email: formValue.email,
+            });
             // Emitir el evento con los datos del formulario al padre
             this.formSubmitted.emit(this.profileForm.value);
         } else {

@@ -19,6 +19,7 @@
     justify-content: center;
     width: 60px;
     height: 60px;
+    background: transparent;
     text-decoration: none;
     color: #294374;
     transition: all 0.2s ease;
@@ -30,6 +31,7 @@
     -webkit-tap-highlight-color: transparent;
     outline: none;
     border: none;
+    cursor: pointer;
     
     &:focus {
       outline: none;
@@ -50,6 +52,14 @@
       width: 60px;
       height: 60px;
       object-fit: contain;
+    }
+
+    &.logout {
+      color: #dc2626;
+
+      &:hover {
+        background: rgba(220, 38, 38, 0.08);
+      }
     }
   }
 }

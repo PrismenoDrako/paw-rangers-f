@@ -21,7 +21,7 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
             break;
           case 401:
             errorMessage = 'No autorizado';
-            router.navigate(['/login']);
+            router.navigate(['/auth']);
             break;
           case 403:
             errorMessage = 'Acceso prohibido';

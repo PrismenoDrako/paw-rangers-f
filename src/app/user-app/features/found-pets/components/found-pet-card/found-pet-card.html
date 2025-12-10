@@ -1,41 +1,31 @@
 <div class="found-pet-card">
-  <div class="card-image-container">
-    <img [src]="foundPet.image" [alt]="foundPet.type + ' encontrado'" class="pet-image" />
-    
-    @if (foundPet.hasCollar) {
-      <div class="collar-badge">
-        <i class="pi pi-verified"></i>
-        <span>Con collar</span>
-      </div>
-    }
-    
-    <button class="favorite-btn" (click)="toggleFavorite()" [class.active]="isFavorite">
+  <div class="pet-image">
+    <img [src]="foundPet.image" [alt]="foundPet.type + ' encontrado'" />
+    <div class="favorite-icon">
       <i class="pi pi-heart"></i>
-    </button>
+    </div>
   </div>
-
-  <div class="card-content">
-    <div class="pet-header">
-      <h3 class="pet-title">{{ foundPet.type }}</h3>
-      <p class="pet-breed">{{ foundPet.breed || 'Raza no especificada' }}</p>
-    </div>
-    
-    <p class="pet-description">{{ foundPet.description }}</p>
-    
-    <div class="pet-info">
-      <div class="info-item">
-        <i class="pi pi-map-marker"></i>
-        <span>{{ foundPet.location }}</span>
-      </div>
+  
+  <div class="pet-info">
+    <div class="pet-details">
+      <h3 class="pet-name">{{ foundPet.breed }}</h3>
+      <p class="pet-breed">{{ foundPet.type }}</p>
+      <p class="pet-description">{{ foundPet.description }}</p>
       
-      <div class="info-item">
-        <i class="pi pi-clock"></i>
-        <span>{{ getTimeAgo(foundPet.foundDate) }}</span>
+      <div class="location-time-info">
+        <div class="location-info">
+          <i class="pi pi-map-marker"></i>
+          <span>{{ foundPet.location }}</span>
+        </div>
+        <div class="time-info">
+          <i class="pi pi-clock"></i>
+          <span>{{ getTimeAgo(foundPet.foundDate) }}</span>
+        </div>
       </div>
     </div>
     
-    <div class="card-actions">
-      <button class="btn btn-primary btn-full" (click)="onContact()">
+    <div class="pet-footer">
+      <button class="contact-btn" (click)="onContact()">
         <i class="pi pi-phone"></i>
         Contactar
       </button>

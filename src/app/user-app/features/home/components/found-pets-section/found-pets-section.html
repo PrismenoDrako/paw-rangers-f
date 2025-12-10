@@ -79,4 +79,72 @@
     </p-carousel>
     </div>
   </div>
+
+  <!-- MODAL DE DETALLES DE MASCOTA ENCONTRADA -->
+  <p-dialog [(visible)]="showDetailModal" [modal]="true" [header]="selectedPet?.breed" [style]="{ width: '100%', maxWidth: '580px' }" (onHide)="closeModal()">
+    <div *ngIf="selectedPet" class="pet-detail-modal">
+      <!-- Lado izquierdo: Imagen -->
+      <div class="modal-left">
+        <div class="modal-image">
+          <img [src]="selectedPet.image" [alt]="selectedPet.breed" />
+        </div>
+      </div>
+
+      <!-- Lado derecho: Información -->
+      <div class="modal-right">
+        <div class="location-tag">
+          <i class="pi pi-map-marker"></i>
+          {{ selectedPet.location }}
+        </div>
+
+        <div class="info-section">
+          <h4><i class="pi pi-info-circle"></i> Información del Animal</h4>
+          <div class="info-grid">
+            <div class="info-item">
+              <span class="info-label">ESPECIE / RAZA</span>
+              <span class="info-value">{{ selectedPet.type }} • {{ selectedPet.breed }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">ENCONTRADO</span>
+              <span class="info-value">Hace {{ getDaysFound(selectedPet.date) }} días</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="description">
+          {{ selectedPet.description }}
+        </div>
+
+        <div class="contact-section">
+          <h4><i class="pi pi-user"></i> Contacto del Reportante</h4>
+          <div class="contact-item">
+            <i class="pi pi-user"></i>
+            <div>
+              <span class="label">NOMBRE</span>
+              <span class="value">{{ selectedPet.contactName }}</span>
+            </div>
+          </div>
+          <div class="contact-item" *ngIf="selectedPet.contactPhone">
+            <i class="pi pi-phone"></i>
+            <div>
+              <span class="label">TELÉFONO</span>
+              <span class="value">{{ selectedPet.contactPhone }}</span>
+            </div>
+          </div>
+          <div class="contact-item" *ngIf="selectedPet.contactEmail">
+            <i class="pi pi-envelope"></i>
+            <div>
+              <span class="label">EMAIL</span>
+              <span class="value">{{ selectedPet.contactEmail }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <ng-template pTemplate="footer">
+      <button pButton label="Cerrar" icon="pi pi-times" (click)="closeModal()" class="p-button-secondary"></button>
+      <button pButton label="Llamar Ahora" icon="pi pi-phone" class="p-button"></button>
+    </ng-template>
+  </p-dialog>
 </div>

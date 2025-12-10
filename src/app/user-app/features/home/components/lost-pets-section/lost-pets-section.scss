@@ -190,3 +190,184 @@ $white: #ffffff;
     padding: 0.875rem 2rem !important;
   }
 }
+
+// Estilos para el modal de detalles
+.pet-detail-modal {
+  display: grid;
+  grid-template-columns: 160px 1fr;
+  gap: 20px;
+  align-items: flex-start;
+
+  .modal-left {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .modal-image {
+    width: 160px;
+    height: 160px;
+    border-radius: 8px;
+    overflow: hidden;
+    flex-shrink: 0;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  .modal-right {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .location-tag {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    background: #e8f0ff;
+    color: $primary-color;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    width: fit-content;
+
+    i {
+      font-size: 0.9rem;
+    }
+  }
+
+  .info-section {
+    h4 {
+      margin: 0 0 12px;
+      color: $primary-color;
+      font-size: 0.9rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      i {
+        font-size: 1rem;
+      }
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .info-item {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+
+      .info-label {
+        display: block;
+        color: #8a94a8;
+        font-size: 0.7rem;
+        font-weight: 600;
+        text-transform: uppercase;
+      }
+
+      .info-value {
+        display: block;
+        color: #2a3f5f;
+        font-size: 0.85rem;
+        font-weight: 500;
+      }
+    }
+  }
+
+  .description {
+    padding: 12px;
+    background: #f5f7fb;
+    border-left: 3px solid $primary-color;
+    border-radius: 4px;
+    color: #6b7a90;
+    font-size: 0.85rem;
+    line-height: 1.4;
+  }
+
+  .contact-section {
+    h4 {
+      margin: 0 0 12px;
+      color: $primary-color;
+      font-size: 0.9rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      i {
+        font-size: 1rem;
+      }
+    }
+
+    .contact-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 10px 12px;
+      background: #f5f7fb;
+      border-radius: 6px;
+
+      i {
+        color: $primary-color;
+        font-size: 1rem;
+        min-width: 20px;
+        margin-top: 2px;
+      }
+
+      div {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        flex: 1;
+
+        .label {
+          color: #8a94a8;
+          font-size: 0.7rem;
+          font-weight: 600;
+          text-transform: uppercase;
+        }
+
+        .value {
+          color: #2a3f5f;
+          font-size: 0.85rem;
+          font-weight: 500;
+        }
+      }
+    }
+  }
+
+  .footer-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 12px;
+    background: #f0f4ff;
+    border-radius: 6px;
+    color: $primary-color;
+    font-weight: 500;
+    font-size: 0.85rem;
+
+    i {
+      font-size: 1rem;
+    }
+  }
+}
+
+:deep(.p-dialog-header) {
+  border-bottom: 1px solid #e5e9f2;
+
+  .p-dialog-title {
+    color: $primary-color;
+    font-weight: 600;
+  }
+}

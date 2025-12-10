@@ -11,6 +11,8 @@ export interface FoundPet {
   image: string;
   description: string;
   contactName: string;
+  contactPhone?: string;
+  contactEmail?: string;
 }
 
 @Component({

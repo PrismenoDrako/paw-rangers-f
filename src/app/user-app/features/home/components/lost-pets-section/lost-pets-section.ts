@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { CarouselModule } from 'primeng/carousel';
 import { ButtonModule } from 'primeng/button';
 import { TagModule } from 'primeng/tag';
+import { DialogModule } from 'primeng/dialog';
 import { LostPetCard, type LostPet } from './components/lost-pet-card/lost-pet-card';
 import { LostSectionHeader } from './components/section-header/section-header';
 
@@ -15,6 +16,7 @@ import { LostSectionHeader } from './components/section-header/section-header';
     CarouselModule,
     ButtonModule,
     TagModule,
+    DialogModule,
     LostPetCard,
     LostSectionHeader
   ],
@@ -33,7 +35,10 @@ export class LostPetsSection implements OnInit {
       date: new Date('2024-11-28'),
       reward: 500,
       image: 'https://images.unsplash.com/photo-1633722715463-d30f4f325e24?w=400&h=300&fit=crop',
-      description: 'Perro muy amigable, responde a Max. Tiene collar azul.'
+      description: 'Perro muy amigable, responde a Max. Tiene collar azul.',
+      ownerName: 'Carlos Mendez',
+      ownerPhone: '+51 987 654 321',
+      ownerEmail: 'carlos.mendez@email.com'
     },
     {
       id: 2,
@@ -45,7 +50,10 @@ export class LostPetsSection implements OnInit {
       date: new Date('2024-11-27'),
       reward: 300,
       image: 'https://images.unsplash.com/photo-1573865526739-10c1dd7aa5b5?w=400&h=300&fit=crop',
-      description: 'Gata con ojos azules, muy asustadiza.'
+      description: 'Gata con ojos azules, muy asustadiza.',
+      ownerName: 'Laura García',
+      ownerPhone: '+51 987 111 222',
+      ownerEmail: 'laura@example.com'
     },
     {
       id: 3,
@@ -57,7 +65,10 @@ export class LostPetsSection implements OnInit {
       date: new Date('2024-11-26'),
       reward: 800,
       image: 'https://images.unsplash.com/photo-1568572933382-74d440642117?w=400&h=300&fit=crop',
-      description: 'Husky de ojos azules, muy activo.'
+      description: 'Husky de ojos azules, muy activo.',
+      ownerName: 'Roberto Silva',
+      ownerPhone: '+51 995 222 333',
+      ownerEmail: 'rsilva@example.com'
     },
     {
       id: 4,
@@ -69,7 +80,10 @@ export class LostPetsSection implements OnInit {
       date: new Date('2024-11-25'),
       reward: 200,
       image: 'https://images.unsplash.com/photo-1574158622682-e40e69881006?w=400&h=300&fit=crop',
-      description: 'Gato juguetón, tiene mancha blanca en el pecho.'
+      description: 'Gato juguetón, tiene mancha blanca en el pecho.',
+      ownerName: 'Sofía Ruiz',
+      ownerPhone: '+51 992 444 555',
+      ownerEmail: 'sofiar@example.com'
     },
     {
       id: 5,
@@ -81,11 +95,16 @@ export class LostPetsSection implements OnInit {
       date: new Date('2024-11-24'),
       reward: 600,
       image: 'https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=400&h=300&fit=crop',
-      description: 'Labrador adulto, muy tranquilo y educado.'
+      description: 'Labrador adulto, muy tranquilo y educado.',
+      ownerName: 'Juan Pérez',
+      ownerPhone: '+51 987 666 777',
+      ownerEmail: 'jperez@example.com'
     }
   ];
 
   responsiveOptions: any[] = [];
+  selectedPet: LostPet | null = null;
+  showDetailModal = false;
 
   constructor(private router: Router) {}
 
@@ -128,7 +147,16 @@ export class LostPetsSection implements OnInit {
   }
 
   viewDetails(petId: number) {
-    this.router.navigate(['/app/animales-perdidos', petId]);
+    const pet = this.lostPets.find(p => p.id === petId);
+    if (pet) {
+      this.selectedPet = pet;
+      this.showDetailModal = true;
+    }
+  }
+
+  closeModal() {
+    this.showDetailModal = false;
+    this.selectedPet = null;
   }
 
   viewAllLostPets() {

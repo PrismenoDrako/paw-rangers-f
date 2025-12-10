@@ -14,6 +14,9 @@ export interface LostPet {
   reward: number;
   image: string;
   description: string;
+  ownerName?: string;
+  ownerPhone?: string;
+  ownerEmail?: string;
 }
 
 @Component({

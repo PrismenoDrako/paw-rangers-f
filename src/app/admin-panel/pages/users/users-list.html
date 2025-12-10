@@ -1,0 +1,97 @@
+<div class="page">
+  <div class="page-header">
+    <div>
+      <h1>Gestión de usuarios</h1>
+      <p>Administra y modera cuentas activas</p>
+    </div>
+    <div class="header-actions">
+      <button pButton label="Nuevo usuario" icon="pi pi-plus" class="p-button-sm"></button>
+    </div>
+  </div>
+
+  <div class="filters">
+    <span class="p-input-icon-left">
+      <i class="pi pi-search"></i>
+      <input
+        pInputText
+        type="text"
+        placeholder="Buscar por nombre, correo o ID"
+        [(ngModel)]="searchTerm"
+      />
+    </span>
+
+    <p-select
+      [options]="roleOptions"
+      [(ngModel)]="selectedRole"
+      placeholder="Rol"
+      optionLabel="label"
+      optionValue="value"
+      [style]="{ width: '150px' }"
+    ></p-select>
+
+    <p-select
+      [options]="statusOptions"
+      [(ngModel)]="selectedStatus"
+      placeholder="Estado"
+      optionLabel="label"
+      optionValue="value"
+      [style]="{ width: '150px' }"
+    ></p-select>
+  </div>
+
+  <p-table
+    [value]="filteredUsers"
+    [rows]="6"
+    [paginator]="true"
+    [rowsPerPageOptions]="[6, 10, 20]"
+    [responsiveLayout]="'stack'"
+    [breakpoint]="'960px'"
+  >
+    <ng-template pTemplate="header">
+      <tr>
+        <th>ID</th>
+        <th>Usuario</th>
+        <th>Rol</th>
+        <th>Reportes</th>
+        <th>Estado</th>
+        <th>Última actividad</th>
+        <th class="actions-col">Acciones</th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-user>
+      <tr>
+        <td class="muted">{{ user.id }}</td>
+        <td>
+          <div class="user-line">
+            <div class="name">{{ user.name }}</div>
+            <div class="email">{{ user.email }}</div>
+          </div>
+        </td>
+        <td><span class="chip">{{ user.role }}</span></td>
+        <td>{{ user.reportesCreados }}</td>
+        <td>
+          <p-tag [value]="user.status" [severity]="statusSeverity(user.status)"></p-tag>
+        </td>
+        <td class="muted">{{ user.ultimaActividad }}</td>
+        <td class="actions">
+          <button pButton icon="pi pi-eye" class="p-button-text p-button-sm" aria-label="Ver" title="Ver detalle"></button>
+          <button
+            pButton
+            [icon]="user.status === 'Activo' ? 'pi pi-ban' : 'pi pi-check'"
+            class="p-button-text p-button-sm"
+            (click)="toggleStatus(user)"
+            [title]="user.status === 'Activo' ? 'Suspender' : 'Activar'"
+          ></button>
+          <button
+            pButton
+            icon="pi pi-refresh"
+            class="p-button-text p-button-sm"
+            title="Resetear contraseña"
+            (click)="resetPassword(user)"
+          ></button>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>

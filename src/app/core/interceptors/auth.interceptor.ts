@@ -1,19 +1,10 @@
-import { HttpInterceptorFn } from '@angular/common/http';
-import { inject } from '@angular/core';
-import { AuthService } from '../services/auth.service';
+import { HttpInterceptorFn, HttpRequest } from '@angular/common/http';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
-  const auth = inject(AuthService);
-  const token = auth.token();
-
-  if (!token) {
-    return next(req);
-  }
-
+  // Agregar withCredentials: true a TODAS las peticiones
+  // Esto asegura que las cookies HttpOnly se envíen automáticamente
   const authReq = req.clone({
-    setHeaders: {
-      Authorization: `Bearer ${token}`,
-    }
+    withCredentials: true
   });
 
   return next(authReq);

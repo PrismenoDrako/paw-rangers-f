@@ -6,10 +6,40 @@
       <label for="name">Nombre</label>
       <div class="input-wrapper">
         <i class="pi pi-user"></i>
-        <input id="name" type="text" formControlName="name" placeholder="Tu nombre" autocomplete="name" />
+        <input id="name" type="text" formControlName="name" placeholder="Tu nombre" autocomplete="given-name" />
       </div>
       <small class="p-error" *ngIf="form.controls.name.touched && form.controls.name.invalid">
         Ingresa tu nombre.
+      </small>
+    </div>
+
+    <div class="field">
+      <label for="lastName1">Apellido Paterno</label>
+      <div class="input-wrapper">
+        <i class="pi pi-id-card"></i>
+        <input id="lastName1" type="text" formControlName="lastName1" placeholder="Tu apellido paterno" autocomplete="family-name" />
+      </div>
+      <small class="p-error" *ngIf="form.controls.lastName1.touched && form.controls.lastName1.invalid">
+        Ingresa tu apellido paterno.
+      </small>
+    </div>
+
+    <div class="field">
+      <label for="lastName2">Apellido Materno</label>
+      <div class="input-wrapper">
+        <i class="pi pi-id-card"></i>
+        <input id="lastName2" type="text" formControlName="lastName2" placeholder="Tu apellido materno (opcional)" autocomplete="family-name" />
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="username">Nombre de Usuario</label>
+      <div class="input-wrapper">
+        <i class="pi pi-user-edit"></i>
+        <input id="username" type="text" formControlName="username" placeholder="Tu nombre de usuario" autocomplete="username" />
+      </div>
+      <small class="p-error" *ngIf="form.controls.username.touched && form.controls.username.invalid">
+        Ingresa un nombre de usuario (mínimo 3 caracteres).
       </small>
     </div>
 
@@ -21,6 +51,54 @@
       </div>
       <small class="p-error" *ngIf="form.controls.email.touched && form.controls.email.invalid">
         Ingresa un correo válido.
+      </small>
+    </div>
+
+    <div class="field">
+      <label for="docType">Tipo de Documento</label>
+      <div class="input-wrapper">
+        <i class="pi pi-id-card"></i>
+        <select
+          id="docType"
+          formControlName="docType"
+          class="doc-type-select"
+          (change)="onDocTypeChange($event)"
+        >
+          <option [value]="''">Selecciona tu tipo de documento</option>
+          <option *ngFor="let docType of docTypes" [value]="docType.id">
+            {{ docType.name }} ({{ docType.length }} dígitos)
+          </option>
+        </select>
+      </div>
+      <small class="p-error" *ngIf="form.controls.docType.touched && form.controls.docType.invalid">
+        Selecciona un tipo de documento.
+      </small>
+    </div>
+
+    <div class="field">
+      <label for="docNumber">
+        Número de Documento
+        <span *ngIf="selectedDocTypeLength > 0" class="doc-length-hint">({{ selectedDocTypeLength }} dígitos)</span>
+      </label>
+      <div class="input-wrapper">
+        <i class="pi pi-credit"></i>
+        <input
+          id="docNumber"
+          type="text"
+          formControlName="docNumber"
+          placeholder="Ingresa tu número de documento"
+          [maxlength]="selectedDocTypeLength || 12"
+          [disabled]="!form.controls.docType.value"
+          (input)="onDocNumberInput($event)"
+          inputmode="numeric"
+        />
+      </div>
+      <small class="p-error" *ngIf="form.controls.docNumber.touched && form.controls.docNumber.invalid">
+        <span *ngIf="form.controls.docNumber.errors?.['required']">Número de documento requerido.</span>
+        <span *ngIf="form.controls.docNumber.errors?.['minlength'] || form.controls.docNumber.errors?.['maxlength']">
+          Debe tener exactamente {{ selectedDocTypeLength }} dígitos.
+        </span>
+        <span *ngIf="form.controls.docNumber.errors?.['notNumeric']">Solo se permiten números.</span>
       </small>
     </div>
 
@@ -81,7 +159,7 @@
     </label>
 
     <div class="actions">
-      <button class="primary-btn" type="submit" [disabled]="loading">
+      <button class="primary-btn" type="submit" [disabled]="loading || form.invalid">
         {{ loading ? 'Creando...' : 'Crear cuenta' }}
       </button>
       <a routerLink="/auth" class="secondary-link">Ya tengo cuenta</a>

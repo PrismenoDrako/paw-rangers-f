@@ -9,7 +9,7 @@
 
         <div class="field col-12 md:col-6">
             <label for="species">Especie</label>
-            <select id="species" formControlName="species" class="p-inputtext" (change)="onSpeciesChange(petForm.get('species')?.value)">
+            <select id="species" formControlName="species" class="p-inputtext" (ngModelChange)="onSpeciesChange($event)">
                 <option [ngValue]="null" disabled selected>Selecciona una especie</option>
                 <option *ngFor="let option of speciesOptions" [ngValue]="option">
                     {{ option.name }}
@@ -17,7 +17,7 @@
             </select>
         </div>
         
-        <div *ngIf="petForm.get('species')?.value?.code === 'OTHER'" class="field col-12 md:col-6">
+        <div *ngIf="petForm.get('species')?.value?.id === 999" class="field col-12 md:col-6">
             <label for="customSpecies">Especifica la especie</label>
             <input pInputText id="customSpecies" type="text" formControlName="customSpecies" />
         </div>
@@ -32,7 +32,7 @@
             </select>
         </div>
         
-        <div *ngIf="petForm.get('breed')?.value?.code === 'OTHER'" class="field col-12 md:col-6">
+        <div *ngIf="petForm.get('breed')?.value?.id === 999" class="field col-12 md:col-6">
             <label for="customBreed">Especifica la raza</label>
             <input pInputText id="customBreed" type="text" formControlName="customBreed" />
         </div>

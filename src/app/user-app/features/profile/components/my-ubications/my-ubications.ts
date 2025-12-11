@@ -11,17 +11,7 @@ import { MessageService, ConfirmationService } from 'primeng/api';
 // Components
 import { UbicationListItemComponent } from '../ubication-list-item/ubication-list-item';
 import { Subject } from 'rxjs';
-import { AuthService } from '../../../../../core/services/auth.service';
-
-export interface Ubication {
-  id: string;
-  name: string;
-  address: string;
-  latitude: number;
-  longitude: number;
-  type: 'Casa' | 'Trabajo' | 'Favorito' | string;
-  createdAt?: Date;
-}
+import { LocationService, UserLocation } from '../../../../../core/services/location.service';
 
 @Component({
   selector: 'app-my-ubications', 
@@ -41,19 +31,15 @@ export interface Ubication {
 })
 export class MyUbicationsComponent implements OnInit, OnDestroy { 
 
-  locations: Ubication[] = [];
+  locations: UserLocation[] = [];
   isLoading = true;
   private destroy$ = new Subject<void>();
-  private storageKey = 'ubications:guest';
   
   constructor(
     private router: Router,
     private messageService: MessageService,
-    private auth: AuthService
-  ) { 
-    const email = this.auth.user()?.email || 'guest';
-    this.storageKey = `ubications:${email}`;
-  }
+    private locationService: LocationService
+  ) { }
 
   ngOnInit(): void {
     this.loadUbications();
@@ -66,28 +52,35 @@ export class MyUbicationsComponent implements OnInit, OnDestroy {
 
   private loadUbications(): void {
     this.isLoading = true;
+    console.log('MyUbicationsComponent - Cargando ubicaciones del servidor...');
     
-    // Simular delay de API
-    setTimeout(() => {
-      // Cargar del localStorage
-      const saved = localStorage.getItem(this.storageKey);
-      if (saved) {
-        try {
-          this.locations = JSON.parse(saved);
-        } catch (error) {
-          console.error('Error al cargar ubicaciones:', error);
-          this.locations = [];
-        }
+    this.locationService.getUserLocations().subscribe({
+      next: (response: any) => {
+        console.log('Respuesta de ubicaciones:', response);
+        // El endpoint devuelve las ubicaciones directamente o en response.data
+        const locationsList = response?.data || response || [];
+        this.locations = Array.isArray(locationsList) ? locationsList : [];
+        console.log('Ubicaciones cargadas:', this.locations);
+        this.isLoading = false;
+      },
+      error: (err) => {
+        console.error('Error cargando ubicaciones:', err);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'No se pudieron cargar las ubicaciones',
+          life: 3000
+        });
+        this.isLoading = false;
       }
-      this.isLoading = false;
-    }, 500);
+    });
   }
 
   openAddLocationForm(): void {
     this.router.navigate(['/app/crear-ubicacion']);
   }
 
-  onLocationDeleted(id: string): void {
+  onLocationDeleted(id: number): void {
     this.locations = this.locations.filter(loc => loc.id !== id);
     this.messageService.add({
       severity: 'success',

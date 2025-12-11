@@ -13,11 +13,6 @@ export const UserAppRoutes: Routes = [
         path: '',
         component: AppLayout,
         children: [
-            {
-                path: '',
-                redirectTo: 'home',
-                pathMatch: 'full'
-            },
             ...homeRoutes,
             ...lostPetsRoutes,
             { path: 'animales-encontrados', children: foundPetsRoutes },

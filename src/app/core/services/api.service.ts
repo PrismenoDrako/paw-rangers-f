@@ -44,6 +44,14 @@ export class ApiService {
         });
     }
 
+    // PATCH
+    patch<T>(endpoint: string, body: any, headers?: HttpHeaders): Observable<T> {
+        return this.http.patch<T>(`${this.baseUrl}/${endpoint}`, body, {
+            headers,
+            withCredentials: true
+        });
+    }
+
     // DELETE
     delete<T>(endpoint: string, params?: any, headers?: HttpHeaders): Observable<T> {
         let httpParams = new HttpParams();

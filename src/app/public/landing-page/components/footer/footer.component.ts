@@ -32,7 +32,7 @@ import { Router } from '@angular/router';
           <h4>Navegación</h4>
           <ul>
             <li><a (click)="viewAlerts()">Ver alertas</a></li>
-            <li><a (click)="navigate('/app/home')">Dashboard</a></li>
+            <li><a (click)="navigate('/app')">Dashboard</a></li>
             <li><a (click)="navigate('/auth/login')">Inicia sesión</a></li>
           </ul>
         </div>
@@ -187,7 +187,7 @@ export class FooterComponent {
   constructor(private router: Router) {}
 
   viewAlerts(): void {
-    this.router.navigate(['/app/home']);
+    this.router.navigate(['/app']);
   }
 
   navigate(path: string): void {

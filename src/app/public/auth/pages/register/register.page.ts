@@ -159,7 +159,7 @@ export class RegisterPage implements OnInit {
       .register(registerDto)
       .pipe(finalize(() => (this.loading = false)))
       .subscribe({
-        next: () => this.router.navigate(['/app/home']),
+        next: () => this.router.navigate(['/app']),
         error: (err) =>
           (this.error =
             err?.message ||

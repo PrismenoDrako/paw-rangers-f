@@ -142,6 +142,6 @@ export class CtaSectionComponent {
   }
 
   viewAlerts(): void {
-    this.router.navigate(['/app/home']);
+    this.router.navigate(['/app']);
   }
 }

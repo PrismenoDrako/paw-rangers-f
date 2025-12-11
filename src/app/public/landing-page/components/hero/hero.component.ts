@@ -238,7 +238,7 @@ export class HeroComponent {
   constructor(private router: Router) {}
 
   viewAlerts(): void {
-    this.router.navigate(['/app/home']);
+    this.router.navigate(['/app']);
   }
 
   login(): void {
@@ -249,3 +249,4 @@ export class HeroComponent {
     this.router.navigate(['/auth/register']);
   }
 }
+

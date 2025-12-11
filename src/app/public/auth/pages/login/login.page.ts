@@ -55,8 +55,9 @@ export class LoginPage {
       .login(username ?? '', password ?? '')
       .pipe(finalize(() => (this.loading = false)))
       .subscribe({
-        next: () => this.router.navigate(['/app/home']),
+        next: () => this.router.navigate(['/app']),
         error: (err) => (this.error = err?.message || 'No pudimos iniciar sesión, intenta de nuevo.'),
       });
   }
 }
+

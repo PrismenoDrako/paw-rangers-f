@@ -21,9 +21,30 @@ export class AuthService {
 
   readonly user = computed(() => this.state().user);
   readonly token = computed(() => this.state().token);
-  readonly isAuthenticated = computed(() => !!this.state().user);
+  readonly isAuthenticatedSignal = computed(() => !!this.state().user);
 
   constructor(private http: HttpClient) {}
+
+  /**
+   * Verifica si el usuario está autenticado
+   */
+  isAuthenticated(): boolean {
+    return !!this.state().user;
+  }
+
+  /**
+   * Obtiene el usuario actual
+   */
+  getUser(): User | null {
+    const user = this.state().user;
+    console.log('🔓 getUser() - Usuario del state:', user);
+    if (!user) return null;
+    
+    // Siempre transformar el usuario para asegurar que tiene roleId
+    const transformed = this.transformUserData({ ...user });
+    console.log('🔓 getUser() - Usuario transformado:', transformed);
+    return transformed;
+  }
 
   login(username: string, password: string): Observable<any> {
     const loginDto = { username, password };
@@ -32,8 +53,13 @@ export class AuthService {
       withCredentials: true
     }).pipe(
       tap((response) => {
-        // El backend devuelve { status, data: user, timestamp }
-        const user = response.data;
+        console.log('🔓 login() - response.data:', response.data);
+        // El backend devuelve { status, data: { access_token, user }, timestamp }
+        let user = response.data.user || response.data;
+        console.log('🔓 login() - user antes de transform:', user);
+        // Transformar la estructura del usuario si es necesario
+        user = this.transformUserData(user);
+        console.log('🔓 login() - user después de transform:', user);
         this.setState({ user, token: 'authenticated' });
         // Conectar al socket después de login exitoso
         this.socket.connect();
@@ -46,7 +72,10 @@ export class AuthService {
       withCredentials: true
     }).pipe(
       tap((response) => {
-        const user = response.data;
+        // El backend devuelve { status, data: { access_token, user }, timestamp }
+        let user = response.data.user || response.data;
+        // Transformar la estructura del usuario si es necesario
+        user = this.transformUserData(user);
         this.setState({ user, token: 'authenticated' });
         // Conectar al socket después de registro exitoso
         this.socket.connect();
@@ -116,12 +145,23 @@ export class AuthService {
   }
 
   /**
+   * Transforma los datos del usuario desde el formato del backend
+   * al formato esperado por el frontend
+   */
+  private transformUserData(user: any): User {
+    // Si el usuario tiene un objeto 'role', extraer el roleId de ahí
+    if (user.role && !user.roleId) {
+      user.roleId = user.role.id;
+    }
+    return user as User;
+  }
+
+  /**
    * Verifica si el usuario autenticado es administrador
    */
   isAdmin(): boolean {
-    const user = this.state().user;
+    const user = this.getUser(); // Usar getUser() para asegurar la transformación
     if (!user) return false;
-    // Según el backend, un admin tiene roleId: 1 y isCollaborator: true
     return user.roleId === 1;
   }
 
@@ -181,18 +221,28 @@ export class AuthService {
   }
 
   private setState(next: AuthState): void {
+    console.log('🔓 setState - Guardando en localStorage:', next);
     this.state.set(next);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
   }
 
   private loadState(): AuthState {
     const data = localStorage.getItem(STORAGE_KEY);
+    console.log('🔓 loadState - Cargando desde localStorage:', data);
     if (!data) {
       return { user: null, token: null };
     }
     try {
-      return JSON.parse(data) as AuthState;
-    } catch {
+      const state = JSON.parse(data) as AuthState;
+      console.log('🔓 loadState - Estado parseado:', state);
+      // Transformar el usuario si es necesario cuando se carga desde localStorage
+      if (state.user) {
+        state.user = this.transformUserData(state.user);
+        console.log('🔓 loadState - Usuario transformado:', state.user);
+      }
+      return state;
+    } catch (e) {
+      console.error('❌ Error al parsear localStorage:', e);
       return { user: null, token: null };
     }
   }

@@ -73,7 +73,20 @@ export class Alerts implements OnInit {
         this.updateCharts(data);
       },
       error: (error) => {
-        console.error('Error loading alerts data:', error);
+        console.error('❌ Error loading alerts data:', error);
+        console.error('Error details:', {
+          status: error.status,
+          statusText: error.statusText,
+          message: error.message,
+          url: error.url
+        });
+        // Mostrar valores por defecto si falla
+        this.alertTypeMetrics = [
+          { label: 'Total de alertas', value: 'Error', subtitle: 'No disponible', icon: 'pi-bell' },
+          { label: 'Alertas activas', value: 'Error', subtitle: 'No disponible', icon: 'pi-exclamation-circle' },
+          { label: 'Alertas resueltas', value: 'Error', subtitle: 'No disponible', icon: 'pi-check-circle' },
+          { label: 'Alertas no resueltas', value: 'Error', subtitle: 'No disponible', icon: 'pi-times-circle' },
+        ];
       }
     });
   }

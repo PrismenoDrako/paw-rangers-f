@@ -85,7 +85,18 @@ export class Dashboard implements OnInit {
         this.updateChartsWithData(users.byMonth, alerts.byMonth);
       },
       error: (error) => {
-        console.error('Error loading dashboard data:', error);
+        console.error('❌ Error loading dashboard data:', error);
+        console.error('Error details:', {
+          status: error.status,
+          statusText: error.statusText,
+          message: error.message,
+          url: error.url
+        });
+        // Mostrar valores por defecto si falla
+        this.userMetrics = [
+          { label: 'Total de usuarios', value: 'Error', subtitle: 'No disponible', icon: 'pi-users' },
+          { label: 'Usuarios nuevos', value: 'Error', subtitle: 'No disponible', icon: 'pi-user-plus' },
+        ];
       }
     });
   }

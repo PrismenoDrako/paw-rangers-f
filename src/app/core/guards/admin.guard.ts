@@ -6,7 +6,7 @@ export const adminGuard: CanMatchFn = (): boolean | UrlTree => {
   // GUARD DESACTIVADO TEMPORALMENTE PARA PRUEBAS
   return true;
   
-  /* const auth = inject(AuthService);
+   const auth = inject(AuthService);
   const router = inject(Router);
 
   const isAuth = auth.isAuthenticated();
@@ -19,5 +19,5 @@ export const adminGuard: CanMatchFn = (): boolean | UrlTree => {
   }
 
   // Si no está autenticado o no es admin, redirigir a login
-  return router.createUrlTree(['/auth']); */
+  return router.createUrlTree(['/auth']); 
 };

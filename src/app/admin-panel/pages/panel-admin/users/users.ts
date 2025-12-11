@@ -76,6 +76,7 @@ export class Users implements OnInit {
   // Formulario de registro
   newUser = {
     name: '',
+    username: '',
     email: '',
     password: '',
     role: 'user' as 'admin' | 'user',
@@ -85,6 +86,7 @@ export class Users implements OnInit {
   // Errores de validación
   errors = {
     name: '',
+    username: '',
     email: '',
     phone: '',
     password: ''
@@ -123,7 +125,19 @@ export class Users implements OnInit {
         this.users = response.data.data;
       },
       error: (error) => {
-        console.error('Error loading users:', error);
+        console.error('❌ Error loading users:', error);
+        console.error('Error details:', {
+          status: error.status,
+          statusText: error.statusText,
+          message: error.message,
+          url: error.url
+        });
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error al cargar usuarios',
+          detail: error.error?.message || 'No se pudo conectar con el servidor',
+          life: 5000
+        });
       }
     });
   }
@@ -175,6 +189,7 @@ export class Users implements OnInit {
   resetForm() {
     this.newUser = {
       name: '',
+      username: '',
       email: '',
       password: '',
       role: 'user',
@@ -182,10 +197,19 @@ export class Users implements OnInit {
     };
     this.errors = {
       name: '',
+      username: '',
       email: '',
       phone: '',
       password: ''
     };
+  }
+
+  validateUsername(event: KeyboardEvent) {
+    const char = event.key;
+    // Solo permitir letras, números, guion bajo y punto
+    if (!/^[a-zA-Z0-9._]$/.test(char) && event.key !== 'Backspace' && event.key !== 'Tab') {
+      event.preventDefault();
+    }
   }
 
   validateName(event: KeyboardEvent) {
@@ -213,7 +237,7 @@ export class Users implements OnInit {
 
   validateForm(): boolean {
     let isValid = true;
-    this.errors = { name: '', email: '', phone: '', password: '' };
+    this.errors = { name: '', username: '', email: '', phone: '', password: '' };
 
     // Validar nombre completo (solo letras y espacios, mínimo 2 palabras)
     const nameRegex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/;
@@ -226,6 +250,16 @@ export class Users implements OnInit {
       isValid = false;
     } else if (nameParts.length < 2) {
       this.errors.name = 'Ingrese nombre y apellido';
+      isValid = false;
+    }
+
+    // Validar username (solo letras, números, guion bajo y punto, mínimo 3 caracteres)
+    const usernameRegex = /^[a-zA-Z0-9._]{3,}$/;
+    if (!this.newUser.username.trim()) {
+      this.errors.username = 'El usuario es requerido';
+      isValid = false;
+    } else if (!usernameRegex.test(this.newUser.username)) {
+      this.errors.username = 'Mínimo 3 caracteres (letras, números, . o _)';
       isValid = false;
     }
 
@@ -273,7 +307,7 @@ export class Users implements OnInit {
 
     const nameParts = this.newUser.name.trim().split(/\s+/);
     const userData = {
-      username: this.newUser.email.split('@')[0],
+      username: this.newUser.username,
       email: this.newUser.email,
       password: this.newUser.password,
       name: nameParts[0],
@@ -285,20 +319,30 @@ export class Users implements OnInit {
       roleId: this.newUser.role === 'admin' ? 1 : 2
     };
 
+    console.log('📤 Enviando datos de usuario:', userData);
+    
     this.http.post<{ status: string; data: UserRow }>('https://nonprejudicially-unmenacing-wanda.ngrok-free.dev/api/admin/users', userData, {
       withCredentials: true
     }).subscribe({
       next: (response) => {
+        console.log('✅ Usuario registrado exitosamente:', response);
         this.messageService.add({
           severity: 'success',
           summary: 'Éxito',
-          detail: 'Usuario registrado correctamente'
+          detail: 'Usuario registrado correctamente',
+          life: 3000
         });
         this.showRegisterModal = false;
         this.loadUsers();
       },
       error: (error) => {
-        console.error('Error registering user:', error);
+        console.error('❌ Error registering user:', error);
+        console.error('Error details:', {
+          status: error.status,
+          statusText: error.statusText,
+          message: error.message,
+          error: error.error
+        });
         this.messageService.add({
           severity: 'error',
           summary: 'Error',
@@ -310,7 +354,7 @@ export class Users implements OnInit {
 
   closeRegisterModal() {
     // Verificar si hay datos en el formulario
-    const hasData = this.newUser.name || this.newUser.email || this.newUser.phone || this.newUser.password;
+    const hasData = this.newUser.name || this.newUser.username || this.newUser.email || this.newUser.phone || this.newUser.password;
     
     if (hasData) {
       this.confirmationService.confirm({

@@ -135,6 +135,20 @@
     </div>
     
     <div class="form-field">
+      <label for="username">Usuario <span style="color: red;">*</span></label>
+      <input 
+        pInputText 
+        id="username" 
+        [(ngModel)]="newUser.username" 
+        placeholder="usuario123" 
+        class="w-full"
+        (keydown)="validateUsername($event)"
+        [class.ng-invalid]="errors.username"
+        [class.ng-dirty]="errors.username" />
+      <small *ngIf="errors.username" class="p-error">{{ errors.username }}</small>
+    </div>
+    
+    <div class="form-field">
       <label for="email">Email <span style="color: red;">*</span></label>
       <input 
         pInputText 

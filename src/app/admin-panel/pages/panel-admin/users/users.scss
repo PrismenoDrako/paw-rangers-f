@@ -215,6 +215,14 @@ $text: #1f2d3d;
   width: 100%;
 }
 
+:deep(.p-select-overlay) {
+  z-index: 9999 !important;
+}
+
+:deep(.p-dialog) {
+  z-index: 1100;
+}
+
 // Estilos responsivos para modales
 :deep(.p-dialog) {
   max-width: calc(100vw - 2rem);

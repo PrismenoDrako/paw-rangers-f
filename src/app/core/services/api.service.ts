@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 })
 export class ApiService {
 
-    private baseUrl = 'https://nonprejudicially-unmenacing-wanda.ngrok-free.dev';
+    private baseUrl = 'http://localhost:3000';
 
     constructor(private http: HttpClient) { }
 

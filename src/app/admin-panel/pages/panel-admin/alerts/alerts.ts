@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CardModule } from 'primeng/card';
 import { ChartModule } from 'primeng/chart';
-import { HttpClient } from '@angular/common/http';
+import { ApiService } from '../../../../core/services/api.service';
 
 interface AlertsData {
   status: string;
@@ -44,8 +44,10 @@ export class Alerts implements OnInit {
   hallazgoChartData: any;
   desaparicionChartData: any;
   pieChartOptions: any;
+  isLoading = false;
+  loadError = false;
 
-  constructor(private http: HttpClient) {}
+  constructor(private api: ApiService) {}
 
   ngOnInit() {
     this.loadDashboardData();
@@ -53,15 +55,19 @@ export class Alerts implements OnInit {
   }
 
   loadDashboardData() {
-    this.http.get<AlertsData>('https://nonprejudicially-unmenacing-wanda.ngrok-free.dev/api/admin/alerts/stats', {
-      withCredentials: true
-    }).subscribe({
-      next: (response) => {
+    this.isLoading = true;
+    this.loadError = false;
+
+    this.api.get<AlertsData>('stats/alerts').subscribe({
+      next: (response: AlertsData) => {
         const data = response.data;
         const totalActive = data.found.active + data.lost.active;
         const totalResolved = data.found.resolved + data.lost.resolved;
         const totalUnresolved = data.found.unresolved + data.lost.unresolved;
-        
+
+        this.isLoading = false;
+        this.loadError = false;
+
         this.alertTypeMetrics = [
           { label: 'Total de alertas', value: data.total.toString(), subtitle: 'Acumulado', icon: 'pi-bell' },
           { label: 'Alertas activas', value: totalActive.toString(), subtitle: 'Pendientes', icon: 'pi-exclamation-circle' },
@@ -72,8 +78,10 @@ export class Alerts implements OnInit {
         // Actualizar gráficos con datos reales de hallazgo y desaparición
         this.updateCharts(data);
       },
-      error: (error) => {
-        console.error('❌ Error loading alerts data:', error);
+      error: (error: any) => {
+        this.isLoading = false;
+        this.loadError = true;
+        console.error('⚠️ Error loading alerts data:', error);
         console.error('Error details:', {
           status: error.status,
           statusText: error.statusText,

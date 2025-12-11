@@ -1,4 +1,11 @@
 <div class="alerts-page">
+  <div *ngIf="isLoading" class="status-banner loading">
+    Cargando alertas...
+  </div>
+  <div *ngIf="loadError" class="status-banner error">
+    No se pudieron cargar las alertas
+  </div>
+
   <div class="page-header">
     <div>
       <h1>Alertas - Detalle por Tipo</h1>

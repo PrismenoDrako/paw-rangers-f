@@ -45,7 +45,8 @@
             <td>
               <div class="actions">
                 <button pButton icon="pi pi-eye" class="p-button-text p-button-sm" (click)="viewUser(user)" title="Ver detalles"></button>
-                <button pButton [icon]="user.isActive ? 'pi pi-ban' : 'pi pi-check'" class="p-button-text p-button-sm" (click)="toggleUserStatus(user)" [title]="user.isActive ? 'Suspender' : 'Activar'"></button>
+                <!-- Botón de activar/suspender deshabilitado por falta de endpoint backend -->
+                <!-- <button pButton [icon]="user.isActive ? 'pi pi-ban' : 'pi pi-check'" class="p-button-text p-button-sm" (click)="toggleUserStatus(user)" [title]="user.isActive ? 'Suspender' : 'Activar'"></button> -->
               </div>
             </td>
           </tr>
@@ -160,6 +161,21 @@
         [class.ng-invalid]="errors.email"
         [class.ng-dirty]="errors.email" />
       <small *ngIf="errors.email" class="p-error">{{ errors.email }}</small>
+    </div>
+
+    <div class="form-field">
+      <label for="docNumber">Documento (DNI) <span style="color: red;">*</span></label>
+      <input
+        pInputText
+        id="docNumber"
+        [(ngModel)]="newUser.docNumber"
+        placeholder="8 dígitos"
+        class="w-full"
+        (keydown)="validateDocNumber($event)"
+        maxlength="8"
+        [class.ng-invalid]="errors.docNumber"
+        [class.ng-dirty]="errors.docNumber" />
+      <small *ngIf="errors.docNumber" class="p-error">{{ errors.docNumber }}</small>
     </div>
     
     <div class="form-field">

@@ -4,9 +4,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { PetFormComponent, Pet } from '../../components/pet-form/pet-form';
-import { MyPetsComponent } from '../../components/my-pets/my-pets';
 import { Subscription } from 'rxjs';
-import { AuthService } from '../../../../../core/services/auth.service';
+import { PetService } from '../../../../../core/services/pet.service';
 
 @Component({
   selector: 'app-edit-pet',
@@ -19,17 +18,13 @@ import { AuthService } from '../../../../../core/services/auth.service';
 export class EditPet implements OnInit, OnDestroy {
   petData: Pet | null = null;
   private routeSubscription: Subscription | null = null;
-  private storageKey = 'paw-pets:guest';
 
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private messageService: MessageService,
-    private auth: AuthService
-  ) { 
-    const email = this.auth.user()?.email || 'guest';
-    this.storageKey = `paw-pets:${email}`;
-  }
+    private petService: PetService
+  ) { }
 
   ngOnInit(): void {
     this.loadPetData();
@@ -42,19 +37,27 @@ export class EditPet implements OnInit, OnDestroy {
   }
 
   private loadPetData(): void {
-    const saved = localStorage.getItem(this.storageKey);
-    try {
-      MyPetsComponent.sharedPets = saved ? JSON.parse(saved) : [];
-    } catch {
-      MyPetsComponent.sharedPets = [];
-    }
-
     const petId = this.route.snapshot.paramMap.get('id');
     if (petId) {
       const id = parseInt(petId);
-      // Buscar siempre desde el array compartido actualizado
-      this.petData = MyPetsComponent.sharedPets.find(p => p.id === id) || null;
-      console.log('Pet data loaded:', this.petData);
+      this.petService.getUserPets().subscribe({
+        next: (pets: Pet[]) => {
+          this.petData = pets.find((p: any) => p.id === id) || null;
+          if (!this.petData) {
+            console.warn('Pet not found with id:', id);
+          }
+          console.log('Pet data loaded:', this.petData);
+        },
+        error: (err: any) => {
+          console.error('Error loading pet:', err);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'Error al cargar la mascota',
+            life: 2000
+          });
+        }
+      });
     }
   }
 
@@ -69,53 +72,60 @@ export class EditPet implements OnInit, OnDestroy {
         if (e.target?.result) {
           console.log('Image converted to base64');
           petData.imageUrl = e.target.result as string;
-          this.savePetData(petData);
+          this.updatePetData(petData);
         }
       };
       reader.onerror = () => {
         console.error('Error reading file');
-        alert('Error al cargar la imagen');
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Error al cargar la imagen',
+          life: 2000
+        });
       };
       reader.readAsDataURL(petData.imageFile);
     } else {
-      this.savePetData(petData);
+      this.updatePetData(petData);
     }
   }
 
-  private savePetData(petData: Pet): void {
-    console.log('savePetData called with:', petData);
+  private updatePetData(petData: Pet): void {
+    console.log('updatePetData called with:', petData);
     
     if (petData.id) {
-      const index = MyPetsComponent.sharedPets.findIndex(p => p.id === petData.id);
-      console.log('Pet index in array:', index);
-      
-      if (index !== -1) {
-        // Crear objeto actualizado manteniendo el ID
-        const updatedPet: Pet = {
-          ...MyPetsComponent.sharedPets[index],
-          ...petData,
-          id: petData.id
-        };
-        
-        // Actualizar en el array
-        MyPetsComponent.sharedPets[index] = updatedPet;
-        MyPetsComponent.saveToStorage(this.storageKey);
-        console.log('Pet updated in array:', updatedPet);
-        console.log('Current pets array:', MyPetsComponent.sharedPets);
-        
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Éxito',
-          detail: `${petData.name} ha sido actualizado correctamente`,
-          life: 1500
-        });
-        
-        setTimeout(() => this.router.navigate(['/app/perfil']), 1500);
-      } else {
-        console.error('Pet not found in array with id:', petData.id);
-        alert('Error: No se encontró la mascota a actualizar');
-        return;
-      }
+      // Actualizar en el servidor
+      this.petService.updateUserPet(petData.id, petData).subscribe({
+        next: (updated: any) => {
+          console.log('Pet updated:', updated);
+          
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Éxito',
+            detail: `${petData.name} ha sido actualizado correctamente`,
+            life: 1500
+          });
+          
+          setTimeout(() => this.router.navigate(['/app/perfil']), 1500);
+        },
+        error: (err: any) => {
+          console.error('Error updating pet:', err);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'Error al actualizar la mascota',
+            life: 2000
+          });
+        }
+      });
+    } else {
+      console.error('Pet ID is missing');
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Error: ID de mascota no válido',
+        life: 2000
+      });
     }
   }
 
@@ -124,10 +134,26 @@ export class EditPet implements OnInit, OnDestroy {
   }
 
   onFormDelete(petId: number): void {
-    console.log('Mascota eliminada:', petId);
-    MyPetsComponent.sharedPets = MyPetsComponent.sharedPets.filter(p => p.id !== petId);
-    MyPetsComponent.saveToStorage(this.storageKey);
-    this.router.navigate(['/app/perfil']);
+    this.petService.deleteUserPet(petId).subscribe({
+      next: () => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Éxito',
+          detail: 'Mascota eliminada correctamente',
+          life: 1500
+        });
+        setTimeout(() => this.router.navigate(['/app/perfil']), 1500);
+      },
+      error: (err: any) => {
+        console.error('Error al eliminar mascota:', err);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Error al eliminar la mascota',
+          life: 2000
+        });
+      }
+    });
   }
 }
 

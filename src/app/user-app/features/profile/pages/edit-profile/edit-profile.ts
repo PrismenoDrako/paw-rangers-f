@@ -9,7 +9,6 @@ import { TooltipModule } from 'primeng/tooltip';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, AbstractControl, ValidationErrors } from '@angular/forms';
-import { AccountInfoComponent } from '../../components/account-info/account-info';
 import { AuthService } from '../../../../../core/services/auth.service';
 
 
@@ -50,37 +49,28 @@ export class EditProfilePage implements OnInit {
     ) {}
 
     ngOnInit(): void {
-        // Cargar la imagen de perfil guardada si existe
-        const user = AccountInfoComponent.sharedUser;
+        // Cargar la imagen de perfil del usuario autenticado
         const authUser = this.auth.user();
-        this.profileImageUrl = authUser?.profileImage || user.profileImage || '';
+        this.profileImageUrl = authUser?.profileImage || '';
         
         this.initializeProfileForm();
         this.initializePasswordForm();
     }
 
     private initializeProfileForm(): void {
-        // Obtener los datos del usuario, priorizando lo que viene de auth
+        // Obtener los datos del usuario autenticado
         const authUser = this.auth.user();
-        const user = {
-            ...AccountInfoComponent.sharedUser,
-            nombre: authUser?.name ?? AccountInfoComponent.sharedUser.nombre,
-            documento: authUser?.documentId ?? AccountInfoComponent.sharedUser.documento,
-            phone: authUser?.phone ?? AccountInfoComponent.sharedUser.phone,
-            direccion: authUser?.address ?? AccountInfoComponent.sharedUser.direccion,
-            email: authUser?.email ?? AccountInfoComponent.sharedUser.email,
-            username: authUser?.email?.split('@')[0] ?? AccountInfoComponent.sharedUser.username,
-        };
+        console.log('EditProfilePage initializeProfileForm - authUser:', authUser);
 
         this.profileForm = this.fb.group({
-            nombre: [user.nombre, Validators.required],
-            apellidoPaterno: [user.apellidoPaterno, Validators.required],
-            apellidoMaterno: [user.apellidoMaterno, Validators.required],
-            username: [user.username, Validators.required],
-            documento: [user.documento, Validators.required],
-            email: [user.email, [Validators.required, Validators.email]],
-            phone: [user.phone, Validators.required],
-            direccion: [user.direccion, Validators.required]
+            nombre: [authUser?.name ?? '', Validators.required],
+            apellidoPaterno: [authUser?.apellidoPaterno ?? '', Validators.required],
+            apellidoMaterno: [authUser?.apellidoMaterno ?? '', Validators.required],
+            username: [authUser?.email?.split('@')[0] ?? '', Validators.required],
+            documento: [authUser?.documentId ?? '', Validators.required],
+            email: [authUser?.email ?? '', [Validators.required, Validators.email]],
+            phone: [authUser?.phone ?? '', Validators.required],
+            direccion: [authUser?.address ?? '', Validators.required]
         });
     }
 
@@ -126,19 +116,10 @@ export class EditProfilePage implements OnInit {
 
     private currentPasswordValidator(group: AbstractControl): ValidationErrors | null {
         const currentPassword = group.get('currentPassword')?.value;
-        const user = AccountInfoComponent.sharedUser;
-
-        if (currentPassword && currentPassword !== user.currentPassword) {
-            group.get('currentPassword')?.setErrors({ incorrectPassword: true });
-            return { incorrectPassword: true };
-        } else if (group.get('currentPassword')?.hasError('incorrectPassword') && currentPassword === user.currentPassword) {
-            const errors = group.get('currentPassword')?.errors;
-            if (errors) {
-                delete errors['incorrectPassword'];
-                if (Object.keys(errors).length === 0) {
-                    group.get('currentPassword')?.setErrors(null);
-                }
-            }
+        // TODO: Validar la contraseña actual contra el servidor
+        // Por ahora, solo validar que no esté vacía
+        if (!currentPassword) {
+            return null;
         }
         return null;
     }
@@ -192,50 +173,54 @@ export class EditProfilePage implements OnInit {
     }
 
     handleSaveAll(): void {
-        // Permitir guardar solo el perfil si es v?lido
+        // Permitir guardar solo el perfil si es válido
         if (this.profileForm.valid) {
             const profileData = this.profileForm.value;
 
             console.log('Guardando perfil:', profileData);
 
-            // Actualizar los datos compartidos con los nuevos valores del perfil
-            AccountInfoComponent.sharedUser = {
-                ...AccountInfoComponent.sharedUser,
-                ...profileData,
-                profileImage: this.profileImageUrl || null
-            };
-
-            // Persistir en AuthService (mock/localStorage) para que se refleje en perfil y guardias
+            // Actualizar el perfil en el servidor
             this.auth.updateProfile({
                 name: profileData.nombre,
+                apellidoPaterno: profileData.apellidoPaterno,
+                apellidoMaterno: profileData.apellidoMaterno,
                 documentId: profileData.documento,
                 phone: profileData.phone,
                 address: profileData.direccion,
                 email: profileData.email,
-                profileImage: this.profileImageUrl || undefined,
-                password: this.passwordForm.valid && this.passwordForm.get('newPassword')?.value
-                    ? this.passwordForm.get('newPassword')?.value
-                    : undefined
+                profileImage: this.profileImageUrl || undefined
+            }).subscribe({
+                next: (response) => {
+                    console.log('Perfil actualizado:', response);
+                    this.messageService.add({
+                        severity: 'success',
+                        summary: 'Éxito',
+                        detail: 'Perfil actualizado correctamente',
+                        life: 1500
+                    });
+                    
+                    // Si el formulario de contraseña también es válido, guardar la nueva contraseña
+                    if (this.passwordForm.valid) {
+                        const newPassword = this.passwordForm.get('newPassword')?.value;
+                        console.log('Guardando nueva contraseña');
+                        // TODO: Implementar cambio de contraseña en el backend
+                    }
+                    
+                    setTimeout(() => this.router.navigate(['/app/perfil']), 1500);
+                },
+                error: (err) => {
+                    console.error('Error actualizando perfil:', err);
+                    this.messageService.add({
+                        severity: 'error',
+                        summary: 'Error',
+                        detail: 'No se pudo actualizar el perfil',
+                        life: 3000
+                    });
+                }
             });
-
-            // Si el formulario de contrase?a tambi?n es v?lido, guardar la nueva contrase?a
-            if (this.passwordForm.valid) {
-                const newPassword = this.passwordForm.get('newPassword')?.value;
-                console.log('Guardando nueva contrase?a');
-                AccountInfoComponent.sharedUser.currentPassword = newPassword;
-            }
-
-            this.messageService.add({
-                severity: 'success',
-                summary: '?xito',
-                detail: 'Perfil actualizado correctamente',
-                life: 1500
-            });
-
-            setTimeout(() => this.router.navigate(['/app/perfil']), 1500);
         } else {
             this.profileForm.markAllAsTouched();
-            console.warn('Formulario de perfil inv?lido.');
+            console.warn('Formulario de perfil inválido.');
         }
     }
 

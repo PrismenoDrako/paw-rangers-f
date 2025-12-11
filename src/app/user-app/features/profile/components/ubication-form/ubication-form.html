@@ -1,59 +1,19 @@
 <div class="form-container">
     <form [formGroup]="locationForm" class="p-fluid">
         <div class="form-section">
-            <h3 class="section-title">Dirección seleccionada</h3>
-            <p class="section-subtitle">Selecciona una ubicación en el mapa</p>
+            <h3 class="section-title">Nueva Ubicación</h3>
             
             <div class="field">
-                <label for="mapAddress">Dirección del mapa</label>
+                <label for="name">Nombre de la ubicación *</label>
                 <input 
                     pInputText 
-                    id="mapAddress" 
+                    id="name" 
                     type="text" 
-                    [value]="locationData?.address || ''"
-                    placeholder="Se cargará automáticamente"
-                    readonly />
-            </div>
-
-            <div class="field">
-                <label for="fullAddress">Dirección Especifica <span class="optional">(Opcional)</span></label>
-                <input 
-                    pInputText 
-                    id="fullAddress" 
-                    type="text" 
-                    formControlName="fullAddress"
-                    placeholder="Calle, número, ciudad, referencias..." />
-                <small class="text-color-secondary">Si no completas este campo, se usará la dirección del mapa</small>
-            </div>
-        </div>
-
-        <div class="form-section">
-            <h3 class="section-title">¿Cómo quieres llamar a esta ubicación?</h3>
-            <p class="section-subtitle">Selecciona un tipo o escribe un nombre personalizado</p>
-            
-            <div class="location-types">
-                <button 
-                    type="button"
-                    *ngFor="let type of locationTypeOptions"
-                    class="location-type-btn"
-                    [class.active]="locationForm.get('locationType')?.value === type.value"
-                    (click)="locationForm.patchValue({locationType: type.value})">
-                    <i [class]="type.icon"></i>
-                    <span>{{ type.label }}</span>
-                </button>
-            </div>
-        </div>
-
-        <div class="form-section">
-            <h3 class="section-title">O escribe un nombre personalizado <span class="optional">(Opcional)</span></h3>
-            
-            <div class="field">
-                <input 
-                    pInputText 
-                    type="text" 
-                    formControlName="customName"
-                    placeholder="Casa de mamá, Veterinaria, Parque favorito..." />
-                <small class="text-color-secondary">Si dejas este campo vacío, se usará el tipo de ubicación seleccionado</small>
+                    formControlName="name"
+                    placeholder="Ej: Casa, Trabajo, Gym, etc..." />
+                <small class="text-color-secondary">Este será el nombre que verás en tu lista de ubicaciones</small>
+                <small *ngIf="locationForm.get('name')?.hasError('required')" class="text-red-500">Campo requerido</small>
+                <small *ngIf="locationForm.get('name')?.hasError('minlength')" class="text-red-500">Mínimo 3 caracteres</small>
             </div>
         </div>
 

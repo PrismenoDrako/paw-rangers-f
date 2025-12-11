@@ -34,7 +34,7 @@ export class LoginPage {
 
   constructor(private fb: FormBuilder, private auth: AuthService, private router: Router) {
     this.form = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
+      username: ['', [Validators.required, Validators.minLength(3)]],
       password: ['', [Validators.required, Validators.minLength(6)]],
       remember: [true],
     });
@@ -49,14 +49,14 @@ export class LoginPage {
     this.loading = true;
     this.error = null;
 
-    const { email, password } = this.form.getRawValue();
+    const { username, password } = this.form.getRawValue();
 
     this.auth
-      .login(email ?? '', password ?? '')
+      .login(username ?? '', password ?? '')
       .pipe(finalize(() => (this.loading = false)))
       .subscribe({
         next: () => this.router.navigate(['/app/home']),
-        error: () => (this.error = 'No pudimos iniciar sesion, intenta de nuevo.'),
+        error: (err) => (this.error = err?.message || 'No pudimos iniciar sesión, intenta de nuevo.'),
       });
   }
 }

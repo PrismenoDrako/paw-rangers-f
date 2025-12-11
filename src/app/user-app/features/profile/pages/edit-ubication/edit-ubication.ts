@@ -4,17 +4,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { UbicationMapComponent } from '../../components/ubication-map/ubication-map';
 import { UbicationFormComponent } from '../../components/ubication-form/ubication-form';
-import { AuthService } from '../../../../../core/services/auth.service';
+import { LocationService, UserLocation } from '../../../../../core/services/location.service';
 
-export interface Ubication {
-  id: string;
-  name: string;
-  address: string;
-  latitude: number;
-  longitude: number;
-  type: 'Casa' | 'Trabajo' | 'Favorito' | string;
-  createdAt?: Date;
-}
+export interface Ubication extends UserLocation {}
 
 @Component({
   selector: 'app-edit-ubication',
@@ -25,22 +17,19 @@ export interface Ubication {
 })
 export class EditUbicationPage implements OnInit {
   @ViewChild(UbicationFormComponent) formComponent!: UbicationFormComponent;
-  locationId: string | null = null;
+  locationId: number | null = null;
   ubication: Ubication | null = null;
   isLoading = true;
-  private storageKey = 'ubications:guest';
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private auth: AuthService
-  ) {
-    const email = this.auth.user()?.email || 'guest';
-    this.storageKey = `ubications:${email}`;
-  }
+    private locationService: LocationService
+  ) {}
 
   ngOnInit(): void {
-    this.locationId = this.route.snapshot.paramMap.get('id');
+    const id = this.route.snapshot.paramMap.get('id');
+    this.locationId = id ? parseInt(id, 10) : null;
     
     if (!this.locationId) {
       this.router.navigate(['/app/perfil']);
@@ -53,40 +42,41 @@ export class EditUbicationPage implements OnInit {
   private loadLocationData(): void {
     this.isLoading = true;
     
-    // Simular delay
-    setTimeout(() => {
-      const saved = localStorage.getItem(this.storageKey);
-      if (saved) {
-        try {
-          const ubications = JSON.parse(saved);
-          this.ubication = ubications.find((u: Ubication) => u.id === this.locationId);
-          
-          if (!this.ubication) {
-            this.router.navigate(['/app/perfil']);
-            return;
-          }
-          
-          // Precargar datos en el formulario
-          setTimeout(() => {
-            if (this.formComponent && this.ubication) {
-              this.formComponent.setEditMode(this.ubication);
-              this.formComponent.setSelectedLocation({
-                latitude: this.ubication.latitude,
-                longitude: this.ubication.longitude,
-                address: this.ubication.address
-              });
-            }
-          }, 100);
-        } catch (error) {
-          console.error('Error al cargar ubicación:', error);
-          this.router.navigate(['/app/perfil']);
-        }
-      }
+    if (!this.locationId) {
       this.isLoading = false;
-    }, 500);
+      return;
+    }
+
+    this.locationService.getUserLocations().subscribe({
+      next: (locations: UserLocation[]) => {
+        this.ubication = locations.find((u: UserLocation) => u.id === this.locationId) as Ubication || null;
+        
+        if (!this.ubication) {
+          console.warn('Location not found with id:', this.locationId);
+          this.isLoading = false;
+          return;
+        }
+        
+        // Precargar datos en el formulario
+        setTimeout(() => {
+          if (this.formComponent && this.ubication) {
+            this.formComponent.setSelectedLocation({
+              latitude: this.ubication!.latitude,
+              longitude: this.ubication!.longitude
+            });
+          }
+        }, 100);
+        
+        this.isLoading = false;
+      },
+      error: (err: any) => {
+        console.error('Error al cargar ubicación:', err);
+        this.isLoading = false;
+      }
+    });
   }
 
-  onLocationSelected(data: { latitude: number; longitude: number; address: string }): void {
+  onLocationSelected(data: { latitude: number; longitude: number }): void {
     if (this.formComponent) {
       this.formComponent.setSelectedLocation(data);
     }

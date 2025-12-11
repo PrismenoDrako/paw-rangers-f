@@ -8,7 +8,7 @@ import { TooltipModule } from 'primeng/tooltip';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { AuthService } from '../../../../../core/services/auth.service';
+import { LocationService } from '../../../../../core/services/location.service';
 
 @Component({
   selector: 'app-ubication-list-item', 
@@ -29,19 +29,15 @@ import { AuthService } from '../../../../../core/services/auth.service';
 export class UbicationListItemComponent { 
   
   @Input() location: any;
-  @Output() locationDeleted = new EventEmitter<string>();
+  @Output() locationDeleted = new EventEmitter<number>();
   isDeleting = false;
-  private storageKey = 'ubications:guest';
   
   constructor(
     private router: Router,
     private confirmationService: ConfirmationService,
     private messageService: MessageService,
-    private auth: AuthService
-  ) {
-    const email = this.auth.user()?.email || 'guest';
-    this.storageKey = `ubications:${email}`;
-  }
+    private locationService: LocationService
+  ) { }
   
   getIcon(): string {
     const name = this.location.name.toLowerCase();
@@ -54,7 +50,13 @@ export class UbicationListItemComponent {
   }
 
   onEditLocation(): void {
-    this.router.navigate([`/editar-ubicacion/${this.location.id}`]);
+    // TODO: Implementar edición de ubicación
+    this.messageService.add({
+      severity: 'info',
+      summary: 'Función no disponible',
+      detail: 'La edición de ubicaciones aún no está implementada',
+      life: 3000
+    });
   }
 
   onDeleteLocation(): void {
@@ -65,34 +67,31 @@ export class UbicationListItemComponent {
       acceptButtonStyleClass: 'p-button-danger',
       accept: () => {
         this.isDeleting = true;
+        console.log('Eliminando ubicación:', this.location.id);
         
-        try {
-          // Eliminar del localStorage
-          const saved = localStorage.getItem(this.storageKey);
-          if (saved) {
-            let ubications = JSON.parse(saved);
-            ubications = ubications.filter((u: any) => u.id !== this.location.id);
-            localStorage.setItem(this.storageKey, JSON.stringify(ubications));
+        this.locationService.deleteUserLocation(this.location.id).subscribe({
+          next: (response) => {
+            console.log('Ubicación eliminada:', response);
+            this.isDeleting = false;
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Éxito',
+              detail: 'Ubicación eliminada correctamente',
+              life: 2000
+            });
+            this.locationDeleted.emit(this.location.id);
+          },
+          error: (err) => {
+            console.error('Error al eliminar ubicación:', err);
+            this.isDeleting = false;
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Error',
+              detail: 'Error al eliminar la ubicación',
+              life: 3000
+            });
           }
-
-          this.isDeleting = false;
-          this.messageService.add({
-            severity: 'success',
-            summary: 'Éxito',
-            detail: 'Ubicación eliminada correctamente',
-            life: 2000
-          });
-          this.locationDeleted.emit(this.location.id);
-        } catch (error) {
-          this.isDeleting = false;
-          console.error('Error al eliminar:', error);
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Error',
-            detail: 'Error al eliminar la ubicación',
-            life: 3000
-          });
-        }
+        });
       },
       reject: () => {
         // Usuario canceló

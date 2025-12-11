@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ApiService } from './api.service';
 import {
@@ -19,6 +20,9 @@ export class PetService {
     found: 'api/pets/found',
     upload: 'api/pets/upload'
   };
+
+  private readonly http = inject(HttpClient);
+  private readonly baseUrl = 'http://localhost:3000';
 
   constructor(private apiService: ApiService) {}
 
@@ -139,5 +143,66 @@ export class PetService {
     const formData = new FormData();
     formData.append('image', file);
     return this.apiService.post<ApiResponse<{ url: string }>>(this.endpoints.upload, formData);
+  }
+
+  // ==================== MASCOTAS DEL USUARIO ====================
+
+  /**
+   * Crea una mascota registrada del usuario autenticado
+   */
+  createUserPet(data: { name: string; age: number; speciesId: number; breedId: number; imageFile?: File }): Observable<any> {
+    // Enviar como FormData porque el backend usa FileFieldsInterceptor
+    const formData = new FormData();
+    formData.append('name', data.name);
+    formData.append('age', data.age.toString());
+    formData.append('speciesId', data.speciesId.toString());
+    formData.append('breedId', data.breedId.toString());
+    
+    // Agregar imagen si existe
+    if (data.imageFile) {
+      formData.append('images', data.imageFile);
+      console.log('Enviando FormData con imagen:', data.imageFile.name);
+    }
+    
+    console.log('Enviando FormData al backend con:', { 
+      name: data.name, 
+      age: data.age, 
+      speciesId: data.speciesId, 
+      breedId: data.breedId,
+      hasImage: !!data.imageFile
+    });
+    
+    return this.http.post<any>(`${this.baseUrl}/pets`, formData, {
+      withCredentials: true
+      // NO enviar Content-Type, el navegador lo configura automáticamente con el boundary
+    });
+  }
+
+  /**
+   * Obtiene todas las mascotas del usuario autenticado
+   */
+  getUserPets(): Observable<any> {
+    return this.apiService.get<any>('pets');
+  }
+
+  /**
+   * Obtiene una mascota del usuario por ID
+   */
+  getUserPetById(id: number): Observable<any> {
+    return this.apiService.get<any>(`pets/${id}`);
+  }
+
+  /**
+   * Actualiza una mascota del usuario
+   */
+  updateUserPet(id: number, data: Partial<{ name: string; age: number; speciesId: number; breedId: number }>): Observable<any> {
+    return this.apiService.put<any>(`pets/${id}`, data);
+  }
+
+  /**
+   * Elimina una mascota del usuario
+   */
+  deleteUserPet(id: number): Observable<any> {
+    return this.apiService.delete<any>(`pets/${id}`);
   }
 }

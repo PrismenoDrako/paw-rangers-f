@@ -8,7 +8,6 @@ import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { FloatLabelModule } from 'primeng/floatlabel'; 
 import { AvatarModule } from 'primeng/avatar';
-import { AccountInfoComponent } from '../account-info/account-info';
 import { AuthService } from '../../../../../core/services/auth.service';
 
 
@@ -42,38 +41,48 @@ export class AccountFormComponent implements OnInit {
     }
 
     private initializeForm(): void {
-        // Obtener los datos del usuario compartidos desde account-info
-        const user = AccountInfoComponent.sharedUser;
+        // Obtener los datos del usuario autenticado
+        const authUser = this.auth.user();
+        console.log('AccountFormComponent initializeForm - authUser:', authUser);
+        
         this.profileForm = this.fb.group({
-            nombre: [user.nombre, Validators.required],
-            apellidoPaterno: [user.apellidoPaterno, Validators.required],
-            apellidoMaterno: [user.apellidoMaterno, Validators.required],
-            username: [user.username, Validators.required],
-            documento: [user.documento, Validators.required],
-            email: [user.email, [Validators.required, Validators.email]],
-            phone: [user.phone, Validators.required],
-            direccion: [user.direccion, Validators.required]
+            nombre: [authUser?.name ?? '', Validators.required],
+            apellidoPaterno: [authUser?.apellidoPaterno ?? '', Validators.required],
+            apellidoMaterno: [authUser?.apellidoMaterno ?? '', Validators.required],
+            username: [authUser?.email?.split('@')[0] ?? '', Validators.required],
+            documento: [authUser?.documentId ?? '', Validators.required],
+            email: [authUser?.email ?? '', [Validators.required, Validators.email]],
+            phone: [authUser?.phone ?? '', Validators.required],
+            direccion: [authUser?.address ?? '', Validators.required]
         });
+        
+        console.log('AccountFormComponent - profileForm inicializado:', this.profileForm.value);
     }
 
     onSubmit(): void {
         if (this.profileForm.valid) {
-            // Actualizar los datos compartidos con los nuevos valores del formulario
-            AccountInfoComponent.sharedUser = {
-                ...AccountInfoComponent.sharedUser,
-                ...this.profileForm.value
-            };
-            // Persistir en AuthService mock/local
             const formValue = this.profileForm.value;
+            console.log('AccountFormComponent onSubmit:', formValue);
+            
+            // Actualizar en el servidor mediante AuthService
             this.auth.updateProfile({
                 name: formValue.nombre,
+                apellidoPaterno: formValue.apellidoPaterno,
+                apellidoMaterno: formValue.apellidoMaterno,
                 documentId: formValue.documento,
                 phone: formValue.phone,
                 address: formValue.direccion,
                 email: formValue.email,
+            }).subscribe({
+                next: (response) => {
+                    console.log('Perfil actualizado en el servidor:', response);
+                    // Emitir el evento con los datos del formulario al padre
+                    this.formSubmitted.emit(formValue);
+                },
+                error: (err) => {
+                    console.error('Error actualizando perfil:', err);
+                }
             });
-            // Emitir el evento con los datos del formulario al padre
-            this.formSubmitted.emit(this.profileForm.value);
         } else {
             this.profileForm.markAllAsTouched();
             console.warn('Formulario inválido.');

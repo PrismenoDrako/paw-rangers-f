@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnInit, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, OnChanges, SimpleChanges, inject } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms'; 
 import { CommonModule } from '@angular/common';
 
@@ -11,6 +11,7 @@ import { SelectButtonModule } from 'primeng/selectbutton';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ApiService } from '../../../../../core/services/api.service';
 
 
 // --- Interfaces para mejor tipado ---
@@ -30,13 +31,14 @@ export interface Pet {
 export interface Species {
   id: number;
   name: string;
-  code: string;
+  scientificName?: string;
+  code?: string;
 }
 
 export interface Breed {
   id: number;
   name: string;
-  code: string;
+  code?: string;
   speciesId: number; // ID de la especie a la que pertenece
 }
 
@@ -71,6 +73,8 @@ export class PetFormComponent implements OnInit, OnChanges {
   @Output() formCancel = new EventEmitter<void>();
   @Output() formDelete = new EventEmitter<number>();
 
+  private readonly apiService = inject(ApiService);
+
   petForm: FormGroup;
   isEditMode: boolean = false;
   localImageUrl: string | null = null;
@@ -80,37 +84,9 @@ export class PetFormComponent implements OnInit, OnChanges {
     { label: 'Hembra', value: 'Hembra', icon: 'pi pi-venus' }
   ];
 
-  // Datos simulados de Species (En producción vendrían de la BD)
-  speciesOptions: Species[] = [
-      { id: 1, name: 'Perro', code: 'DOG' },
-      { id: 2, name: 'Gato', code: 'CAT' },
-      { id: 3, name: 'Ave', code: 'BIRD' },
-      { id: 4, name: 'Otro', code: 'OTHER' },
-  ];
-
-  // Datos simulados de Breeds (En producción vendrían de la BD)
-  allBreeds: Breed[] = [
-      // Razas de Perros
-      { id: 1, name: 'Labrador', code: 'LAB', speciesId: 1 },
-      { id: 2, name: 'Schnauzer', code: 'SCHN', speciesId: 1 },
-      { id: 3, name: 'Pastor Alemán', code: 'GSD', speciesId: 1 },
-      { id: 4, name: 'Mestizo', code: 'MIX_DOG', speciesId: 1 },
-      
-      // Razas de Gatos
-      { id: 5, name: 'Angora Turco', code: 'ANG', speciesId: 2 },
-      { id: 6, name: 'Persa', code: 'PERS', speciesId: 2 },
-      { id: 7, name: 'Siamés', code: 'SIAM', speciesId: 2 },
-      { id: 8, name: 'Mestizo', code: 'MIX_CAT', speciesId: 2 },
-      
-      // Razas de Aves
-      { id: 9, name: 'Canario', code: 'CAN', speciesId: 3 },
-      { id: 10, name: 'Loro', code: 'PAR', speciesId: 3 },
-      { id: 11, name: 'Loro Verde', code: 'PARV', speciesId: 3 },
-      
-      // Otros
-      { id: 12, name: 'Conejo', code: 'RAB', speciesId: 4 },
-      { id: 13, name: 'Hamster', code: 'HAM', speciesId: 4 },
-  ];
+  // Arrays que se cargarán desde la API
+  speciesOptions: Species[] = [];
+  allBreeds: Breed[] = [];
 
   // Razas filtradas según la especie seleccionada
   filteredBreeds: Breed[] = [];
@@ -146,7 +122,7 @@ export class PetFormComponent implements OnInit, OnChanges {
   }
 
   ngOnInit(): void {
-    this.initializeForm();
+    this.loadSpeciesAndBreeds();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -154,6 +130,44 @@ export class PetFormComponent implements OnInit, OnChanges {
       // Si petData cambió (no es el primer cambio), reinicializar el formulario
       this.initializeForm();
     }
+  }
+
+  private loadSpeciesAndBreeds(): void {
+    // Cargar especies desde la API
+    this.apiService.get<any>('species').subscribe({
+      next: (response) => {
+        this.speciesOptions = response.data || [];
+        console.log('Especies cargadas:', this.speciesOptions);
+      },
+      error: (err) => {
+        console.error('Error cargando especies:', err);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'No se pudieron cargar las especies',
+          life: 3000
+        });
+      }
+    });
+
+    // Cargar razas desde la API
+    this.apiService.get<any>('breeds').subscribe({
+      next: (response) => {
+        this.allBreeds = response.data || [];
+        console.log('Razas cargadas:', this.allBreeds);
+        // Inicializar form DESPUÉS de cargar AMBAS listas
+        this.initializeForm();
+      },
+      error: (err) => {
+        console.error('Error cargando razas:', err);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'No se pudieron cargar las razas',
+          life: 3000
+        });
+      }
+    });
   }
 
   private initializeForm(): void {
@@ -218,21 +232,33 @@ export class PetFormComponent implements OnInit, OnChanges {
 
   // Filtrar razas según especie seleccionada
   onSpeciesChange(species: Species | null): void {
+    console.log('🔥 onSpeciesChange llamado con:', species);
+    console.log('🔥 allBreeds disponibles:', this.allBreeds);
+    
     if (!species) {
       this.filteredBreeds = [];
       this.petForm.get('breed')?.reset();
       return;
     }
 
-    if (species.code === 'OTHER') {
-      this.filteredBreeds = [];
-      this.petForm.get('breed')?.reset();
-    } else {
-      this.filteredBreeds = this.allBreeds.filter(b => b.speciesId === species.id);
-      // Agregar opción "Otra raza" al final
-      this.filteredBreeds.push({ id: 999, name: 'Otra raza', code: 'OTHER', speciesId: species.id });
-      this.petForm.get('breed')?.reset();
-    }
+    // Filtrar razas por speciesId - IMPORTANTE: crear nuevo array
+    const filtered = this.allBreeds.filter(b => b.speciesId === species.id);
+    
+    console.log(`🔥 Razas filtradas para ${species.name} (ID: ${species.id}):`, filtered);
+    console.log('🔥 Longitud de filtered:', filtered.length);
+    
+    // Agregar opción "Otra raza" al final
+    const withOther = [...filtered, { id: 999, name: 'Otra raza', speciesId: species.id }];
+    
+    console.log('🔥 Array final con "Otra raza":', withOther);
+    
+    // Asignar como nuevo array para que Angular detecte el cambio
+    this.filteredBreeds = withOther;
+    
+    console.log('🔥 filteredBreeds después de asignar:', this.filteredBreeds);
+    
+    // Reset del control de raza
+    this.petForm.get('breed')?.reset();
   }
 
   // Manejo de la subida de imagen (Previsualización)
@@ -279,13 +305,13 @@ export class PetFormComponent implements OnInit, OnChanges {
       return;
     }
 
-    if (selectedSpecies.code !== 'OTHER' && !selectedBreed) {
+    if (selectedSpecies.id !== 999 && !selectedBreed) {
       alert('Debes seleccionar una raza');
       return;
     }
 
-    let species = selectedSpecies.code === 'OTHER' ? formValue.customSpecies : selectedSpecies.name;
-    let breed = selectedBreed && selectedBreed.code !== 'OTHER' ? selectedBreed.name : formValue.customBreed;
+    let species = selectedSpecies.id === 999 ? formValue.customSpecies : selectedSpecies.name;
+    let breed = selectedBreed && selectedBreed.id !== 999 ? selectedBreed.name : formValue.customBreed;
 
     // Ajuste para género femenino
     if (formValue.gender === 'Hembra') {
@@ -296,9 +322,9 @@ export class PetFormComponent implements OnInit, OnChanges {
     const petToSave: Pet = {
       id: formValue.id,
       name: formValue.name,
-      speciesId: selectedSpecies.code === 'OTHER' ? undefined : selectedSpecies.id,
+      speciesId: selectedSpecies.id,
       species: species,
-      breedId: selectedBreed ? selectedBreed.id : undefined,
+      breedId: selectedBreed?.id,
       breed: breed,
       gender: formValue.gender,
       age: formValue.age,

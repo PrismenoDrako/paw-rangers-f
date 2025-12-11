@@ -3,21 +3,21 @@
     <p class="error" *ngIf="error">{{ error }}</p>
 
     <div class="field">
-      <label for="email">Correo Electrónico</label>
+      <label for="username">Nombre de Usuario</label>
       <div class="input-wrapper">
-        <i class="pi pi-envelope"></i>
+        <i class="pi pi-user"></i>
         <input
-          id="email"
+          id="username"
           pInputText
-          type="email"
-          formControlName="email"
-          placeholder="Correo Electrónico"
-          autocomplete="email"
-          [ngClass]="{ 'ng-invalid ng-dirty': form.controls.email.touched && form.controls.email.invalid }"
+          type="text"
+          formControlName="username"
+          placeholder="Tu nombre de usuario"
+          autocomplete="username"
+          [ngClass]="{ 'ng-invalid ng-dirty': form.controls.username.touched && form.controls.username.invalid }"
         />
       </div>
-      <small class="p-error" *ngIf="form.controls.email.touched && form.controls.email.invalid">
-        Ingresa un correo válido.
+      <small class="p-error" *ngIf="form.controls.username.touched && form.controls.username.invalid">
+        Ingresa un nombre de usuario válido.
       </small>
     </div>
 
@@ -46,7 +46,8 @@
 
     <div class="actions">
       <button class="primary-btn" type="submit" [disabled]="loading">
-        {{ loading ? 'Entrando...' : 'Iniciar Sesión' }}
+        <span *ngIf="loading">Entrando...</span>
+        <span *ngIf="!loading">Iniciar Sesión</span>
       </button>
     </div>
 

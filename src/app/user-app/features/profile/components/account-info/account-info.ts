@@ -1,5 +1,5 @@
 // account-info.ts
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 
@@ -24,46 +24,41 @@ import { AuthService } from '../../../../../core/services/auth.service';
 })
 export class AccountInfoComponent implements OnInit {
 
-    // Datos compartidos que pueden ser actualizados desde account-form
-    static sharedUser: any = {
-        nombre: '',
-        apellidoPaterno: '',
-        apellidoMaterno: '',
-        username: '',
-        documento: '',
-        email: '',
-        phone: '',
-        direccion: '',
-        currentPassword: '',
-        profileImage: null
-    };
-
-    user: any = {};
     profileImageUrl: string = '';
 
     constructor(private router: Router, private auth: AuthService) { }
 
     ngOnInit(): void {
+        console.log('AccountInfoComponent ngOnInit');
+    }
+
+    /**
+     * Getter para acceder a los datos del usuario desde el auth service
+     * Mapea los datos del usuario autenticado al formato esperado por el template
+     */
+    get user(): any {
         const authUser = this.auth.user();
-        const mappedUser = {
+        console.log('AccountInfoComponent get user() - authUser:', authUser);
+        
+        return {
             nombre: authUser?.name ?? '',
-            apellidoPaterno: '',
-            apellidoMaterno: '',
+            apellidoPaterno: authUser?.apellidoPaterno ?? '',
+            apellidoMaterno: authUser?.apellidoMaterno ?? '',
             username: authUser?.email?.split('@')[0] ?? '',
             documento: authUser?.documentId ?? '',
             email: authUser?.email ?? '',
             phone: authUser?.phone ?? '',
             direccion: authUser?.address ?? '',
-            currentPassword: '',
             profileImage: authUser?.profileImage ?? null
         };
+    }
 
-        AccountInfoComponent.sharedUser = { ...AccountInfoComponent.sharedUser, ...mappedUser };
-
-        // Obtener los datos del usuario compartidos
-        this.user = AccountInfoComponent.sharedUser;
-        // Obtener la imagen de perfil si existe
-        this.profileImageUrl = this.user.profileImage || '';
+    /**
+     * Getter para la imagen de perfil
+     */
+    get profileImage(): string {
+        const authUser = this.auth.user();
+        return authUser?.profileImage || '';
     }
 
     /**

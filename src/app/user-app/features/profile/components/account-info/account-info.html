@@ -9,11 +9,11 @@
             <!-- Avatar a la izquierda -->
             <div class="avatar-column">
                 <div class="profile-avatar-container">
-                    <img *ngIf="profileImageUrl"
-                         [src]="profileImageUrl"
+                    <img *ngIf="profileImage"
+                         [src]="profileImage"
                          alt="Profile"
                          class="profile-image-display">
-                    <div *ngIf="!profileImageUrl" class="profile-avatar-default">
+                    <div *ngIf="!profileImage" class="profile-avatar-default">
                         <i class="pi pi-user"></i>
                     </div>
                 </div>

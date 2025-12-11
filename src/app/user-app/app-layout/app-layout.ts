@@ -9,5 +9,4 @@ import { Navigation } from "../components/navigation/navigation";
   styleUrl: './app-layout.scss',
 })
 export class AppLayout {
-
 }

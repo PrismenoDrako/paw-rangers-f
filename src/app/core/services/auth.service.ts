@@ -1,6 +1,8 @@
-import { Injectable, computed, signal } from '@angular/core';
-import { Observable, delay, of, tap, throwError } from 'rxjs';
-import { AuthResponse, User } from '../models/user.model';
+import { Injectable, computed, signal, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable, tap, throwError } from 'rxjs';
+import { AuthResponse, User, LoginDto, RegisterDto } from '../models/user.model';
+import { SocketService } from './socket.service';
 
 interface AuthState {
   user: User | null;
@@ -8,147 +10,172 @@ interface AuthState {
 }
 
 const STORAGE_KEY = 'paw-rangers-auth';
-const ADMIN_EMAILS = ['admin@pawrangers.com'];
-const USERS_KEY = 'paw-rangers-users';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   private readonly state = signal<AuthState>(this.loadState());
+  private readonly baseUrl = 'http://localhost:3000';
+  private readonly socket = inject(SocketService);
 
   readonly user = computed(() => this.state().user);
   readonly token = computed(() => this.state().token);
-  readonly isAuthenticated = computed(() => !!this.state().token);
+  readonly isAuthenticated = computed(() => !!this.state().user);
 
-  login(email: string, password: string): Observable<AuthResponse> {
-    const users = this.loadUsers();
-    const normalizedEmail = (email || '').trim().toLowerCase();
-    const found = users.find(
-      (u) => u.email.toLowerCase() === normalizedEmail && u.password === password
+  constructor(private http: HttpClient) {}
+
+  login(username: string, password: string): Observable<any> {
+    const loginDto = { username, password };
+    
+    return this.http.post<any>(`${this.baseUrl}/auth/login`, loginDto, {
+      withCredentials: true
+    }).pipe(
+      tap((response) => {
+        // El backend devuelve { status, data: user, timestamp }
+        const user = response.data;
+        this.setState({ user, token: 'authenticated' });
+        // Conectar al socket después de login exitoso
+        this.socket.connect();
+      })
     );
+  }
 
-    if (!found) {
-      return throwError(() => new Error('Credenciales inválidas'));
+  register(registerData: RegisterDto): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/users/register`, registerData, {
+      withCredentials: true
+    }).pipe(
+      tap((response) => {
+        const user = response.data;
+        this.setState({ user, token: 'authenticated' });
+        // Conectar al socket después de registro exitoso
+        this.socket.connect();
+      })
+    );
+  }
+
+  /**
+   * Obtiene los datos del usuario autenticado desde el servidor
+   * Llama a GET /users y busca el usuario con el email autenticado
+   */
+  getCurrentUser(): Observable<any> {
+    const authUser = this.state().user;
+    if (!authUser?.email) {
+      return throwError(() => new Error('Usuario no autenticado'));
     }
-
-    const user: User = {
-      id: found.id,
-      email: found.email,
-      name: found.name,
-      documentId: found.documentId,
-      phone: found.phone,
-      address: found.address,
-      profileImage: found.profileImage,
-      createdAt: new Date(found.createdAt),
-      updatedAt: new Date(found.updatedAt),
-      roles: found.roles,
-    };
-
-    const response: AuthResponse = {
-      user,
-      token: 'demo-token',
-      refreshToken: 'demo-refresh',
-    };
-
-    return of(response).pipe(
-      delay(300),
-      tap((res) => this.setState({ user: res.user, token: res.token }))
+    
+    console.log('getCurrentUser - Obteniendo usuario autenticado:', authUser.email);
+    
+    return this.http.get<any>(`${this.baseUrl}/users`, {
+      withCredentials: true
+    }).pipe(
+      tap((response) => {
+        console.log('getCurrentUser - Respuesta de /users:', response);
+        
+        // El endpoint devuelve {status: 'success', data: [...]}
+        const usersArray = response?.data || response || [];
+        
+        // Buscar el usuario autenticado por email
+        const user = Array.isArray(usersArray) 
+          ? usersArray.find((u: any) => u.email === authUser.email)
+          : null;
+        
+        console.log('getCurrentUser - Usuario encontrado:', user);
+        
+        if (user) {
+          this.setState({ user, token: 'authenticated' });
+        }
+      })
     );
   }
 
-  register(email: string, password: string, name: string): Observable<AuthResponse> {
-    const users = this.loadUsers();
-    const normalizedEmail = (email || '').trim().toLowerCase();
-    const exists = users.some((u) => u.email.toLowerCase() === normalizedEmail);
-    if (exists) {
-      return throwError(() => new Error('El correo ya está registrado.'));
-    }
-
-    const newUser = {
-      id: Date.now(),
-      email: normalizedEmail,
-      name,
-      password,
-      documentId: '',
-      phone: '',
-      address: '',
-      profileImage: '',
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-      roles: ['user'],
-    };
-    users.push(newUser);
-    this.saveUsers(users);
-
-    const user: User = {
-      id: newUser.id,
-      email: newUser.email,
-      name: newUser.name,
-      documentId: '',
-      phone: '',
-      address: '',
-      profileImage: '',
-      createdAt: new Date(newUser.createdAt),
-      updatedAt: new Date(newUser.updatedAt),
-      roles: newUser.roles,
-    };
-
-    const response: AuthResponse = {
-      user,
-      token: 'demo-token',
-      refreshToken: 'demo-refresh',
-    };
-
-    return of(response).pipe(
-      delay(400),
-      tap((res) => this.setState({ user: res.user, token: res.token }))
+  logout(): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/auth/logout`, {}, {
+      withCredentials: true
+    }).pipe(
+      tap(() => {
+        this.clearState();
+        // Desconectar del socket al cerrar sesión
+        this.socket.disconnect();
+      })
     );
   }
 
-  forgotPassword(email: string): Observable<{ ok: boolean }> {
-    return of({ ok: true }).pipe(delay(400));
+  /**
+   * Limpia el estado local sin hacer petición al servidor
+   * Usada cuando el servidor devuelve 401
+   */
+  clearLocalState(): void {
+    this.clearState();
+    // Desconectar del socket cuando la sesión expira
+    this.socket.disconnect();
   }
 
-  resetPassword(token: string, password: string): Observable<{ ok: boolean }> {
-    return of({ ok: true }).pipe(delay(400));
-  }
-
-  logout(): void {
+  private clearState(): void {
     this.setState({ user: null, token: null });
   }
 
+  /**
+   * Verifica si el usuario autenticado es administrador
+   */
   isAdmin(): boolean {
-    return this.state().user?.roles?.includes('admin') ?? false;
+    const user = this.state().user;
+    if (!user) return false;
+    // Según el backend, un admin tiene roleId: 1 y isCollaborator: true
+    return user.roleId === 1;
   }
 
-  updateProfile(data: Partial<User> & { password?: string; profileImage?: string }): void {
+  /**
+   * Solicita recuperación de contraseña
+   */
+  forgotPassword(email: string): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/auth/forgot-password`, { email }, {
+      withCredentials: true
+    });
+  }
+
+  /**
+   * Resetea la contraseña con un token
+   */
+  resetPassword(token: string, password: string): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/auth/reset-password`, { token, password }, {
+      withCredentials: true
+    });
+  }
+
+  /**
+   * Actualiza el perfil del usuario en el servidor
+   * Si lo necesitas síncrono para actualización local, usa updateLocalProfile()
+   */
+  updateProfile(data: Partial<User>): Observable<any> {
+    const userId = this.state().user?.id;
+    if (!userId) {
+      return throwError(() => new Error('Usuario no autenticado'));
+    }
+
+    return this.http.put<any>(`${this.baseUrl}/users/${userId}`, data, {
+      withCredentials: true
+    }).pipe(
+      tap((response) => {
+        const updatedUser = { ...this.state().user, ...response.data } as User;
+        this.setState({ user: updatedUser, token: this.state().token });
+      })
+    );
+  }
+
+  /**
+   * Actualiza el perfil localmente sin hacer petición al servidor
+   * Útil para actualizaciones rápidas en el UI
+   */
+  updateLocalProfile(data: Partial<User>): void {
     const current = this.state().user;
     if (!current) return;
 
     const updatedUser: User = {
       ...current,
       ...data,
-      profileImage: data.profileImage ?? current.profileImage,
       updatedAt: new Date(),
     };
-
-    // Actualizar store de usuarios mock
-    const users = this.loadUsers();
-    const idx = users.findIndex((u) => u.id === current.id || u.email === current.email);
-    if (idx !== -1) {
-      users[idx] = {
-        ...users[idx],
-        ...data,
-        password: data.password ?? users[idx].password,
-        profileImage: data.profileImage ?? users[idx].profileImage,
-        updatedAt: new Date().toISOString(),
-        // si cambia el email, respetar el nuevo para futuros logins
-        email: data.email ? data.email.trim().toLowerCase() : users[idx].email,
-        createdAt: typeof users[idx].createdAt === 'string' ? users[idx].createdAt : new Date(users[idx].createdAt).toISOString(),
-      };
-      this.saveUsers(users);
-    }
 
     this.setState({ user: updatedUser, token: this.state().token });
   }
@@ -169,53 +196,5 @@ export class AuthService {
       return { user: null, token: null };
     }
   }
-
-  private loadUsers(): Array<{
-    id: number;
-    email: string;
-    name: string;
-    password: string;
-    documentId: string;
-    phone: string;
-    address: string;
-    profileImage?: string;
-    createdAt: string;
-    updatedAt: string;
-    roles: string[];
-  }> {
-    const stored = localStorage.getItem(USERS_KEY);
-    let users: Array<any> = [];
-    if (stored) {
-      try {
-        users = JSON.parse(stored) as any[];
-      } catch {
-        users = [];
-      }
-    }
-
-    // Seed admin if missing
-    const adminExists = users.some((u) => u.email?.toLowerCase() === ADMIN_EMAILS[0]);
-    if (!adminExists) {
-      users.push({
-        id: 1,
-        email: ADMIN_EMAILS[0],
-        name: 'Administrador PawRangers',
-        password: 'Admin123!',
-        documentId: '',
-        phone: '',
-        address: '',
-        profileImage: '',
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-        roles: ['admin'],
-      });
-    }
-
-    this.saveUsers(users);
-    return users;
-  }
-
-  private saveUsers(users: any[]): void {
-    localStorage.setItem(USERS_KEY, JSON.stringify(users));
-  }
 }
+

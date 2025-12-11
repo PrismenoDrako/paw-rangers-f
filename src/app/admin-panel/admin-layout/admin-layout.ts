@@ -17,13 +17,13 @@ export class AdminLayout {
   logout() {
     this.auth.logout().subscribe({
       next: () => {
-        this.router.navigate(['/auth/login']);
+        this.router.navigate(['/auth']);
       },
       error: (error) => {
         console.error('Error al cerrar sesión:', error);
         // Forzar cierre de sesión local incluso si falla
         this.auth.clearLocalState();
-        this.router.navigate(['/auth/login']);
+        this.router.navigate(['/auth']);
       }
     });
   }

@@ -12,6 +12,7 @@ import { HttpClient } from '@angular/common/http';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
+import { environment } from '../../../../../environments/environment';
 
 type TagSeverity = 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'contrast' | null;
 
@@ -79,6 +80,7 @@ export class Users implements OnInit {
     username: '',
     email: '',
     password: '',
+    docNumber: '',
     role: 'user' as 'admin' | 'user',
     phone: ''
   };
@@ -88,6 +90,7 @@ export class Users implements OnInit {
     name: '',
     username: '',
     email: '',
+    docNumber: '',
     phone: '',
     password: ''
   };
@@ -107,6 +110,40 @@ export class Users implements OnInit {
     user: 'secondary',
   };
 
+  private mapRole(role: any): UserRow['role'] {
+    if (role && typeof role === 'object' && role.id !== undefined) {
+      return {
+        id: role.id,
+        name: role.name || (role.id === 1 ? 'Admin' : 'Usuario'),
+        isCollaborator: !!role.isCollaborator
+      };
+    }
+    const roleId = typeof role === 'number' ? role : 2;
+    return {
+      id: roleId,
+      name: roleId === 1 ? 'Admin' : 'Usuario',
+      isCollaborator: roleId === 1
+    };
+  }
+
+  private mapUser(u: any): UserRow {
+    return {
+      id: u.id,
+      username: u.username,
+      email: u.email?.value || u.email,
+      name: u.name,
+      lastName1: u.lastName1,
+      lastName2: u.lastName2 ?? null,
+      docType: u.docType ?? null,
+      docNumber: u.docNumber ?? '',
+      address: u.address ?? '',
+      role: this.mapRole(u.role ?? u.roleId),
+      isActive: u.isActive ?? true,
+      createdAt: u.createdAt ?? '',
+      updatedAt: u.updatedAt ?? ''
+    };
+  }
+
   constructor(
     private http: HttpClient,
     private confirmationService: ConfirmationService,
@@ -118,11 +155,16 @@ export class Users implements OnInit {
   }
 
   loadUsers() {
-    this.http.get<UsersResponse>('https://nonprejudicially-unmenacing-wanda.ngrok-free.dev/api/admin/users?page=1&size=100', {
+    this.http.get<UsersResponse>(`${environment.apiUrl}/users`, {
       withCredentials: true
     }).subscribe({
       next: (response) => {
-        this.users = response.data.data;
+        const raw = Array.isArray(response?.data)
+          ? response.data
+          : Array.isArray(response?.data?.data)
+            ? response.data.data
+            : [];
+        this.users = raw.map((u: any) => this.mapUser(u));
       },
       error: (error) => {
         console.error('❌ Error loading users:', error);
@@ -158,7 +200,8 @@ export class Users implements OnInit {
   toggleUserStatus(user: UserRow) {
     const newStatus = !user.isActive;
     
-    this.http.patch(`https://nonprejudicially-unmenacing-wanda.ngrok-free.dev/api/admin/users/${user.id}/status`, 
+    this.http.put(
+      `${environment.apiUrl}/users/${user.id}`,
       { isActive: newStatus },
       { withCredentials: true }
     ).subscribe({
@@ -192,6 +235,7 @@ export class Users implements OnInit {
       username: '',
       email: '',
       password: '',
+      docNumber: '',
       role: 'user',
       phone: ''
     };
@@ -199,6 +243,7 @@ export class Users implements OnInit {
       name: '',
       username: '',
       email: '',
+      docNumber: '',
       phone: '',
       password: ''
     };
@@ -235,9 +280,23 @@ export class Users implements OnInit {
     }
   }
 
+  validateDocNumber(event: KeyboardEvent) {
+    const char = event.key;
+    const currentValue = this.newUser.docNumber;
+
+    // Solo permitir números y limitar a 8 dígitos
+    if (!/^\d$/.test(char) && event.key !== 'Backspace' && event.key !== 'Tab') {
+      event.preventDefault();
+    }
+
+    if (currentValue.length >= 8 && /^\d$/.test(char)) {
+      event.preventDefault();
+    }
+  }
+
   validateForm(): boolean {
     let isValid = true;
-    this.errors = { name: '', username: '', email: '', phone: '', password: '' };
+    this.errors = { name: '', username: '', email: '', docNumber: '', phone: '', password: '' };
 
     // Validar nombre completo (solo letras y espacios, mínimo 2 palabras)
     const nameRegex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/;
@@ -283,6 +342,16 @@ export class Users implements OnInit {
       isValid = false;
     }
 
+    // Validar documento (8 dígitos)
+    const docRegex = /^\d{8}$/;
+    if (!this.newUser.docNumber.trim()) {
+      this.errors.docNumber = 'El documento es requerido';
+      isValid = false;
+    } else if (!docRegex.test(this.newUser.docNumber)) {
+      this.errors.docNumber = 'Debe tener 8 dígitos';
+      isValid = false;
+    }
+
     // Validar contraseña (mínimo 6 caracteres)
     if (!this.newUser.password) {
       this.errors.password = 'La contraseña es requerida';
@@ -313,7 +382,7 @@ export class Users implements OnInit {
       name: nameParts[0],
       lastName1: nameParts[1] || '',
       lastName2: nameParts.length > 2 ? nameParts.slice(2).join(' ') : null,
-      docNumber: '00000000',
+      docNumber: this.newUser.docNumber,
       phone: this.newUser.phone,
       address: 'Perú',
       roleId: this.newUser.role === 'admin' ? 1 : 2
@@ -321,7 +390,7 @@ export class Users implements OnInit {
 
     console.log('📤 Enviando datos de usuario:', userData);
     
-    this.http.post<{ status: string; data: UserRow }>('https://nonprejudicially-unmenacing-wanda.ngrok-free.dev/api/admin/users', userData, {
+    this.http.post<{ status: string; data: UserRow }>(`${environment.apiUrl}/users/register`, userData, {
       withCredentials: true
     }).subscribe({
       next: (response) => {
@@ -354,7 +423,7 @@ export class Users implements OnInit {
 
   closeRegisterModal() {
     // Verificar si hay datos en el formulario
-    const hasData = this.newUser.name || this.newUser.username || this.newUser.email || this.newUser.phone || this.newUser.password;
+    const hasData = this.newUser.name || this.newUser.username || this.newUser.email || this.newUser.docNumber || this.newUser.phone || this.newUser.password;
     
     if (hasData) {
       this.confirmationService.confirm({

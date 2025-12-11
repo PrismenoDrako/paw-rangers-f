@@ -16,7 +16,7 @@ const STORAGE_KEY = 'paw-rangers-auth';
 })
 export class AuthService {
   private readonly state = signal<AuthState>(this.loadState());
-  private readonly baseUrl = 'https://nonprejudicially-unmenacing-wanda.ngrok-free.dev';
+  private readonly baseUrl = 'http://localhost:3000';
   private readonly socket = inject(SocketService);
 
   readonly user = computed(() => this.state().user);

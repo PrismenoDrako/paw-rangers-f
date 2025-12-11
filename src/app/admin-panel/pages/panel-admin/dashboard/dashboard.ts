@@ -5,6 +5,7 @@ import { ChartModule } from 'primeng/chart';
 import { ButtonModule } from 'primeng/button';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../../../environments/environment';
 
 interface DashboardData {
   status: string;
@@ -61,7 +62,7 @@ export class Dashboard implements OnInit {
   }
 
   loadDashboardData() {
-    this.http.get<DashboardData>('https://nonprejudicially-unmenacing-wanda.ngrok-free.dev/api/admin/dashboard', {
+    this.http.get<DashboardData>(`${environment.apiUrl}/stats`, {
       withCredentials: true
     }).subscribe({
       next: (response) => {

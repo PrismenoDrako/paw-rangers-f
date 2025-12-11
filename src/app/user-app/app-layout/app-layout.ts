@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from "@angular/router";
+import { ToastModule } from 'primeng/toast';
 import { Navigation } from "../components/navigation/navigation";
-import { ToastContainerComponent } from "../components/toast-container/toast-container.component";
 import { NotificationHandlerService } from '../../core/services/notification-handler.service';
 
 @Component({
   selector: 'app-app-layout',
-  imports: [RouterOutlet, Navigation, ToastContainerComponent],
+  imports: [RouterOutlet, Navigation, ToastModule],
   templateUrl: './app-layout.html',
   styleUrl: './app-layout.scss',
 })

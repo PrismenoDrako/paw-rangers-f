@@ -40,21 +40,7 @@ export class LostPetsSection implements OnInit {
       ownerPhone: '+51 987 654 321',
       ownerEmail: 'carlos.mendez@email.com'
     },
-    {
-      id: 2,
-      name: 'Luna',
-      type: 'Gato',
-      breed: 'Siamés',
-      color: 'Crema con puntos marrones',
-      location: 'Miraflores, Lima',
-      date: new Date('2024-11-27'),
-      reward: 300,
-      image: 'https://images.unsplash.com/photo-1573865526739-10c1dd7aa5b5?w=400&h=300&fit=crop',
-      description: 'Gata con ojos azules, muy asustadiza.',
-      ownerName: 'Laura García',
-      ownerPhone: '+51 987 111 222',
-      ownerEmail: 'laura@example.com'
-    },
+    
     {
       id: 3,
       name: 'Rocky',

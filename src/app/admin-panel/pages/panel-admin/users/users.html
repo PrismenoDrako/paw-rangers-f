@@ -1,3 +1,6 @@
+<p-toast></p-toast>
+<p-confirmDialog></p-confirmDialog>
+
 <div class="users-page">
   <div class="page-header">
     <div>
@@ -118,27 +121,64 @@
   [resizable]="false">
   <div class="register-form">
     <div class="form-field">
-      <label for="name">Nombre completo</label>
-      <input pInputText id="name" [(ngModel)]="newUser.name" placeholder="Ingrese el nombre" class="w-full" />
+      <label for="name">Nombre completo <span style="color: red;">*</span></label>
+      <input 
+        pInputText 
+        id="name" 
+        [(ngModel)]="newUser.name" 
+        placeholder="Ingrese nombre y apellido" 
+        class="w-full"
+        (keydown)="validateName($event)"
+        [class.ng-invalid]="errors.name"
+        [class.ng-dirty]="errors.name" />
+      <small *ngIf="errors.name" class="p-error">{{ errors.name }}</small>
     </div>
     
     <div class="form-field">
-      <label for="email">Email</label>
-      <input pInputText id="email" type="email" [(ngModel)]="newUser.email" placeholder="usuario@example.com" class="w-full" />
+      <label for="email">Email <span style="color: red;">*</span></label>
+      <input 
+        pInputText 
+        id="email" 
+        type="email" 
+        [(ngModel)]="newUser.email" 
+        placeholder="usuario@example.com" 
+        class="w-full"
+        [class.ng-invalid]="errors.email"
+        [class.ng-dirty]="errors.email" />
+      <small *ngIf="errors.email" class="p-error">{{ errors.email }}</small>
     </div>
     
     <div class="form-field">
-      <label for="phone">Teléfono</label>
-      <input pInputText id="phone" [(ngModel)]="newUser.phone" placeholder="+34 600 000 000" class="w-full" />
+      <label for="phone">Teléfono (Perú) <span style="color: red;">*</span></label>
+      <input 
+        pInputText 
+        id="phone" 
+        [(ngModel)]="newUser.phone" 
+        placeholder="987654321 (9 dígitos)" 
+        class="w-full"
+        (keydown)="validatePhone($event)"
+        maxlength="9"
+        [class.ng-invalid]="errors.phone"
+        [class.ng-dirty]="errors.phone" />
+      <small *ngIf="errors.phone" class="p-error">{{ errors.phone }}</small>
     </div>
     
     <div class="form-field">
-      <label for="password">Contraseña</label>
-      <p-password id="password" [(ngModel)]="newUser.password" placeholder="Contraseña" [feedback]="false" [toggleMask]="true" styleClass="w-full"></p-password>
+      <label for="password">Contraseña <span style="color: red;">*</span></label>
+      <p-password 
+        id="password" 
+        [(ngModel)]="newUser.password" 
+        placeholder="Mínimo 6 caracteres" 
+        [feedback]="false" 
+        [toggleMask]="true" 
+        styleClass="w-full"
+        [class.ng-invalid]="errors.password"
+        [class.ng-dirty]="errors.password"></p-password>
+      <small *ngIf="errors.password" class="p-error">{{ errors.password }}</small>
     </div>
     
     <div class="form-field">
-      <label for="role">Rol</label>
+      <label for="role">Rol <span style="color: red;">*</span></label>
       <p-select 
         id="role"
         [options]="roleOptions" 
@@ -153,7 +193,7 @@
   
   <ng-template #footer>
     <div class="dialog-footer">
-      <p-button label="Cancelar" severity="secondary" [text]="true" (onClick)="showRegisterModal = false"></p-button>
+      <p-button label="Cancelar" severity="secondary" [text]="true" (onClick)="closeRegisterModal()"></p-button>
       <p-button label="Registrar" (onClick)="registerUser()"></p-button>
     </div>
   </ng-template>

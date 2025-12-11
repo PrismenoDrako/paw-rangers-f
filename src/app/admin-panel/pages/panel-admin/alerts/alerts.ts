@@ -53,7 +53,9 @@ export class Alerts implements OnInit {
   }
 
   loadDashboardData() {
-    this.http.get<AlertsData>('http://localhost:3000/api/admin/alerts/stats').subscribe({
+    this.http.get<AlertsData>('https://nonprejudicially-unmenacing-wanda.ngrok-free.dev/api/admin/alerts/stats', {
+      withCredentials: true
+    }).subscribe({
       next: (response) => {
         const data = response.data;
         const totalActive = data.found.active + data.lost.active;

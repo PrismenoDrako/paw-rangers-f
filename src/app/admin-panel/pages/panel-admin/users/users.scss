@@ -178,6 +178,17 @@ $text: #1f2d3d;
       color: $text;
       font-size: clamp(0.85rem, 2vw, 0.9rem);
     }
+
+    .p-error {
+      color: #f44336;
+      font-size: 0.85rem;
+      margin-top: 0.25rem;
+    }
+
+    input.ng-invalid.ng-dirty,
+    :deep(.p-password.ng-invalid.ng-dirty input) {
+      border-color: #f44336;
+    }
   }
 }
 

@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
+import { AuthService } from '../../core/services/auth.service';
 
 @Component({
   selector: 'app-admin-layout',
@@ -10,5 +11,20 @@ import { RouterModule } from '@angular/router';
   styleUrl: './admin-layout.scss',
 })
 export class AdminLayout {
+  private auth = inject(AuthService);
+  private router = inject(Router);
 
+  logout() {
+    this.auth.logout().subscribe({
+      next: () => {
+        this.router.navigate(['/auth/login']);
+      },
+      error: (error) => {
+        console.error('Error al cerrar sesión:', error);
+        // Forzar cierre de sesión local incluso si falla
+        this.auth.clearLocalState();
+        this.router.navigate(['/auth/login']);
+      }
+    });
+  }
 }

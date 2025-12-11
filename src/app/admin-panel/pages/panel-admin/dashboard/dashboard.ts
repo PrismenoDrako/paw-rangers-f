@@ -61,7 +61,9 @@ export class Dashboard implements OnInit {
   }
 
   loadDashboardData() {
-    this.http.get<DashboardData>('http://localhost:3000/api/admin/dashboard').subscribe({
+    this.http.get<DashboardData>('https://nonprejudicially-unmenacing-wanda.ngrok-free.dev/api/admin/dashboard', {
+      withCredentials: true
+    }).subscribe({
       next: (response) => {
         const users = response.data.users;
         const alerts = response.data.alerts;

@@ -75,7 +75,32 @@ $text: #1f2d3d;
   }
 
   .session {
+    display: flex;
+    align-items: center;
+    gap: 12px;
     color: #6b7a90;
+
+    .logout-btn {
+      background: transparent;
+      border: none;
+      color: #6b7a90;
+      cursor: pointer;
+      padding: 8px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+
+      i {
+        font-size: 1.2rem;
+      }
+
+      &:hover {
+        background: rgba(244, 67, 54, 0.1);
+        color: #f44336;
+      }
+    }
   }
 }
 

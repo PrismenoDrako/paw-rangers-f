@@ -18,6 +18,8 @@ import { MessageService } from 'primeng/api';
 
 // Services
 import { SimilarityService, SimilarPet } from '../../../../../core/services/similarity.service';
+import { AlertService, CreateAlertDto } from '../../../../../core/services/alert.service';
+import { PetService } from '../../../../../core/services/pet.service';
 
 // Components
 import { SimilarPetsModalComponent } from '../../../../../shared/components/similar-pets-modal/similar-pets-modal';
@@ -159,7 +161,9 @@ export class LostPetReportD implements OnInit, AfterViewInit, OnDestroy {
     private location: Location,
     private router: Router,
     private messageService: MessageService,
-    private similarityService: SimilarityService
+    private similarityService: SimilarityService,
+    private alertService: AlertService,
+    private petService: PetService
   ) {}
 
   ngOnInit(): void {
@@ -411,56 +415,119 @@ export class LostPetReportD implements OnInit, AfterViewInit, OnDestroy {
 
   // Finalizar reporte
   finalizeReport(savePetToProfile: boolean): void {
-    const reportData = {
-      pet: this.petInfoForm.value,
-      location: this.locationForm.value,
-      reward: this.rewardForm.value,
-      photo: this.photoFile,
-      isUserPet: !!this.selectedPet,
-      selectedPetId: this.selectedPet?.id || null,
-      savePetToProfile: savePetToProfile
-    };
+    const petData = this.petInfoForm.value;
+    const locationData = this.locationForm.value;
 
-    console.log('Reporte enviado:', reportData);
-    
-    if (savePetToProfile) {
+    // Validar datos críticos
+    if (!petData.species || !locationData.latitude || !locationData.longitude) {
       this.messageService.add({
-        severity: 'success',
-        summary: 'Éxito',
-        detail: '¡Reporte publicado y mascota guardada en tu perfil!'
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Faltan datos requeridos para crear el reporte'
       });
-    } else {
-      this.messageService.add({
-        severity: 'success',
-        summary: 'Éxito',
-        detail: '¡Reporte publicado exitosamente!'
-      });
+      return;
     }
 
-    // Buscar mascotas encontradas similares
-    const petData = {
-      species: reportData.pet.species || '',
-      breed: reportData.pet.breed || '',
-      gender: reportData.pet.gender || '',
-      age: typeof reportData.pet.age === 'number'
-        ? reportData.pet.age
-        : reportData.pet.age
-          ? Number(reportData.pet.age) || undefined
-          : undefined,
-      description: reportData.pet.description || ''
-    };
-    this.similarPets = this.similarityService.findSimilarFoundPets(petData);
-    this.isFoundReport = false; // Indica que estamos reportando una mascota PERDIDA
+    // Buscar el ID de especie (suponiendo que species es un número o necesita mapeo)
+    const speciesId = typeof petData.species === 'number' 
+      ? petData.species 
+      : this.mapSpeciesNameToId(petData.species);
 
-    // Mostrar modal si hay mascotas similares
-    if (this.similarPets.length > 0) {
-      this.showSimilarPetsModal = true;
-    } else {
-      // Si no hay mascotas similares, navegar después de 2 segundos
-      setTimeout(() => {
-        this.router.navigate(['/app/animales-perdidos']);
-      }, 2000);
-    }
+    // Construir DTO para la API
+    const alertDto: CreateAlertDto = {
+      speciesId: speciesId,
+      breedId: petData.breed ? this.mapBreedNameToId(petData.breed) : undefined,
+      description: petData.description || '',
+      latitude: locationData.latitude,
+      longitude: locationData.longitude,
+      date: locationData.lostDate ? new Date(locationData.lostDate).toISOString() : undefined,
+      type: 'lost'
+    };
+
+    // Enviar alerta a la API
+    this.alertService.createAlert(alertDto, this.photoFile ? [this.photoFile] : undefined)
+      .subscribe({
+        next: (response) => {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Éxito',
+            detail: savePetToProfile 
+              ? '¡Reporte publicado y mascota guardada en tu perfil!'
+              : '¡Reporte publicado exitosamente!'
+          });
+
+          // Si quiere guardar la mascota en perfil
+          if (savePetToProfile && this.isReportingOther) {
+            this.savePetToProfile(petData);
+          }
+
+          // Buscar mascotas encontradas similares
+          const similarData = {
+            species: petData.species || '',
+            breed: petData.breed || '',
+            gender: petData.gender || '',
+            age: typeof petData.age === 'number'
+              ? petData.age
+              : petData.age ? Number(petData.age) || undefined : undefined,
+            description: petData.description || ''
+          };
+          this.similarPets = this.similarityService.findSimilarFoundPets(similarData);
+          this.isFoundReport = false;
+
+          // Mostrar modal si hay mascotas similares
+          if (this.similarPets.length > 0) {
+            this.showSimilarPetsModal = true;
+          } else {
+            setTimeout(() => {
+              this.router.navigate(['/app/animales-perdidos']);
+            }, 2000);
+          }
+        },
+        error: (error) => {
+          console.error('Error al crear alerta:', error);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'No se pudo publicar el reporte. Intenta nuevamente.'
+          });
+        }
+      });
+  }
+
+  // Mapear nombre de especie a ID (ajustar según especies disponibles)
+  private mapSpeciesNameToId(speciesName: string): number {
+    const speciesMap: { [key: string]: number } = {
+      'Perro': 1,
+      'Dog': 1,
+      'Gato': 2,
+      'Cat': 2,
+      'Ave': 3,
+      'Bird': 3,
+      'Otra': 999
+    };
+    return speciesMap[speciesName] || 1; // Por defecto Perro
+  }
+
+  // Mapear nombre de raza a ID (ajustar según razas disponibles)
+  private mapBreedNameToId(breedName: string): number {
+    // Aquí puedes implementar un mapeo más sofisticado
+    // Por ahora retornar un ID dummy
+    return 1;
+  }
+
+  // Guardar mascota en perfil del usuario
+  private savePetToProfile(petData: any): void {
+    const createPetDto = {
+      name: petData.petName,
+      species: petData.species,
+      breed: petData.breed,
+      age: petData.age,
+      gender: petData.gender,
+      description: petData.description
+    };
+
+    // Hacer llamada al PetService si existe método para crear mascota
+    // this.petService.createPet(createPetDto).subscribe(...);
   }
 
   // Obtener dirección desde coordenadas usando Nominatim (OpenStreetMap)

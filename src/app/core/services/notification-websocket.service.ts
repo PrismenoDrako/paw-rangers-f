@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { io, Socket } from 'socket.io-client';
 import { AuthService } from './auth.service';
 import { NotificationsHttpService, Notification, NotificationsResponse } from './notifications-http.service';
@@ -16,6 +16,10 @@ export class NotificationWebsocketService {
 
   private isConnectedSubject = new BehaviorSubject<boolean>(false);
   public isConnected$ = this.isConnectedSubject.asObservable();
+
+  // Nuevo: emisor de notificaciones en tiempo real para mostrar toasts
+  private notificationReceivedSubject = new Subject<Notification>();
+  public notificationReceived$ = this.notificationReceivedSubject.asObservable();
 
   private readonly socketUrl = 'http://localhost:3000';
 
@@ -68,8 +72,15 @@ export class NotificationWebsocketService {
     });
 
     this.socket.on('notification', (notification: Notification) => {
-      console.log('Nueva notificacion via WebSocket:', notification);
+      console.log('📬 Nueva notificación vía WebSocket:', notification);
+      console.log('🎯 [SOCKET CLIENT] Evento notification recibido');
+      console.log('📦 [SOCKET CLIENT] Datos:', JSON.stringify(notification));
+      
       this.addNotification(notification);
+      // Emitir para que el toast la muestre en tiempo real
+      this.notificationReceivedSubject.next(notification);
+      
+      console.log('✅ [SOCKET CLIENT] Notificación añadida y emitida al handler');
     });
   }
 

@@ -37,13 +37,10 @@ export class AuthService {
    */
   getUser(): User | null {
     const user = this.state().user;
-    console.log('🔓 getUser() - Usuario del state:', user);
     if (!user) return null;
     
     // Siempre transformar el usuario para asegurar que tiene roleId
-    const transformed = this.transformUserData({ ...user });
-    console.log('🔓 getUser() - Usuario transformado:', transformed);
-    return transformed;
+    return this.transformUserData({ ...user });
   }
 
   login(username: string, password: string): Observable<any> {
@@ -53,13 +50,10 @@ export class AuthService {
       withCredentials: true
     }).pipe(
       tap((response) => {
-        console.log('🔓 login() - response.data:', response.data);
         // El backend devuelve { status, data: { access_token, user }, timestamp }
         let user = response.data.user || response.data;
-        console.log('🔓 login() - user antes de transform:', user);
         // Transformar la estructura del usuario si es necesario
         user = this.transformUserData(user);
-        console.log('🔓 login() - user después de transform:', user);
         this.setState({ user, token: 'authenticated' });
         // Conectar al socket después de login exitoso
         this.socket.connect();
@@ -221,28 +215,23 @@ export class AuthService {
   }
 
   private setState(next: AuthState): void {
-    console.log('🔓 setState - Guardando en localStorage:', next);
     this.state.set(next);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
   }
 
   private loadState(): AuthState {
     const data = localStorage.getItem(STORAGE_KEY);
-    console.log('🔓 loadState - Cargando desde localStorage:', data);
     if (!data) {
       return { user: null, token: null };
     }
     try {
       const state = JSON.parse(data) as AuthState;
-      console.log('🔓 loadState - Estado parseado:', state);
       // Transformar el usuario si es necesario cuando se carga desde localStorage
       if (state.user) {
         state.user = this.transformUserData(state.user);
-        console.log('🔓 loadState - Usuario transformado:', state.user);
       }
       return state;
-    } catch (e) {
-      console.error('❌ Error al parsear localStorage:', e);
+    } catch {
       return { user: null, token: null };
     }
   }

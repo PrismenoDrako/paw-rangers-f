@@ -13,7 +13,8 @@ export const UserAppRoutes: Routes = [
         path: '',
         component: AppLayout,
         children: [
-            ...homeRoutes,
+            // Cargar home directamente en /app (sin /app/home)
+            ...homeRoutes.map(route => ({ ...route, path: route.path === 'home' ? '' : route.path })),
             ...lostPetsRoutes,
             { path: 'animales-encontrados', children: foundPetsRoutes },
             ...mapExplorerRoutes,

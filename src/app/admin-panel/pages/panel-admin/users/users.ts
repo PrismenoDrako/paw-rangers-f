@@ -9,6 +9,9 @@ import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
 import { SelectModule } from 'primeng/select';
 import { HttpClient } from '@angular/common/http';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ConfirmationService, MessageService } from 'primeng/api';
+import { ToastModule } from 'primeng/toast';
 
 type TagSeverity = 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'contrast' | null;
 
@@ -56,8 +59,11 @@ interface UsersResponse {
     DialogModule,
     InputTextModule,
     PasswordModule,
-    SelectModule
+    SelectModule,
+    ConfirmDialogModule,
+    ToastModule
   ],
+  providers: [ConfirmationService, MessageService],
   templateUrl: './users.html',
   styleUrl: './users.scss',
 })
@@ -70,15 +76,25 @@ export class Users implements OnInit {
   // Formulario de registro
   newUser = {
     name: '',
+    username: '',
     email: '',
     password: '',
     role: 'user' as 'admin' | 'user',
     phone: ''
   };
 
+  // Errores de validación
+  errors = {
+    name: '',
+    username: '',
+    email: '',
+    phone: '',
+    password: ''
+  };
+
   roleOptions = [
     { label: 'Usuario', value: 'user' },
-    { label: 'Administrador', value: 'admin' }
+    { label: 'Admin', value: 'admin' }
   ];
 
   private readonly statusSeverityMap: Record<string, TagSeverity> = {
@@ -91,19 +107,37 @@ export class Users implements OnInit {
     user: 'secondary',
   };
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private confirmationService: ConfirmationService,
+    private messageService: MessageService
+  ) {}
 
   ngOnInit() {
     this.loadUsers();
   }
 
   loadUsers() {
-    this.http.get<UsersResponse>('http://localhost:3000/api/admin/users?page=1&size=100').subscribe({
+    this.http.get<UsersResponse>('https://nonprejudicially-unmenacing-wanda.ngrok-free.dev/api/admin/users?page=1&size=100', {
+      withCredentials: true
+    }).subscribe({
       next: (response) => {
         this.users = response.data.data;
       },
       error: (error) => {
-        console.error('Error loading users:', error);
+        console.error('❌ Error loading users:', error);
+        console.error('Error details:', {
+          status: error.status,
+          statusText: error.statusText,
+          message: error.message,
+          url: error.url
+        });
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error al cargar usuarios',
+          detail: error.error?.message || 'No se pudo conectar con el servidor',
+          life: 5000
+        });
       }
     });
   }
@@ -124,50 +158,219 @@ export class Users implements OnInit {
   toggleUserStatus(user: UserRow) {
     const newStatus = !user.isActive;
     
-    this.http.patch(`http://localhost:3000/api/admin/users/${user.id}/status`, { isActive: newStatus }).subscribe({
+    this.http.patch(`https://nonprejudicially-unmenacing-wanda.ngrok-free.dev/api/admin/users/${user.id}/status`, 
+      { isActive: newStatus },
+      { withCredentials: true }
+    ).subscribe({
       next: () => {
         user.isActive = newStatus;
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Éxito',
+          detail: `Usuario ${newStatus ? 'activado' : 'suspendido'} correctamente`
+        });
       },
       error: (error) => {
         console.error('Error updating user status:', error);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'No se pudo actualizar el estado del usuario'
+        });
       }
     });
   }
 
   openRegisterModal() {
+    this.resetForm();
+    this.showRegisterModal = true;
+  }
+
+  resetForm() {
     this.newUser = {
       name: '',
+      username: '',
       email: '',
       password: '',
       role: 'user',
       phone: ''
     };
-    this.showRegisterModal = true;
+    this.errors = {
+      name: '',
+      username: '',
+      email: '',
+      phone: '',
+      password: ''
+    };
+  }
+
+  validateUsername(event: KeyboardEvent) {
+    const char = event.key;
+    // Solo permitir letras, números, guion bajo y punto
+    if (!/^[a-zA-Z0-9._]$/.test(char) && event.key !== 'Backspace' && event.key !== 'Tab') {
+      event.preventDefault();
+    }
+  }
+
+  validateName(event: KeyboardEvent) {
+    const char = event.key;
+    // Solo permitir letras, espacios y tildes
+    if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]$/.test(char) && event.key !== 'Backspace' && event.key !== 'Tab') {
+      event.preventDefault();
+    }
+  }
+
+  validatePhone(event: KeyboardEvent) {
+    const char = event.key;
+    const currentValue = this.newUser.phone;
+    
+    // Solo permitir números y limitar a 9 dígitos
+    if (!/^\d$/.test(char) && event.key !== 'Backspace' && event.key !== 'Tab') {
+      event.preventDefault();
+    }
+    
+    // Evitar que se ingresen más de 9 dígitos
+    if (currentValue.length >= 9 && /^\d$/.test(char)) {
+      event.preventDefault();
+    }
+  }
+
+  validateForm(): boolean {
+    let isValid = true;
+    this.errors = { name: '', username: '', email: '', phone: '', password: '' };
+
+    // Validar nombre completo (solo letras y espacios, mínimo 2 palabras)
+    const nameRegex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/;
+    const nameParts = this.newUser.name.trim().split(/\s+/);
+    if (!this.newUser.name.trim()) {
+      this.errors.name = 'El nombre es requerido';
+      isValid = false;
+    } else if (!nameRegex.test(this.newUser.name)) {
+      this.errors.name = 'Solo se permiten letras';
+      isValid = false;
+    } else if (nameParts.length < 2) {
+      this.errors.name = 'Ingrese nombre y apellido';
+      isValid = false;
+    }
+
+    // Validar username (solo letras, números, guion bajo y punto, mínimo 3 caracteres)
+    const usernameRegex = /^[a-zA-Z0-9._]{3,}$/;
+    if (!this.newUser.username.trim()) {
+      this.errors.username = 'El usuario es requerido';
+      isValid = false;
+    } else if (!usernameRegex.test(this.newUser.username)) {
+      this.errors.username = 'Mínimo 3 caracteres (letras, números, . o _)';
+      isValid = false;
+    }
+
+    // Validar email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!this.newUser.email.trim()) {
+      this.errors.email = 'El email es requerido';
+      isValid = false;
+    } else if (!emailRegex.test(this.newUser.email)) {
+      this.errors.email = 'Email inválido';
+      isValid = false;
+    }
+
+    // Validar teléfono (exactamente 9 dígitos para Perú)
+    const phoneRegex = /^\d{9}$/;
+    if (!this.newUser.phone.trim()) {
+      this.errors.phone = 'El teléfono es requerido';
+      isValid = false;
+    } else if (!phoneRegex.test(this.newUser.phone)) {
+      this.errors.phone = 'Debe tener 9 dígitos';
+      isValid = false;
+    }
+
+    // Validar contraseña (mínimo 6 caracteres)
+    if (!this.newUser.password) {
+      this.errors.password = 'La contraseña es requerida';
+      isValid = false;
+    } else if (this.newUser.password.length < 6) {
+      this.errors.password = 'Mínimo 6 caracteres';
+      isValid = false;
+    }
+
+    return isValid;
   }
 
   registerUser() {
+    if (!this.validateForm()) {
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Validación',
+        detail: 'Por favor corrija los errores en el formulario'
+      });
+      return;
+    }
+
+    const nameParts = this.newUser.name.trim().split(/\s+/);
     const userData = {
-      username: this.newUser.email.split('@')[0],
+      username: this.newUser.username,
       email: this.newUser.email,
       password: this.newUser.password,
-      name: this.newUser.name.split(' ')[0],
-      lastName1: this.newUser.name.split(' ')[1] || '',
-      lastName2: this.newUser.name.split(' ')[2] || null,
+      name: nameParts[0],
+      lastName1: nameParts[1] || '',
+      lastName2: nameParts.length > 2 ? nameParts.slice(2).join(' ') : null,
       docNumber: '00000000',
-      address: this.newUser.phone,
+      phone: this.newUser.phone,
+      address: 'Perú',
       roleId: this.newUser.role === 'admin' ? 1 : 2
     };
 
-    this.http.post<{ status: string; data: UserRow }>('http://localhost:3000/api/admin/users', userData).subscribe({
+    console.log('📤 Enviando datos de usuario:', userData);
+    
+    this.http.post<{ status: string; data: UserRow }>('https://nonprejudicially-unmenacing-wanda.ngrok-free.dev/api/admin/users', userData, {
+      withCredentials: true
+    }).subscribe({
       next: (response) => {
-        this.users.push(response.data);
+        console.log('✅ Usuario registrado exitosamente:', response);
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Éxito',
+          detail: 'Usuario registrado correctamente',
+          life: 3000
+        });
         this.showRegisterModal = false;
-        this.loadUsers(); // Recargar lista
+        this.loadUsers();
       },
       error: (error) => {
-        console.error('Error registering user:', error);
+        console.error('❌ Error registering user:', error);
+        console.error('Error details:', {
+          status: error.status,
+          statusText: error.statusText,
+          message: error.message,
+          error: error.error
+        });
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: error.error?.message || 'No se pudo registrar el usuario'
+        });
       }
     });
+  }
+
+  closeRegisterModal() {
+    // Verificar si hay datos en el formulario
+    const hasData = this.newUser.name || this.newUser.username || this.newUser.email || this.newUser.phone || this.newUser.password;
+    
+    if (hasData) {
+      this.confirmationService.confirm({
+        message: '¿Está seguro de cancelar? Se perderán los datos ingresados.',
+        header: 'Confirmar cancelación',
+        icon: 'pi pi-exclamation-triangle',
+        acceptLabel: 'Sí, cancelar',
+        rejectLabel: 'No',
+        accept: () => {
+          this.resetForm();
+          this.showRegisterModal = false;
+        }
+      });
+    } else {
+      this.showRegisterModal = false;
+    }
   }
 
   getRoleLabel(role: UserRow['role']): string {

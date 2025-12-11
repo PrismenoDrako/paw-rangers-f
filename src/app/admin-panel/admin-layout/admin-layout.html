@@ -3,17 +3,26 @@
     <div class="brand">Paw Rangers · Admin</div>
     <nav>
       <a routerLink="/admin" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Dashboard</a>
+      <a routerLink="/admin/panel-users" routerLinkActive="active">Usuarios</a>
+      <a routerLink="/admin/panel-alerts" routerLinkActive="active">Alertas</a>
     </nav>
+    <button class="logout-btn" (click)="logout()" title="Cerrar sesión">
+      <i class="pi pi-sign-out"></i>
+      <span>Cerrar sesión</span>
+    </button>
   </aside>
 
   <div class="admin-main">
     <header class="admin-topbar">
       <div class="title">Panel de administración</div>
-      <div class="session">Administrador</div>
+      <div class="session">
+        <span>Administrador</span>
+      </div>
     </header>
 
     <section class="admin-content">
       <router-outlet></router-outlet>
     </section>
+    
   </div>
 </div>

@@ -53,7 +53,9 @@ export class Alerts implements OnInit {
   }
 
   loadDashboardData() {
-    this.http.get<AlertsData>('http://localhost:3000/api/admin/alerts/stats').subscribe({
+    this.http.get<AlertsData>('https://nonprejudicially-unmenacing-wanda.ngrok-free.dev/api/admin/alerts/stats', {
+      withCredentials: true
+    }).subscribe({
       next: (response) => {
         const data = response.data;
         const totalActive = data.found.active + data.lost.active;
@@ -71,7 +73,20 @@ export class Alerts implements OnInit {
         this.updateCharts(data);
       },
       error: (error) => {
-        console.error('Error loading alerts data:', error);
+        console.error('❌ Error loading alerts data:', error);
+        console.error('Error details:', {
+          status: error.status,
+          statusText: error.statusText,
+          message: error.message,
+          url: error.url
+        });
+        // Mostrar valores por defecto si falla
+        this.alertTypeMetrics = [
+          { label: 'Total de alertas', value: 'Error', subtitle: 'No disponible', icon: 'pi-bell' },
+          { label: 'Alertas activas', value: 'Error', subtitle: 'No disponible', icon: 'pi-exclamation-circle' },
+          { label: 'Alertas resueltas', value: 'Error', subtitle: 'No disponible', icon: 'pi-check-circle' },
+          { label: 'Alertas no resueltas', value: 'Error', subtitle: 'No disponible', icon: 'pi-times-circle' },
+        ];
       }
     });
   }

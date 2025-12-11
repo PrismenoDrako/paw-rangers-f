@@ -61,7 +61,9 @@ export class Dashboard implements OnInit {
   }
 
   loadDashboardData() {
-    this.http.get<DashboardData>('http://localhost:3000/api/admin/dashboard').subscribe({
+    this.http.get<DashboardData>('https://nonprejudicially-unmenacing-wanda.ngrok-free.dev/api/admin/dashboard', {
+      withCredentials: true
+    }).subscribe({
       next: (response) => {
         const users = response.data.users;
         const alerts = response.data.alerts;
@@ -83,7 +85,18 @@ export class Dashboard implements OnInit {
         this.updateChartsWithData(users.byMonth, alerts.byMonth);
       },
       error: (error) => {
-        console.error('Error loading dashboard data:', error);
+        console.error('❌ Error loading dashboard data:', error);
+        console.error('Error details:', {
+          status: error.status,
+          statusText: error.statusText,
+          message: error.message,
+          url: error.url
+        });
+        // Mostrar valores por defecto si falla
+        this.userMetrics = [
+          { label: 'Total de usuarios', value: 'Error', subtitle: 'No disponible', icon: 'pi-users' },
+          { label: 'Usuarios nuevos', value: 'Error', subtitle: 'No disponible', icon: 'pi-user-plus' },
+        ];
       }
     });
   }
@@ -185,7 +198,7 @@ export class Dashboard implements OnInit {
       '07': 'Jul', '08': 'Ago', '09': 'Sep', '10': 'Oct', '11': 'Nov', '12': 'Dic'
     };
 
-    // Actualizar gráfico de usuarios
+ // Actualizar gráfico de usuarios
     const userLabels = usersByMonth.map(item => {
       const [year, month] = item.month.split('-');
       return monthNames[month] || month;
@@ -200,7 +213,6 @@ export class Dashboard implements OnInit {
         data: userData
       }]
     };
-
     // Actualizar gráfico de alertas
     const alertLabels = alertsByMonth.map(item => {
       const [year, month] = item.month.split('-');

@@ -24,10 +24,12 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
           case 401:
             // Unauthorized: El servidor rechazó la sesión
             errorMessage = 'Tu sesión ha expirado. Por favor, inicia sesión de nuevo.';
-            // Limpiar el estado local
-            auth.clearLocalState();
-            // Redirigir al login
-            router.navigate(['/auth']);
+            // Solo limpiar estado y redirigir si ya estábamos autenticados
+            // Esto evita problemas durante el login inicial
+            if (auth.isAuthenticated()) {
+              auth.clearLocalState();
+              router.navigate(['/auth']);
+            }
             break;
           case 403:
             errorMessage = 'No tienes permiso para acceder a este recurso';

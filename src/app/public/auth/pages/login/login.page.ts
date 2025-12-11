@@ -55,7 +55,14 @@ export class LoginPage {
       .login(username ?? '', password ?? '')
       .pipe(finalize(() => (this.loading = false)))
       .subscribe({
-        next: () => this.router.navigate(['/app']),
+        next: () => {
+          // Redirigir según el rol del usuario
+          if (this.auth.isAdmin()) {
+            this.router.navigate(['/admin']);
+          } else {
+            this.router.navigate(['/app']);
+          }
+        },
         error: (err) => (this.error = err?.message || 'No pudimos iniciar sesión, intenta de nuevo.'),
       });
   }

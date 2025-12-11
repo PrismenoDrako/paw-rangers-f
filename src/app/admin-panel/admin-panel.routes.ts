@@ -18,7 +18,31 @@ export const AdminAppRoutes: Routes = [
             { path: 'alertas', component: AlertsList, title: 'Moderación de alertas' },
             { path: 'alertas/:id', component: AlertDetail, title: 'Detalle de alerta' },
             { path: 'comunicados', component: ComunicadosAdminPage, title: 'Comunicados' },
-            // Rutas futuras: informes, configuraciones.
+            // Nuevas rutas del panel-admin
+            {
+                path: 'dashboard',
+                loadComponent: () =>
+                    import('./pages/panel-admin/dashboard/dashboard').then(
+                        (m) => m.Dashboard
+                    ),
+                title: 'Dashboard'
+            },
+            {
+                path: 'panel-users',
+                loadComponent: () =>
+                    import('./pages/panel-admin/users/users').then(
+                        (m) => m.Users
+                    ),
+                title: 'Gestión de usuarios'
+            },
+            {
+                path: 'panel-alerts',
+                loadComponent: () =>
+                    import('./pages/panel-admin/alerts/alerts').then(
+                        (m) => m.Alerts
+                    ),
+                title: 'Estadísticas de alertas'
+            },
         ],
     },
 ];

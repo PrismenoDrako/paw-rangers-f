@@ -41,7 +41,7 @@
       <p-button label="Ver detalle" icon="pi pi-arrow-right" [text]="true" (onClick)="navigateToAlerts()"></p-button>
     </div>
     
-    <!-- Métricas de alertas activas/resueltas -->
+    <!-- Métricas de alertas activas/resueltas/no resueltass -->
     <div class="metrics">
       <p-card *ngFor="let m of alertMetrics" class="metric-card">
         <i class="pi {{ m.icon }} metric-icon"></i>
@@ -51,7 +51,7 @@
       </p-card>
     </div>
 
-    <!-- Gráfico comparativo alertas activas vs resueltas -->
+    <!-- Gráfico comparativo alertas activas vs resueltas vs no resueltas-->
     <div class="panel">
       <div class="panel-header">
         <h3>Alertas activas vs resueltas vs no resueltas </h3>

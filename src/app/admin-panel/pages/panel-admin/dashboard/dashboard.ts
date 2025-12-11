@@ -185,7 +185,7 @@ export class Dashboard implements OnInit {
       '07': 'Jul', '08': 'Ago', '09': 'Sep', '10': 'Oct', '11': 'Nov', '12': 'Dic'
     };
 
-    // Actualizar gráfico de usuarios
+ // Actualizar gráfico de usuarios
     const userLabels = usersByMonth.map(item => {
       const [year, month] = item.month.split('-');
       return monthNames[month] || month;
@@ -200,7 +200,6 @@ export class Dashboard implements OnInit {
         data: userData
       }]
     };
-
     // Actualizar gráfico de alertas
     const alertLabels = alertsByMonth.map(item => {
       const [year, month] = item.month.split('-');

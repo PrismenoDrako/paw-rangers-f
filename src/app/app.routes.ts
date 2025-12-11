@@ -14,7 +14,7 @@ export const routes: Routes = [
   },
   {
     path: 'admin',
-    canMatch: [authGuard, adminGuard],
+    canActivate: [adminGuard],
     loadChildren: () => import('./admin-panel/admin-panel.routes').then(m => m.AdminAppRoutes),
   },
 ];

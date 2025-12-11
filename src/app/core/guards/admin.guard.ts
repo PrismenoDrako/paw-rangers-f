@@ -9,9 +9,12 @@ export const adminGuard: CanMatchFn = (): boolean | UrlTree => {
   const isAuth = auth.isAuthenticated();
   const isAdminUser = auth.isAdmin();
 
+  console.log('AdminGuard - isAuth:', isAuth, 'isAdmin:', isAdminUser);
+
   if (isAuth && isAdminUser) {
     return true;
   }
 
+  // Si no está autenticado o no es admin, redirigir a login
   return router.createUrlTree(['/auth']);
 };

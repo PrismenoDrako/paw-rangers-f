@@ -1,0 +1,65 @@
+<div class="dash">
+  <div class="dash-header">
+    <div>
+      <h1>Panel de Administración</h1>
+    </div>
+  </div>
+
+  <!-- Sección de USUARIOS -->
+  <section class="section">
+    <div class="section-header">
+      <h2 class="section-title">Usuarios</h2>
+      <p-button label="Ver detalle" icon="pi pi-arrow-right" [text]="true" (onClick)="navigateToUsers()"></p-button>
+    </div>
+    
+    <!-- Métricas de usuarios -->
+    <div class="metrics">
+      <p-card *ngFor="let m of userMetrics" class="metric-card">
+        <i class="pi {{ m.icon }} metric-icon"></i>
+        <div class="metric-label">{{ m.label }}</div>
+        <div class="metric-value">{{ m.value }}</div>
+        <div class="metric-sub">{{ m.subtitle }}</div>
+      </p-card>
+    </div>
+
+    <!-- KPI de usuarios (gráfico lineal) -->
+    <div class="panel">
+      <div class="panel-header">
+        <h3>KPI de Usuarios</h3>
+        <p>Crecimiento de usuarios registrados</p>
+      </div>
+      <div class="panel-body chart-holder">
+        <p-chart type="line" [data]="userKpiChartData" [options]="userKpiChartOptions"></p-chart>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sección de ALERTAS GENERALES -->
+  <section class="section">
+    <div class="section-header">
+      <h2 class="section-title">Alertas</h2>
+      <p-button label="Ver detalle" icon="pi pi-arrow-right" [text]="true" (onClick)="navigateToAlerts()"></p-button>
+    </div>
+    
+    <!-- Métricas de alertas activas/resueltas -->
+    <div class="metrics">
+      <p-card *ngFor="let m of alertMetrics" class="metric-card">
+        <i class="pi {{ m.icon }} metric-icon"></i>
+        <div class="metric-label">{{ m.label }}</div>
+        <div class="metric-value">{{ m.value }}</div>
+        <div class="metric-sub">{{ m.subtitle }}</div>
+      </p-card>
+    </div>
+
+    <!-- Gráfico comparativo alertas activas vs resueltas -->
+    <div class="panel">
+      <div class="panel-header">
+        <h3>Alertas activas vs resueltas vs no resueltas </h3>
+        <p>Comparativa mensual</p>
+      </div>
+      <div class="panel-body chart-holder">
+        <p-chart type="line" [data]="alertsCompareChartData" [options]="alertsCompareChartOptions"></p-chart>
+      </div>
+    </div>
+  </section>
+</div>

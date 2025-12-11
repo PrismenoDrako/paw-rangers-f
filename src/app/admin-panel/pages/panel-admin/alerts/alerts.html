@@ -1,0 +1,41 @@
+<div class="alerts-page">
+  <div class="page-header">
+    <div>
+      <h1>Alertas - Detalle por Tipo</h1>
+      <p>Estadísticas y distribución de alertas por categoría</p>
+    </div>
+  </div>
+
+  <!-- Métricas de alertas por tipo -->
+  <div class="metrics">
+    <p-card *ngFor="let m of alertTypeMetrics" class="metric-card">
+      <i class="pi {{ m.icon }} metric-icon"></i>
+      <div class="metric-label">{{ m.label }}</div>
+      <div class="metric-value">{{ m.value }}</div>
+      <div class="metric-sub">{{ m.subtitle }}</div>
+    </p-card>
+  </div>
+
+  <!-- Gráficos de dona (mitad/mitad) -->
+  <div class="split-charts">
+    <div class="panel half">
+      <div class="panel-header">
+        <h3>Alertas de Hallazgo</h3>
+        <p>Distribución por estado</p>
+      </div>
+      <div class="panel-body chart-holder-pie">
+        <p-chart type="doughnut" [data]="hallazgoChartData" [options]="pieChartOptions"></p-chart>
+      </div>
+    </div>
+
+    <div class="panel half">
+      <div class="panel-header">
+        <h3>Alertas de Desaparición</h3>
+        <p>Distribución por estado</p>
+      </div>
+      <div class="panel-body chart-holder-pie">
+        <p-chart type="doughnut" [data]="desaparicionChartData" [options]="pieChartOptions"></p-chart>
+      </div>
+    </div>
+  </div>
+</div>

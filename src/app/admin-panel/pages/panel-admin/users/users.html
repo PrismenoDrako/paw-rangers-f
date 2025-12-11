@@ -1,0 +1,160 @@
+<div class="users-page">
+  <div class="page-header">
+    <div>
+      <h1>Gestión de Usuarios</h1>
+      <p>Administración y control de usuarios del sistema</p>
+    </div>
+    <div class="header-actions">
+      <p-button label="Registrar usuario" icon="pi pi-user-plus" (onClick)="openRegisterModal()"></p-button>
+    </div>
+  </div>
+
+  <!-- Tabla de usuarios -->
+  <div class="panel">
+    <div class="panel-body">
+      <p-table [value]="users" [paginator]="true" [rows]="10" [tableStyle]="{ 'min-width': '60rem' }">
+        <ng-template #header>
+          <tr>
+            <th>Usuario</th>
+            <th>Rol</th>
+            <th>Username</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </ng-template>
+        <ng-template #body let-user>
+          <tr>
+            <td>
+              <div class="user-cell">
+                <div class="user-name">{{ getFullName(user) }}</div>
+                <div class="user-email">{{ user.email }}</div>
+              </div>
+            </td>
+            <td>
+              <p-tag [value]="getRoleLabel(user.role)" [severity]="roleSeverity(user.role)"></p-tag>
+            </td>
+            <td>
+              <span class="reports-count">{{ user.username }}</span>
+            </td>
+            <td>
+              <p-tag [value]="getStatusLabel(user.isActive)" [severity]="statusSeverity(user.isActive)"></p-tag>
+            </td>
+            <td>
+              <div class="actions">
+                <button pButton icon="pi pi-eye" class="p-button-text p-button-sm" (click)="viewUser(user)" title="Ver detalles"></button>
+                <button pButton [icon]="user.isActive ? 'pi pi-ban' : 'pi pi-check'" class="p-button-text p-button-sm" (click)="toggleUserStatus(user)" [title]="user.isActive ? 'Suspender' : 'Activar'"></button>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de información del usuario -->
+<p-dialog 
+  header="Información del Usuario" 
+  [(visible)]="showUserModal" 
+  [modal]="true" 
+  [style]="{ width: '500px' }"
+  [draggable]="false"
+  [resizable]="false">
+  <div class="user-info-modal" *ngIf="selectedUser">
+    <div class="info-row">
+      <span class="label">ID:</span>
+      <span class="value">{{ selectedUser.id }}</span>
+    </div>
+    <div class="info-row">
+      <span class="label">Nombre completo:</span>
+      <span class="value">{{ getFullName(selectedUser) }}</span>
+    </div>
+    <div class="info-row">
+      <span class="label">Username:</span>
+      <span class="value">{{ selectedUser.username }}</span>
+    </div>
+    <div class="info-row">
+      <span class="label">Email:</span>
+      <span class="value">{{ selectedUser.email }}</span>
+    </div>
+    <div class="info-row">
+      <span class="label">Documento:</span>
+      <span class="value">{{ selectedUser.docNumber }}</span>
+    </div>
+    <div class="info-row">
+      <span class="label">Dirección:</span>
+      <span class="value">{{ selectedUser.address }}</span>
+    </div>
+    <div class="info-row">
+      <span class="label">Rol:</span>
+      <span class="value">
+        <p-tag [value]="getRoleLabel(selectedUser.role)" [severity]="roleSeverity(selectedUser.role)"></p-tag>
+      </span>
+    </div>
+    <div class="info-row">
+      <span class="label">Estado:</span>
+      <span class="value">
+        <p-tag [value]="getStatusLabel(selectedUser.isActive)" [severity]="statusSeverity(selectedUser.isActive)"></p-tag>
+      </span>
+    </div>
+    <div class="info-row">
+      <span class="label">Fecha de registro:</span>
+      <span class="value">{{ selectedUser.createdAt | date: 'dd/MM/yyyy HH:mm' }}</span>
+    </div>
+    <div class="info-row">
+      <span class="label">Última actualización:</span>
+      <span class="value">{{ selectedUser.updatedAt | date: 'dd/MM/yyyy HH:mm' }}</span>
+    </div>
+  </div>
+</p-dialog>
+
+<!-- Modal de registro de usuario -->
+<p-dialog 
+  header="Registrar Usuario" 
+  [(visible)]="showRegisterModal" 
+  [modal]="true" 
+  [style]="{ width: '500px' }"
+  [draggable]="false"
+  [resizable]="false">
+  <div class="register-form">
+    <div class="form-field">
+      <label for="name">Nombre completo</label>
+      <input pInputText id="name" [(ngModel)]="newUser.name" placeholder="Ingrese el nombre" class="w-full" />
+    </div>
+    
+    <div class="form-field">
+      <label for="email">Email</label>
+      <input pInputText id="email" type="email" [(ngModel)]="newUser.email" placeholder="usuario@example.com" class="w-full" />
+    </div>
+    
+    <div class="form-field">
+      <label for="phone">Teléfono</label>
+      <input pInputText id="phone" [(ngModel)]="newUser.phone" placeholder="+34 600 000 000" class="w-full" />
+    </div>
+    
+    <div class="form-field">
+      <label for="password">Contraseña</label>
+      <p-password id="password" [(ngModel)]="newUser.password" placeholder="Contraseña" [feedback]="false" [toggleMask]="true" styleClass="w-full"></p-password>
+    </div>
+    
+    <div class="form-field">
+      <label for="role">Rol</label>
+      <p-select 
+        id="role"
+        [options]="roleOptions" 
+        [(ngModel)]="newUser.role" 
+        optionLabel="label"
+        optionValue="value"
+        placeholder="Seleccione un rol"
+        styleClass="w-full">
+      </p-select>
+    </div>
+  </div>
+  
+  <ng-template #footer>
+    <div class="dialog-footer">
+      <p-button label="Cancelar" severity="secondary" [text]="true" (onClick)="showRegisterModal = false"></p-button>
+      <p-button label="Registrar" (onClick)="registerUser()"></p-button>
+    </div>
+  </ng-template>
+</p-dialog>

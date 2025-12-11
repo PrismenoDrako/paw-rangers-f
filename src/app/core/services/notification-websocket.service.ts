@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { io, Socket } from 'socket.io-client';
 import { AuthService } from './auth.service';
-import { NotificationsHttpService, Notification } from './notifications-http.service';
+import { NotificationsHttpService, Notification, NotificationsResponse } from './notifications-http.service';
 
 export type { Notification };
 
@@ -33,17 +33,17 @@ export class NotificationWebsocketService {
    */
   public connect(): void {
     if (this.socket?.connected) {
-      console.log('✅ WebSocket ya está conectado');
+      console.log('WebSocket ya esta conectado');
       return;
     }
 
     // Si el usuario no está autenticado, no intentar conectar
     if (!this.authService.isAuthenticated()) {
-      console.warn('❌ Usuario no autenticado - No se puede conectar al WebSocket');
+      console.warn('Usuario no autenticado - No se puede conectar al WebSocket');
       return;
     }
 
-    console.log('🔌 Conectando al WebSocket de notificaciones...');
+    console.log('Conectando al WebSocket de notificaciones...');
 
     // Cargar notificaciones guardadas del servidor al conectar
     this.loadSavedNotifications();
@@ -55,21 +55,21 @@ export class NotificationWebsocketService {
       reconnection: true,
       reconnectionDelay: 1000,
       reconnectionAttempts: 5,
-      withCredentials: true  // ✅ Enviar cookies automáticamente (incluye access_token)
+      withCredentials: true // ✅ Enviar cookies automáticamente (incluye access_token)
     });
 
     this.socket.on('connect', () => {
-      console.log('✅ Conectado al WebSocket');
+      console.log('Conectado al WebSocket');
       this.isConnectedSubject.next(true);
     });
 
     this.socket.on('disconnect', (reason: string) => {
-      console.log('❌ Desconectado del WebSocket:', reason);
+      console.log('Desconectado del WebSocket:', reason);
       this.isConnectedSubject.next(false);
     });
 
-    this.socket.on('connect_error', (error: any) => {
-      console.error('⚠️ Error en WebSocket:', error);
+    this.socket.on('connect_error', (error: unknown) => {
+      console.error('Error en WebSocket:', error);
     });
 
     this.socket.on('notification', (notification: Notification) => {
@@ -90,7 +90,7 @@ export class NotificationWebsocketService {
    */
   public disconnect(): void {
     if (this.socket) {
-      console.log('🔌 Desconectando del WebSocket...');
+      console.log('Desconectando del WebSocket...');
       this.socket.disconnect();
       this.socket = null;
       this.isConnectedSubject.next(false);
@@ -102,16 +102,16 @@ export class NotificationWebsocketService {
    */
   private loadSavedNotifications(): void {
     this.notificationsHttpService.getNotifications(1, 50).subscribe({
-      next: (response) => {
-        console.log('📥 Notificaciones cargadas del servidor:', response);
+      next: (response: NotificationsResponse) => {
+        console.log('Notificaciones cargadas del servidor:', response);
         // El backend retorna { status, data: { data, total, page, size, totalPages }, timestamp }
         const notificationsData = response.data.data || [];
         const notifications = Array.isArray(notificationsData) ? notificationsData : [];
-        console.log('📥 Notificaciones procesadas:', notifications);
+        console.log('Notificaciones procesadas:', notifications);
         this.notificationsSubject.next(notifications);
       },
-      error: (err) => {
-        console.error('⚠️ Error al cargar notificaciones:', err);
+      error: (err: unknown) => {
+        console.error('Error al cargar notificaciones:', err);
       }
     });
   }
@@ -146,7 +146,7 @@ export class NotificationWebsocketService {
     if (typeof notificationId === 'number') {
       this.notificationsHttpService.markAsRead(notificationId).subscribe({
         next: () => {
-          console.log(`✅ Notificación ${notificationId} marcada como leída`);
+          console.log(`Notificacion ${notificationId} marcada como leida`);
           // Actualizar localmente
           const notifications = this.notificationsSubject.value;
           const notification = notifications.find(n => String(n.id) === String(notificationId));
@@ -156,8 +156,8 @@ export class NotificationWebsocketService {
             this.notificationsSubject.next([...notifications]);
           }
         },
-        error: (err) => {
-          console.error(`❌ Error al marcar como leída:`, err);
+        error: (err: unknown) => {
+          console.error('Error al marcar como leida:', err);
         }
       });
     } else {
@@ -172,5 +172,3 @@ export class NotificationWebsocketService {
     }
   }
 }
-
-

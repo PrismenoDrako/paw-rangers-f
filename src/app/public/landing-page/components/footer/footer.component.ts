@@ -194,3 +194,4 @@ export class FooterComponent {
     this.router.navigate([path]);
   }
 }
+

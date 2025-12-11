@@ -249,3 +249,4 @@ export class HeroComponent {
     this.router.navigate(['/auth/register']);
   }
 }
+

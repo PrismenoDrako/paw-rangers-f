@@ -145,3 +145,4 @@ export class CtaSectionComponent {
     this.router.navigate(['/app']);
   }
 }
+

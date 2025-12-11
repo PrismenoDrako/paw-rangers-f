@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { ApiService } from './api.service';
 
 export interface Notification {
   id: number;
@@ -31,31 +31,30 @@ export interface NotificationsResponse {
   providedIn: 'root'
 })
 export class NotificationsHttpService {
-  private readonly baseUrl = 'http://localhost:3000/notifications';
-
-  constructor(private http: HttpClient) {}
+  constructor(private api: ApiService) {}
 
   /**
-   * Obtiene las notificaciones del usuario autenticado con paginación
+   * Obtiene las notificaciones del usuario autenticado con paginacion
    */
   getNotifications(page: number = 1, size: number = 20, isRead?: boolean): Observable<NotificationsResponse> {
-    let url = `${this.baseUrl}?page=${page}&size=${size}`;
+    const params: { page: number; size: number; isRead?: boolean } = { page, size };
     if (isRead !== undefined) {
-      url += `&isRead=${isRead}`;
+      params.isRead = isRead;
     }
-    return this.http.get<NotificationsResponse>(url, {
-      withCredentials: true
-    });
+    return this.api.get<NotificationsResponse>('notifications', params);
   }
 
   /**
-   * Marca una notificación como leída
+   * Marca una notificacionn como leida
    */
   markAsRead(notificationId: number): Observable<Notification> {
-    return this.http.patch<Notification>(
-      `${this.baseUrl}/${notificationId}/read`,
-      {},
-      { withCredentials: true }
-    );
+    return this.api.patch<Notification>(`notifications/${notificationId}/read`, {});
+  }
+
+  /**
+   * Elimina todas las notificaciones del usuario
+   */
+  clearAll(): Observable<NotificationsResponse> {
+    return this.api.delete<NotificationsResponse>('notifications');
   }
 }

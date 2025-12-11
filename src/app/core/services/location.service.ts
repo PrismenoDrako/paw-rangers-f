@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { tap } from 'rxjs/operators';
 
 export interface UserLocation {
   id: number;
@@ -23,9 +24,14 @@ export class LocationService {
    * Obtiene todas las ubicaciones del usuario autenticado
    */
   getUserLocations(): Observable<UserLocation[]> {
+    console.log('📍 LocationService.getUserLocations(): Llamando a GET /user-locations');
     return this.http.get<UserLocation[]>(`${this.baseUrl}/user-locations`, {
       withCredentials: true
-    });
+    }).pipe(
+      tap((response) => {
+        console.log('📍 LocationService.getUserLocations(): Respuesta recibida:', response);
+      })
+    );
   }
 
   /**

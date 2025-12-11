@@ -48,13 +48,14 @@ export class NotificationWebsocketService {
     // Cargar notificaciones guardadas del servidor al conectar
     this.loadSavedNotifications();
 
-    // Conectar sin autenticación explícita ya que el backend usa cookies HTTP-only
+    // Conectar con credenciales (cookies HTTP-only)
+    // El backend busca el token en: Authorization header, handshake.access_token, auth.token, o cookies
     this.socket = io(this.socketUrl, {
       transports: ['websocket', 'polling'],
       reconnection: true,
       reconnectionDelay: 1000,
       reconnectionAttempts: 5,
-      withCredentials: true  // Enviar cookies automáticamente
+      withCredentials: true  // ✅ Enviar cookies automáticamente (incluye access_token)
     });
 
     this.socket.on('connect', () => {

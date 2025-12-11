@@ -16,3 +16,65 @@
     padding-bottom: 65px;
   }
 }
+
+// Estilos personalizados para el toast de notificaciones PrimeNG
+::ng-deep {
+  .p-toast .p-toast-message.ng-trigger.ng-trigger-messageAnimation {
+    .p-toast-message-content {
+      // Icono de warning (cambiar de amarillo a azul)
+      .p-toast-icon {
+        color: #1976d2 !important;
+        
+        i {
+          color: #1976d2 !important;
+        }
+        
+        svg {
+          color: #1976d2 !important;
+          stroke: #1976d2 !important;
+          
+          * {
+            color: #1976d2 !important;
+            stroke: #1976d2 !important;
+            fill: #1976d2 !important;
+          }
+        }
+      }
+    }
+  }
+
+  .p-toast {
+    .p-toast-message {
+      background-color: #e3f2fd !important; // Celeste claro
+      border: 1px solid #bbdefb !important;
+      border-left: 4px solid #1976d2 !important; // Azul
+      box-shadow: 0 4px 12px rgba(25, 118, 210, 0.15) !important;
+      
+      .p-toast-message-content {
+        padding: 16px !important;
+        
+        .p-toast-summary {
+          color: #1976d2 !important; // Azul
+          font-weight: 600 !important;
+          font-size: 16px !important;
+        }
+        
+        .p-toast-detail {
+          color: #1565c0 !important; // Azul más oscuro
+          font-size: 14px !important;
+          margin-top: 8px !important;
+          line-height: 1.5;
+        }
+      }
+      
+      // Botón de cerrar
+      .p-toast-close-button {
+        color: #1976d2 !important; // Azul
+        
+        &:hover {
+          color: #1565c0 !important;
+        }
+      }
+    }
+  }
+}

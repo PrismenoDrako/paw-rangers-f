@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
+import { MessageService } from 'primeng/api';
 import { NotificationWebsocketService, Notification } from './notification-websocket.service';
-import { ToastService } from './toast.service';
+import { LocationService, UserLocation } from './location.service';
 
 /**
  * Servicio para manejar la lógica de notificaciones en tiempo real
@@ -14,10 +15,18 @@ export class NotificationHandlerService {
 
   constructor(
     private notificationWs: NotificationWebsocketService,
-    private toastService: ToastService,
-    private router: Router
+    private messageService: MessageService,
+    private router: Router,
+    private locationService: LocationService
   ) {
+    console.log('🔔 NotificationHandlerService: Inicializando...');
     this.initializeNotificationHandler();
+    // ✅ Conectar al WebSocket de notificaciones en tiempo real
+    // Usar un pequeño delay para asegurar que la autenticación está lista
+    setTimeout(() => {
+      console.log('🔌 NotificationHandlerService: Llamando a connect()...');
+      this.notificationWs.connect();
+    }, 500);
   }
 
   /**
@@ -25,7 +34,9 @@ export class NotificationHandlerService {
    * Se suscribe a nuevas notificaciones del WebSocket
    */
   private initializeNotificationHandler(): void {
+    console.log('🎯 initializeNotificationHandler: Suscribiéndose a notificaciones...');
     this.notificationWs.notificationReceived$.subscribe(notification => {
+      console.log('🎯 initializeNotificationHandler: Notificación recibida del observable:', notification);
       this.handleNotification(notification);
     });
   }
@@ -86,57 +97,94 @@ export class NotificationHandlerService {
    * Muestra una alerta de mascota cercana
    */
   private showNearbyPetAlert(notification: Notification): void {
-    const toastId = this.toastService.show({
-      title: notification.title || '🐾 Mascota Cercana',
-      message: notification.message || '',
-      type: 'warning',
-      duration: 0, // No auto-cerrar
-      action: {
-        label: 'Ver Detalles',
-        callback: () => this.viewPetDetails(notification)
-      },
-      data: notification
-    });
+    console.log('🐾 showNearbyPetAlert: Obteniendo ubicaciones del usuario...');
+    
+    // Obtener ubicaciones del usuario para encontrar la más cercana
+    this.locationService.getUserLocations().subscribe({
+      next: (response: any) => {
+        console.log('✅ showNearbyPetAlert: Respuesta completa:', response);
+        
+        // El backend retorna {status: 'success', data: [...], timestamp: '...'}
+        // Necesitamos extraer el array de locations de response.data
+        const locations = response.data || response;
+        console.log('✅ showNearbyPetAlert: Ubicaciones extraídas:', locations);
+        console.log('✅ showNearbyPetAlert: Cantidad de ubicaciones:', locations ? locations.length : 0);
+        
+        let locationName = 'tu ubicación guardada';
+        
+        if (locations && Array.isArray(locations) && locations.length > 0) {
+          locationName = locations[0].name;
+          console.log('📍 showNearbyPetAlert: Nombre de ubicación:', locationName);
+        } else {
+          console.log('⚠️ showNearbyPetAlert: No hay ubicaciones disponibles o no es un array');
+        }
+        
+        const formattedMessage = `Se perdió una mascota cerca a ${locationName}`;
+        console.log('📝 showNearbyPetAlert: Mensaje formateado:', formattedMessage);
+        
+        // Usar PrimeNG MessageService para mostrar un toast más grande
+        this.messageService.add({
+          severity: 'info',
+          summary: notification.title || '🐾 Mascota Cercana',
+          detail: formattedMessage,
+          life: 0, // No auto-cerrar
+          sticky: true, // Sticky para que no desaparezca
+          styleClass: 'notification-toast-large',
+          contentStyleClass: 'notification-toast-content'
+        });
 
-    console.log('📢 Toast de mascota cercana mostrado:', toastId);
+        console.log('📢 Toast de mascota cercana mostrado (PrimeNG)');
+      },
+      error: (err) => {
+        console.error('❌ Error al obtener ubicaciones:', err);
+        // Fallback si hay error
+        const formattedMessage = `Se perdió una mascota cerca a tu ubicación guardada`;
+        
+        this.messageService.add({
+          severity: 'info',
+          summary: notification.title || '🐾 Mascota Cercana',
+          detail: formattedMessage,
+          life: 0,
+          sticky: true,
+          styleClass: 'notification-toast-large',
+          contentStyleClass: 'notification-toast-content'
+        });
+
+        console.log('📢 Toast de mascota cercana mostrado (fallback PrimeNG)');
+      }
+    });
   }
 
   /**
    * Muestra una alerta
    */
   private showAlert(notification: Notification): void {
-    const toastId = this.toastService.show({
-      title: notification.title || '⚠️ Alerta',
-      message: notification.message || '',
-      type: 'warning',
-      duration: 7000,
-      action: notification.url ? {
-        label: 'Ver',
-        callback: () => this.navigateToUrl(notification.url!)
-      } : undefined,
-      data: notification
+    this.messageService.add({
+      severity: 'warn',
+      summary: notification.title || '⚠️ Alerta',
+      detail: notification.message || '',
+      life: 7000,
+      sticky: false,
+      styleClass: 'notification-toast-large'
     });
 
-    console.log('⚠️ Toast de alerta mostrado:', toastId);
+    console.log('⚠️ Toast de alerta mostrado (PrimeNG)');
   }
 
   /**
    * Muestra una notificación de información
    */
   private showInfo(notification: Notification): void {
-    const toastId = this.toastService.show({
-      title: notification.title || 'ℹ️ Información',
-      message: notification.message || '',
-      type: 'info',
-      duration: 5000,
-      action: notification.url ? {
-        label: 'Abrir',
-        callback: () => this.navigateToUrl(notification.url!)
-      } : undefined,
-      data: notification
+    this.messageService.add({
+      severity: 'info',
+      summary: notification.title || 'ℹ️ Información',
+      detail: notification.message || '',
+      life: 5000,
+      sticky: false,
+      styleClass: 'notification-toast-large'
     });
 
-    console.log('ℹ️ Toast de información mostrado:', toastId);
+    console.log('ℹ️ Toast de información mostrado (PrimeNG)');
   }
 
   /**
